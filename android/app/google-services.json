@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "709117709364",
+    "project_id": "bitandec-e84c1",
+    "storage_bucket": "bitandec-e84c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:709117709364:android:829303f9e62000ed6f0e61",
+        "android_client_info": {
+          "package_name": "com.rnJuanCrypto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "709117709364-238abrhobqi0dcqp6p0h0ntttbhni6bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rnJuanCrypto",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "709117709364-a8qaobl0f7dvsj71tnnbfpmiqu9v6nmk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeaNfe4XwBaDedQnGn9ubYVIkOx6Kc6Gc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "709117709364-a8qaobl0f7dvsj71tnnbfpmiqu9v6nmk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "709117709364-g2il483scclmr20p92e8cll5g9keih0d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rnjuancrypto"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

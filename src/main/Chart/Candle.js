@@ -1,7 +1,7 @@
 import React from 'react';
 import {Line, Rect} from 'react-native-svg';
 
-const MARGIN = 2;
+const MARGIN = 4;
 
 export default ({candle, index, width, scaleY, scaleBody}) => {
   const {close, open, high, low} = candle;

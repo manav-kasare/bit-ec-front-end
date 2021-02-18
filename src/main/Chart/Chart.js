@@ -8,7 +8,7 @@ import Candle from './Candle';
 export const {width: size} = Dimensions.get('window');
 
 export default ({candles, domain}) => {
-  const width = size / candles.length;
+  const width = (size / candles.length) * 0.95;
   const scaleY = scaleLinear().domain(domain).range([size, 0]);
   const scaleBody = scaleLinear()
     .domain([0, Math.max(...domain) - Math.min(...domain)])

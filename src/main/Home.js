@@ -1,7 +1,6 @@
+import Binance from 'binance-api-react-native';
 import React from 'react';
-import '../sockets/binance';
-import {View, Text, SafeAreaView, StyleSheet, processColor} from 'react-native';
-import {getBinanceData} from '../sockets/binance';
+import {StyleSheet, View} from 'react-native';
 import CoinbasePro from './Chart/CoinbasePro';
 
 const reducer = (state, action) => {
@@ -16,8 +15,6 @@ const reducer = (state, action) => {
       return {chartData: state};
   }
 };
-
-import Binance from 'binance-api-react-native';
 
 const client = Binance();
 
@@ -35,13 +32,21 @@ export default function Home() {
       .then(handleHistories);
   }, [interval]);
 
-  React.useEffect(() => {
-    const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
-    return () => clean();
-  }, [interval]);
+  // React.useEffect(() => {
+  //   const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
+  //   return () => clean();
+  // }, [interval]);
+
+  // React.useEffect(() => {
+  //   const clean = client.ws.depth('BTCUSDT', handleDepthData);
+  //   return () => clean();
+  // }, []);
+
+  const handleDepthData = (data) => {
+    setPriceNow(`$ ${data.bidDepth[0].price.slice(0, -6)}`);
+  };
 
   const handleBinanceData = (data) => {
-    console.log(data);
     const candleDate = new Date(data.startTime);
     const modified = {
       date: data.startTime,
@@ -52,7 +57,7 @@ export default function Home() {
       low: data.low,
     };
     dispatch({type: 'append', element: modified});
-    setPriceNow(`$ ${data.open.slice(0, -6)}`);
+    // setPriceNow(`$ ${data.open.slice(0, -6)}`);
   };
 
   const handleHistories = (candles) => {
@@ -72,7 +77,6 @@ export default function Home() {
     Promise.all(promise).then(() => {
       dispatch({type: 'set', data: values});
       setDone(true);
-      // getBinanceData(interval, handleBinanceData);
     });
   };
 

@@ -9,15 +9,18 @@ import Animated, {
   sub,
 } from 'react-native-reanimated';
 import {onGestureEvent, useValues} from 'react-native-redash';
-
-import data from './data.json';
 import Chart, {size} from './Chart';
-import Values from './Values';
-import Line from './Line';
-import Label from './Label';
-import {Candle} from './Candle';
 import Content from './Content';
 import Header from './Header';
+import Label from './Label';
+import Line from './Line';
+import Values from './Values';
+import {
+  VictoryChart,
+  VictoryTheme,
+  VictoryAxis,
+  VictoryCandlestick,
+} from 'victory-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,7 +30,8 @@ const styles = StyleSheet.create({
 });
 
 export default function CoinbasePro({data, interval, setInterval, priceNow}) {
-  const candles = data.slice(0, 20);
+  const [zoom, setZoom] = React.useState(0.5);
+  const candles = data.slice(0, zoom * 50);
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
     x,
@@ -35,7 +39,7 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
     state,
   });
   const caliber = size / candles.length;
-  const translateY = diffClamp(y, 0, size);
+  const translateY = diffClamp(y, 10, size);
   const translateX = add(sub(x, modulo(x, caliber)), caliber / 2);
   const opacity = eq(state, State.ACTIVE);
 
@@ -52,13 +56,34 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
           interval={interval}
           setInterval={setInterval}
           priceNow={priceNow}
+          zoom={zoom}
+          setZoom={setZoom}
         />
         <Animated.View style={{opacity}} pointerEvents="none">
           <Values {...{candles, translateX, caliber}} />
         </Animated.View>
       </View>
       <View>
-        <Chart {...{candles, domain}} />
+        {/* <Chart {...{candles, domain}} /> */}
+        <VictoryChart
+          width={size}
+          height={size}
+          theme={VictoryTheme.grayscale}
+          domainPadding={{x: 5}}
+          scale={{x: 'time'}}>
+          <VictoryAxis tickFormat={(t) => `${t.getDay()}`} />
+          <VictoryAxis dependentAxis />
+          <VictoryCandlestick
+            candleColors={{positive: '#4AFA9A', negative: '#E33F64'}}
+            animate={{
+              duration: 1000,
+              easing: 'elasticInOut',
+              onLoad: {duration: 1000},
+            }}
+            candleWidth={(1 - zoom) * 10}
+            data={candles}
+          />
+        </VictoryChart>
         <PanGestureHandler minDist={0} {...gestureHandler}>
           <Animated.View style={StyleSheet.absoluteFill}>
             <Animated.View

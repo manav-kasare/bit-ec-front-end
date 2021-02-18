@@ -1,7 +1,3 @@
-/**
- * @format
- */
-
 import './src/shared/constants';
 import {AppRegistry} from 'react-native';
 import App from './App';

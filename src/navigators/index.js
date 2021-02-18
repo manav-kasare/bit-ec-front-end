@@ -117,7 +117,11 @@ const MainNavigator = () => {
         },
         headerTintColor: 'black',
       }}>
-      <MainStack.Screen name="Home" component={Home} />
+      <MainStack.Screen
+        name="Home"
+        component={Home}
+        options={{headerShown: false}}
+      />
     </MainStack.Navigator>
   );
 };

@@ -41,8 +41,8 @@ class WebSocket {
     return response;
   };
 
-  sendMessage = (data) => {
-    this.socket.emit('sendMessage', data);
+  sendMessageToAdmin = (data) => {
+    this.socket.emit('sendMessageToAdmin', data);
   };
 }
 

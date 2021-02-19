@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import {useGlobal} from 'reactn';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
+import {setMain} from '../navigation/navStart';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [code, setCode] = React.useState('');
@@ -64,7 +65,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       setToken(response.token);
       storeUser(response.user);
       storeToken(response.token);
-      setMain();
+      setMain(phoneNumber);
     }
     setIsLoadingCode(false);
   };
@@ -77,7 +78,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       setToken(response.token);
       storeUser(response.user);
       storeToken(response.token);
-      setMain();
+      setMain(phoneNumber);
     }
     setIsLoadingCode(false);
   };

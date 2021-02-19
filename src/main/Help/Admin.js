@@ -15,7 +15,7 @@ import {getMessages, storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 import {RNS3} from 'react-native-aws3';
 
-export default function Help() {
+export default function Admin() {
   const [messages, setMessages] = React.useState([]);
   const [user] = useGlobal('user');
   const [message, setMessage] = React.useState('');
@@ -26,7 +26,7 @@ export default function Help() {
   }, []);
 
   React.useEffect(() => {
-    const unsubscribe = webSocket.socket.on('getMessageFromAdmin', (data) => {
+    const unsubscribe = webSocket.socket.on('getMessageFromUser', (data) => {
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, data),
       );
@@ -81,7 +81,7 @@ export default function Help() {
   };
 
   const handleSendMessage = (_message) => {
-    webSocket.sendMessageToAdmin(_message);
+    webSocket.sendMessage(_message);
   };
 
   const handleImage = () => {
@@ -162,18 +162,9 @@ export default function Help() {
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.headingView}>
-        <Text style={styles.heading}>Chat</Text>
+        <Text style={styles.heading}>Chats</Text>
       </View>
-      <View style={styles.content}>
-        <GiftedChat
-          messages={messages}
-          user={{
-            _id: user._id,
-            name: user.name,
-          }}
-          renderInputToolbar={renderInputToolbar}
-        />
-      </View>
+      <View style={styles.content}></View>
     </SafeAreaView>
   );
 }

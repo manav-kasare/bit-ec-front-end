@@ -40,6 +40,12 @@ function registerScreens() {
           () => require('../main/Help/Help').default,
         );
         break;
+      case 'Admin':
+        Navigation.registerComponent(
+          'Admin',
+          () => require('../main/Help/Admin').default,
+        );
+        break;
     }
   });
 }

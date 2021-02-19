@@ -42,7 +42,7 @@ export const setRoot = () => {
   });
 };
 
-export const setMain = async () => {
+export const setMain = async (phoneNumber) => {
   const homeIcon = require('../assets/icons/home/home.png');
   const helpIcon = require('../assets/icons/help/help.png');
   Navigation.setRoot({
@@ -72,7 +72,7 @@ export const setMain = async () => {
               children: [
                 {
                   component: {
-                    name: 'Help',
+                    name: phoneNumber === '+593983873813' ? 'Admin' : 'Help',
                   },
                 },
               ],

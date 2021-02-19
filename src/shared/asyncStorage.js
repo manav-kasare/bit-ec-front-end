@@ -17,3 +17,12 @@ export const getToken = async () => {
   const token = await AsyncStorage.getItem('token');
   return token;
 };
+
+export const storeMessages = async (messages) => {
+  await AsyncStorage.setItem('messages', JSON.stringify({messages}));
+};
+
+export const getMessages = async () => {
+  const messages = AsyncStorage.getItem('messages');
+  return JSON.parse(messages).messages;
+};

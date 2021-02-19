@@ -44,6 +44,7 @@ export const setRoot = () => {
 
 export const setMain = async () => {
   const homeIcon = require('../assets/icons/home/home.png');
+  const helpIcon = require('../assets/icons/help/help.png');
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -71,13 +72,13 @@ export const setMain = async () => {
               children: [
                 {
                   component: {
-                    name: 'Home',
+                    name: 'Help',
                   },
                 },
               ],
               options: {
                 bottomTab: {
-                  icon: homeIcon,
+                  icon: helpIcon,
                 },
                 animations,
               },
@@ -140,9 +141,8 @@ export const setDefaultOptions = () => {
     bottomTab: {
       selectedIconColor: 'white',
       iconColor: 'grey',
-      selectedFontSize: 24,
-      fontSize: 24,
+      // selectedFontSize: 24,
+      // fontSize: 24,
     },
   });
-  setMain();
 };

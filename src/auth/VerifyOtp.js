@@ -64,7 +64,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       setToken(response.token);
       storeUser(response.user);
       storeToken(response.token);
+      setMain();
     }
+    setIsLoadingCode(false);
   };
 
   const handleLogin = async () => {
@@ -75,7 +77,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       setToken(response.token);
       storeUser(response.user);
       storeToken(response.token);
+      setMain();
     }
+    setIsLoadingCode(false);
   };
 
   const resendConfirmationCode = async () => {
@@ -114,7 +118,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
           loading={isLoadingCode}
           disabled={isLoadingCode}
           labelStyle={{textTransform: 'none', color: 'white'}}
-          mode="contained"
+          mode="outlined"
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
           onPress={checkAndHandle}>
@@ -146,6 +150,7 @@ const styles = StyleSheet.create({
   singleView: {
     width: constants.width * 0.1,
     fontSize: 35,
+    color: 'white',
   },
   headingView: {
     marginBottom: constants.height * 0.025,

@@ -1,6 +1,8 @@
 import Binance from 'binance-api-react-native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useGlobal} from 'reactn';
+import {webSocket} from '../sockets';
 import ChartView from './Chart/ChartView';
 
 const reducer = (state, action) => {
@@ -16,13 +18,16 @@ const reducer = (state, action) => {
   }
 };
 
-const client = Binance();
-
 export default function Home() {
+  const [user] = useGlobal('user');
   const [{chartData}, dispatch] = React.useReducer(reducer, {chartData: []});
   const [interval, setInterval] = React.useState('1m');
   const [done, setDone] = React.useState(false);
   const [priceNow, setPriceNow] = React.useState('');
+
+  React.useEffect(() => {
+    webSocket.connected(user._id);
+  }, []);
 
   React.useEffect(() => {
     fetch(
@@ -32,15 +37,15 @@ export default function Home() {
       .then(handleHistories);
   }, [interval]);
 
-  React.useEffect(() => {
-    const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
-    return () => clean();
-  }, [interval]);
+  // React.useEffect(() => {
+  //   const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
+  //   return () => clean();
+  // }, [interval]);
 
-  React.useEffect(() => {
-    const clean = client.ws.depth('BTCUSDT', handleDepthData);
-    return () => clean();
-  }, []);
+  // React.useEffect(() => {
+  //   const clean = client.ws.depth('BTCUSDT', handleDepthData);
+  //   return () => clean();
+  // }, []);
 
   const handleDepthData = (data) => {
     const price = parseFloat(data.bidDepth[0].price.slice(0, -6));

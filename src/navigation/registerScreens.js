@@ -34,6 +34,12 @@ function registerScreens() {
           () => require('../auth/VerifyOtp').default,
         );
         break;
+      case 'Help':
+        Navigation.registerComponent(
+          'Help',
+          () => require('../main/Help/Help').default,
+        );
+        break;
     }
   });
 }

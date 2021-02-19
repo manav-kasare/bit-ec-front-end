@@ -2,13 +2,23 @@ const socketPromise = require('./socket.io-promise').promise;
 import socketIO from 'socket.io-client';
 
 class WebSocket {
+  constructor() {
+    this.socket = null;
+  }
+
   init = () => {
-    this.socket = socketIO(`http://192.168.0.101:9090/`, {
+    console.log('connecting');
+    this.socket = socketIO(`http://192.168.0.100:9090/`, {
       transports: ['websocket'],
       reconnect: true,
       jsonp: false,
     });
+
     this.socket.request = socketPromise(this.socket);
+  };
+
+  connected = (id) => {
+    this.socket.emit('connected', id);
   };
 
   createUser = async (data) => {
@@ -29,6 +39,10 @@ class WebSocket {
   sell = async (data) => {
     const response = await this.socket.request('sell', data);
     return response;
+  };
+
+  sendMessage = (data) => {
+    this.socket.emit('sendMessage', data);
   };
 }
 

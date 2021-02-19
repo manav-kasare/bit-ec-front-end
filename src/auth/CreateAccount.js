@@ -1,6 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, Keyboard} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
 import {Button, Provider, TextInput} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
@@ -49,7 +49,7 @@ export default function CreateAccount({componentId}) {
           push(componentId, 'VerifyOtp', {
             confirmation,
             name,
-            phoneNumber,
+            phoneNumber: _phoneNumber,
             type: 'create',
           });
           setIsLoading(false);

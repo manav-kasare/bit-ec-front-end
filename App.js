@@ -6,11 +6,12 @@ import Toast from 'react-native-toast-message';
 
 const theme = {
   ...DefaultTheme,
-  roundness: 2,
+  roundness: 10,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'purple',
-    accent: 'dodgerblue',
+    primary: 'transparent',
+    accent: constants.accent,
+    text: 'black',
   },
   dark: false,
 };

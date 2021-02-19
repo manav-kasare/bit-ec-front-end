@@ -1,17 +1,19 @@
-import auth from '@react-native-firebase/auth';
 import React from 'react';
+import auth from '@react-native-firebase/auth';
 import {Keyboard, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import OtpInputs from 'react-native-otp-inputs';
 import Toast from 'react-native-toast-message';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
+import {Button} from 'react-native-paper';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
+  const [code, setCode] = React.useState('');
   const [_confirmation, setConfirmation] = React.useState(confirmation);
   const [isLoadingCode, setIsLoadingCode] = React.useState(false);
   const [isLoadingResendCode, setIsLoadingResendCode] = React.useState(false);
-  const [setUser] = React.useContext('UserContext');
-  const [setToken] = React.useContext('TokenContext');
+  const user = React.useContext('UserContext');
+  const token = React.useContext('TokenContext');
 
   const showToast = (text1) => {
     Toast.show({
@@ -103,25 +105,25 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
             numberOfInputs={6}
             inputStyles={styles.singleView}
             placeholder="0"
-            placeholderTextColor="rgba(10,10,10,0.5)"
+            placeholderTextColor="grey"
           />
         </View>
         <Button
-          color={constants.primary}
+          color={constants.accent}
           loading={isLoadingCode}
           disabled={isLoadingCode}
-          labelStyle={{textTransform: 'none'}}
-          mode="outlined"
+          labelStyle={{textTransform: 'none', color: 'white'}}
+          mode="contained"
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
           onPress={checkAndHandle}>
           Submit
         </Button>
         <Button
-          color={constants.primary}
+          color="white"
           loading={isLoadingResendCode}
           disabled={isLoadingResendCode}
-          labelStyle={{textTransform: 'none'}}
+          labelStyle={{textTransform: 'none', color: 'white'}}
           mode="outlined"
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
@@ -137,8 +139,12 @@ const styles = StyleSheet.create({
   screen: {
     width: constants.width,
     height: constants.height,
-    backgroundColor: 'white',
+    backgroundColor: constants.primary,
     justifyContent: 'space-around',
+  },
+  singleView: {
+    width: constants.width * 0.1,
+    fontSize: 25,
   },
   headingView: {
     marginBottom: constants.height * 0.025,
@@ -146,7 +152,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: constants.width * 0.05,
     fontWeight: '900',
-    color: 'black',
+    color: 'white',
   },
   container: {
     flex: 1,
@@ -162,6 +168,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     marginVertical: 10,
+    borderColor: 'white',
   },
   buttonContentStyle: {
     width: constants.width * 0.8,

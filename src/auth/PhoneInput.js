@@ -33,7 +33,10 @@ export default function PhoneInput({
         mode="flat"
         style={styles.input}
         value={phoneNumber}
-        selectionColor={constants.primary}
+        theme={{colors: {primary: 'transparent', text: 'black'}}}
+        selectionColor="black"
+        underlineColorAndroid="transparent"
+        underlineColor="transparent"
         keyboardType="number-pad"
         textContentType="telephoneNumber"
         placeholder="Phone Number"
@@ -46,23 +49,25 @@ export default function PhoneInput({
 
 const styles = StyleSheet.create({
   container: {
-    height: constants.height * 0.06,
+    height: constants.height * 0.065,
     width: constants.width * 0.8,
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    backgroundColor: 'rgb(245,245,245)',
-    borderWidth: 1,
-    borderRadius: 5,
+    backgroundColor: 'white',
+    borderWidth: 0,
+    borderRadius: 10,
     borderColor: 'grey',
     marginVertical: 10,
   },
   flagView: {
     paddingHorizontal: 5,
-    height: constants.height * 0.056,
+    height: constants.height * 0.06,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgb(245,245,245)',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    backgroundColor: 'white',
   },
   flag: {
     fontSize: 25,
@@ -73,11 +78,12 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: constants.height * 0.059,
-    borderWidth: 0.3,
+    height: constants.height * 0.06,
+    borderWidth: 0,
     shadowOpacity: 0,
     elevation: 0,
-    borderRadius: 0,
-    backgroundColor: 'rgb(245,245,245)',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    backgroundColor: 'white',
   },
 });

@@ -90,15 +90,32 @@ export default function CreateAccount({navigation}) {
           <View style={styles.headingView}>
             <Text style={styles.heading}>Create your account</Text>
           </View>
-          <TextInput
-            mode="outlined"
-            label="Your name"
-            value={name}
-            onChangeText={onChangeName}
-            selectionColor={constants.primary}
-            underlineColor={constants.primary}
-            style={styles.textInput}
-          />
+          <View style={styles.textInput}>
+            <TextInput
+              theme={{
+                colors: {
+                  primary: 'transparent',
+                  text: 'black',
+                  background: 'transparent',
+                },
+              }}
+              selectionColor="black"
+              underlineColorAndroid="transparent"
+              underlineColor="transparent"
+              mode="flat"
+              placeholder="Full name"
+              value={name}
+              style={{
+                width: constants.width * 0.8,
+                height: constants.height * 0.06,
+                margin: 0,
+                borderWidth: 0,
+                borderColor: 'transparent',
+              }}
+              onChangeText={onChangeName}
+              placeholderTextColor="grey"
+            />
+          </View>
           <PhoneInput
             handleOnPress={handleOnPress}
             phoneNumber={phoneNumber}
@@ -109,10 +126,10 @@ export default function CreateAccount({navigation}) {
             setCountry={setCountry}
           />
           <Button
-            color={constants.primary}
+            color={constants.accent}
             loading={isLoading}
             disabled={isLoading}
-            labelStyle={{textTransform: 'none'}}
+            labelStyle={{textTransform: 'none', color: 'white'}}
             mode="outlined"
             style={styles.button}
             contentStyle={styles.buttonContentStyle}
@@ -129,7 +146,7 @@ const styles = StyleSheet.create({
   screen: {
     width: constants.width,
     height: constants.height,
-    backgroundColor: 'white',
+    backgroundColor: constants.primary,
     justifyContent: 'space-around',
   },
   headingView: {
@@ -138,7 +155,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: constants.width * 0.075,
     fontWeight: '900',
-    color: 'black',
+    color: 'white',
   },
   container: {
     flex: 1,
@@ -149,12 +166,17 @@ const styles = StyleSheet.create({
   textInput: {
     width: constants.width * 0.8,
     marginVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
     height: constants.height * 0.06,
-    // backgroundColor: 'white',
+    borderRadius: 10,
+    backgroundColor: 'white',
+    borderWidth: 0,
   },
   button: {
     borderRadius: 10,
     marginVertical: 10,
+    backgroundColor: constants.accent,
   },
   buttonContentStyle: {
     width: constants.width * 0.8,

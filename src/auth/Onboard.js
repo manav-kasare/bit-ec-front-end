@@ -18,7 +18,7 @@ export default function Onboard({navigation}) {
       </View>
       <View style={styles.bottom}>
         <Button
-          color={constants.primary}
+          color={constants.accent}
           labelStyle={{textTransform: 'none'}}
           mode="contained"
           style={styles.button}
@@ -27,7 +27,7 @@ export default function Onboard({navigation}) {
           Create Account
         </Button>
         <Button
-          color={constants.primary}
+          color="white"
           labelStyle={{textTransform: 'none'}}
           mode="outlined"
           style={styles.button}
@@ -44,14 +44,14 @@ const styles = StyleSheet.create({
   screen: {
     width: constants.width,
     height: constants.height,
-    backgroundColor: 'white',
+    backgroundColor: constants.primary,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   header: {
     fontSize: constants.width * 0.15,
     fontWeight: '800',
-    color: constants.primary,
+    color: 'white',
     marginTop: constants.height * 0.1,
   },
   bottom: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     marginVertical: 10,
+    borderColor: 'white',
   },
   buttonContentStyle: {
     width: constants.width * 0.8,

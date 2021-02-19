@@ -40,7 +40,7 @@ export default function Navigator() {
 
   return (
     <NavigationContainer>
-      {!token ? <MainNavigator /> : <AuthNavigator />}
+      {token ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }
@@ -60,8 +60,9 @@ const AuthNavigator = () => {
         headerStyle: {
           shadowOpacity: 0,
           borderWidth: 0,
+          backgroundColor: constants.primary,
         },
-        headerTintColor: 'black',
+        headerTintColor: 'white',
       }}>
       <AuthStack.Screen
         name="Onboard"
@@ -72,7 +73,6 @@ const AuthNavigator = () => {
         name="CreateAccount"
         component={CreateAccount}
         options={{
-          title: 'Create your account',
           headerBackTitleVisible: false,
           headerTitle: null,
         }}
@@ -81,7 +81,6 @@ const AuthNavigator = () => {
         name="Login"
         component={Login}
         options={{
-          title: 'Log In',
           headerBackTitleVisible: false,
           headerTitle: null,
         }}
@@ -90,7 +89,6 @@ const AuthNavigator = () => {
         name="VerifyOtp"
         component={VerifyOtp}
         options={{
-          title: 'Verify OTP',
           headerBackTitleVisible: false,
           headerTitle: null,
         }}

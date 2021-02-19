@@ -86,7 +86,7 @@ export default function Login({navigation}) {
           />
           <Button
             color={constants.primary}
-            labelStyle={{textTransform: 'none'}}
+            labelStyle={{textTransform: 'none', color: 'white'}}
             mode="outlined"
             loading={isLoading}
             disabled={isLoading}
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   screen: {
     width: constants.width,
     height: constants.height,
-    backgroundColor: 'white',
+    backgroundColor: constants.primary,
     justifyContent: 'space-around',
   },
   headingView: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: constants.width * 0.075,
     fontWeight: '900',
-    color: 'black',
+    color: 'white',
   },
   container: {
     flex: 1,
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     marginVertical: 10,
+    backgroundColor: constants.accent,
   },
   buttonContentStyle: {
     width: constants.width * 0.8,

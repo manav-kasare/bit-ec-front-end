@@ -33,8 +33,10 @@ export default function PhoneInput({
         mode="flat"
         style={styles.input}
         value={phoneNumber}
-        theme={{colors: {primary: 'transparent', text: 'black'}}}
-        selectionColor="black"
+        theme={{
+          colors: {primary: 'transparent', text: 'white'},
+        }}
+        selectionColor="rgba(255,255,255,0.2)"
         underlineColorAndroid="transparent"
         underlineColor="transparent"
         keyboardType="number-pad"
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderWidth: 0,
     borderRadius: 10,
     borderColor: 'grey',
@@ -67,12 +69,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
   flag: {
     fontSize: 25,
   },
   dialingCode: {
+    color: 'white',
     marginLeft: 5,
     marginRight: 10,
   },
@@ -84,6 +87,6 @@ const styles = StyleSheet.create({
     elevation: 0,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
 });

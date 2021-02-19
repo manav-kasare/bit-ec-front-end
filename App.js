@@ -8,7 +8,7 @@ export default function App() {
 
   React.useEffect(() => {
     getToken().then((asyncToken) => {
-      if (asyncToken) {
+      if (!asyncToken) {
         setMain();
         setToken(asyncToken);
       } else {

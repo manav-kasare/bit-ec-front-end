@@ -5,10 +5,11 @@ import * as RNLocalize from 'react-native-localize';
 import {Button, Provider, TextInput} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import countries from '../assets/countries.json';
+import {push} from '../navigation/functions';
 import CountryPicker from './CountryPicker';
 import PhoneInput from './PhoneInput';
 
-export default function CreateAccount({navigation}) {
+export default function CreateAccount({componentId}) {
   const [name, setName] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [visible, setVisible] = React.useState(false);
@@ -45,7 +46,7 @@ export default function CreateAccount({navigation}) {
       await auth()
         .signInWithPhoneNumber(_phoneNumber)
         .then((confirmation) => {
-          navigation.navigate('VerifyOtp', {
+          push(componentId, 'VerifyOtp', {
             confirmation,
             name,
             phoneNumber,
@@ -95,11 +96,11 @@ export default function CreateAccount({navigation}) {
               theme={{
                 colors: {
                   primary: 'transparent',
-                  text: 'black',
+                  text: 'white',
                   background: 'transparent',
                 },
               }}
-              selectionColor="black"
+              selectionColor="white"
               underlineColorAndroid="transparent"
               underlineColor="transparent"
               mode="flat"
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: constants.height * 0.06,
     borderRadius: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderWidth: 0,
   },
   button: {
@@ -183,3 +184,15 @@ const styles = StyleSheet.create({
     height: constants.height * 0.06,
   },
 });
+
+CreateAccount.options = {
+  topBar: {
+    title: {
+      text: '',
+    },
+    borderColor: 'transparent',
+    backButton: {
+      showTitle: false,
+    },
+  },
+};

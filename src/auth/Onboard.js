@@ -1,14 +1,15 @@
 import React from 'react';
 import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
 import {Button} from 'react-native-paper';
+import {push} from '../navigation/functions';
 
-export default function Onboard({navigation}) {
+export default function Onboard({componentId}) {
   const handleCreateAccount = () => {
-    navigation.navigate('CreateAccount');
+    push(componentId, 'CreateAccount');
   };
 
   const handleLogin = () => {
-    navigation.navigate('Login');
+    push(componentId, 'Login');
   };
 
   return (
@@ -67,3 +68,9 @@ const styles = StyleSheet.create({
     height: constants.height * 0.06,
   },
 });
+
+Onboard.options = {
+  topBar: {
+    visible: false,
+  },
+};

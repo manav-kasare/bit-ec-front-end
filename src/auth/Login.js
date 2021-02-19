@@ -5,10 +5,11 @@ import * as RNLocalize from 'react-native-localize';
 import {Button, Provider, TextInput} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import countries from '../assets/countries.json';
+import {push} from '../navigation/functions';
 import CountryPicker from './CountryPicker';
 import PhoneInput from './PhoneInput';
 
-export default function Login({navigation}) {
+export default function Login({componentId}) {
   const [phoneNumber, setPhoneNumber] = React.useState('');
   const [visible, setVisible] = React.useState(false);
   const [country, setCountry] = React.useState(RNLocalize.getCountry());
@@ -31,7 +32,7 @@ export default function Login({navigation}) {
       await auth()
         .signInWithPhoneNumber(_phoneNumber)
         .then((confirmation) => {
-          navigation.navigate('VerifyOtp', {
+          push(componentId, 'VerifyOtp', {
             confirmation,
             phoneNumber,
             type: 'login',

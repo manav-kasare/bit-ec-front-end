@@ -35,7 +35,7 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
   const [zoom, setZoom] = React.useState(0.5);
   const [buyModal, setBuyModal] = React.useState(false);
   const [sellModal, setSellModal] = React.useState(false);
-  const candles = data.slice(0, zoom * 50);
+  const candles = data.slice(-(zoom * 50));
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
     x,
@@ -89,24 +89,24 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
         <View>
           <Chart {...{candles, domain}} />
           {/* <VictoryChart
-          width={size}
-          height={size}
-          theme={VictoryTheme.grayscale}
-          domainPadding={{x: 5}}
-          scale={{x: 'time'}}>
-          <VictoryAxis tickFormat={(t) => `${t.getDay()}`} />
-          <VictoryAxis dependentAxis />
-          <VictoryCandlestick
-            candleColors={{positive: '#37b526', negative: '#E33F64'}}
-            animate={{
-              duration: 1000,
-              easing: 'elasticInOut',
-              onLoad: {duration: 1000},
-            }}
-            candleWidth={(1 - zoom) * 10}
-            data={candles}
-          />
-        </VictoryChart> */}
+            width={size}
+            height={size}
+            theme={VictoryTheme.grayscale}
+            domainPadding={{x: 5}}
+            scale={{x: 'time'}}>
+            <VictoryAxis tickFormat={(t) => `${t.getTime()}`} />
+            <VictoryAxis dependentAxis />
+            <VictoryCandlestick
+              candleColors={{positive: '#37b526', negative: '#E33F64'}}
+              animate={{
+                duration: 1000,
+                easing: 'elasticInOut',
+                onLoad: {duration: 1000},
+              }}
+              candleWidth={(1 - zoom) * 10}
+              data={candles}
+            />
+          </VictoryChart> */}
           <PanGestureHandler minDist={0} {...gestureHandler}>
             <Animated.View style={StyleSheet.absoluteFill}>
               <Animated.View

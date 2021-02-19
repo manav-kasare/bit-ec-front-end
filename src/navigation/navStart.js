@@ -1,5 +1,6 @@
 import {Navigation} from 'react-native-navigation';
 import {setGlobalData} from '../shared/reactn';
+import {registerScreens} from './registerScreens';
 
 const animations = {
   push: {
@@ -42,6 +43,7 @@ export const setRoot = () => {
 };
 
 export const setMain = async () => {
+  const homeIcon = require('../assets/icons/home/home.png');
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -56,12 +58,29 @@ export const setMain = async () => {
                   },
                 },
               ],
-              //   options: {
-              //     bottomTab: {
-              //       icon: searchIcon,
-              //     },
-              //     animations,
-              //   },
+              options: {
+                bottomTab: {
+                  icon: homeIcon,
+                },
+                animations,
+              },
+            },
+          },
+          {
+            stack: {
+              children: [
+                {
+                  component: {
+                    name: 'Home',
+                  },
+                },
+              ],
+              options: {
+                bottomTab: {
+                  icon: homeIcon,
+                },
+                animations,
+              },
             },
           },
         ],
@@ -71,6 +90,7 @@ export const setMain = async () => {
 };
 
 export const navStart = () => {
+  registerScreens();
   setGlobalData();
   Navigation.events().registerAppLaunchedListener(() => {
     Navigation.setRoot({
@@ -96,6 +116,7 @@ export const navStart = () => {
 export const setDefaultOptions = () => {
   Navigation.setDefaultOptions({
     statusBar: {
+      style: 'light',
       backgroundColor: constants.primary,
     },
     topBar: {
@@ -117,7 +138,7 @@ export const setDefaultOptions = () => {
       titleDisplayMode: 'alwaysHide',
     },
     bottomTab: {
-      selectedIconColor: darkTheme ? 'white' : '#03449e',
+      selectedIconColor: 'white',
       iconColor: 'grey',
       selectedFontSize: 24,
       fontSize: 24,

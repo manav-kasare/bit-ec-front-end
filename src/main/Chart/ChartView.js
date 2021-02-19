@@ -21,6 +21,7 @@ import {
   VictoryAxis,
   VictoryCandlestick,
 } from 'victory-native';
+import BuyModal from './BuyModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
 
 export default function ChartView({data, interval, setInterval, priceNow}) {
   const [zoom, setZoom] = React.useState(0.5);
+  const [buyModal, setBuyModal] = React.useState(false);
   const candles = data.slice(0, zoom * 50);
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
@@ -50,22 +52,32 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
   const domain = getDomain(candles);
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Header
-          interval={interval}
-          setInterval={setInterval}
+    <>
+      {buyModal ? (
+        <BuyModal
+          buyModal={buyModal}
+          setBuyModal={setBuyModal}
           priceNow={priceNow}
-          zoom={zoom}
-          setZoom={setZoom}
         />
-        <Animated.View style={{opacity}} pointerEvents="none">
-          <Values {...{candles, translateX, caliber}} />
-        </Animated.View>
-      </View>
-      <View>
-        <Chart {...{candles, domain}} />
-        {/* <VictoryChart
+      ) : (
+        <></>
+      )}
+      <View style={styles.container}>
+        <View>
+          <Header
+            interval={interval}
+            setInterval={setInterval}
+            priceNow={priceNow}
+            zoom={zoom}
+            setZoom={setZoom}
+          />
+          <Animated.View style={{opacity}} pointerEvents="none">
+            <Values {...{candles, translateX, caliber}} />
+          </Animated.View>
+        </View>
+        <View>
+          <Chart {...{candles, domain}} />
+          {/* <VictoryChart
           width={size}
           height={size}
           theme={VictoryTheme.grayscale}
@@ -84,29 +96,30 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
             data={candles}
           />
         </VictoryChart> */}
-        <PanGestureHandler minDist={0} {...gestureHandler}>
-          <Animated.View style={StyleSheet.absoluteFill}>
-            <Animated.View
-              style={{
-                transform: [{translateY}],
-                opacity,
-                ...StyleSheet.absoluteFillObject,
-              }}>
-              <Line x={size} y={0} />
+          <PanGestureHandler minDist={0} {...gestureHandler}>
+            <Animated.View style={StyleSheet.absoluteFill}>
+              <Animated.View
+                style={{
+                  transform: [{translateY}],
+                  opacity,
+                  ...StyleSheet.absoluteFillObject,
+                }}>
+                <Line x={size} y={0} />
+              </Animated.View>
+              <Animated.View
+                style={{
+                  transform: [{translateX}],
+                  opacity,
+                  ...StyleSheet.absoluteFillObject,
+                }}>
+                <Line x={0} y={size} />
+              </Animated.View>
+              <Label y={translateY} {...{size, domain, opacity}} />
             </Animated.View>
-            <Animated.View
-              style={{
-                transform: [{translateX}],
-                opacity,
-                ...StyleSheet.absoluteFillObject,
-              }}>
-              <Line x={0} y={size} />
-            </Animated.View>
-            <Label y={translateY} {...{size, domain, opacity}} />
-          </Animated.View>
-        </PanGestureHandler>
+          </PanGestureHandler>
+        </View>
+        <Content priceNow={priceNow} setBuyModal={setBuyModal} />
       </View>
-      <Content priceNow={priceNow} />
-    </View>
+    </>
   );
 }

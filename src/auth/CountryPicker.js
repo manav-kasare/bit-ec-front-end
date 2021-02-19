@@ -103,17 +103,6 @@ const styles = StyleSheet.create({
     width: constants.width,
     paddingVertical: 10,
   },
-  seperator: {
-    position: 'relative',
-    flex: 1,
-    left: 50,
-    height: 1,
-    opacity: 0.3,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-  },
-  listItem: {
-    alignItems: 'center',
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -132,21 +121,5 @@ const styles = StyleSheet.create({
   },
   searchBarInput: {
     color: 'black',
-  },
-  x: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backDrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.25)',
-  },
-  headingView: {
-    width: constants.width * 0.8,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   },
 });

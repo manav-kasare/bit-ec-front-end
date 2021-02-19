@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {UserContext} from '../../shared/context';
 
 const styles = StyleSheet.create({
@@ -85,15 +91,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const Button = ({color, backgroundColor, label}) => (
-  <View style={[styles.button, {backgroundColor}]}>
-    <Text style={[styles.label, {color}]}>{label}</Text>
-  </View>
+const Button = ({color, backgroundColor, label, onPress}) => (
+  <TouchableWithoutFeedback onPress={onPress}>
+    <View style={[styles.button, {backgroundColor}]}>
+      <Text style={[styles.label, {color}]}>{label}</Text>
+    </View>
+  </TouchableWithoutFeedback>
 );
 
-export default ({priceNow}) => {
+export default ({priceNow, setBuyModal}) => {
   const {user} = React.useContext(UserContext);
   const [type, setType] = React.useState('price');
+
+  const handleBuy = () => setBuyModal(true);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -129,7 +139,12 @@ export default ({priceNow}) => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Button label="Buy" backgroundColor={constants.accent} color="white" />
+        <Button
+          label="Buy"
+          backgroundColor={constants.accent}
+          color="white"
+          onPress={handleBuy}
+        />
         <Button label="Sell" backgroundColor="#E33F64" color="white" />
       </View>
     </SafeAreaView>

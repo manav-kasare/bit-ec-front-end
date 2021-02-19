@@ -32,15 +32,15 @@ export default function Home() {
       .then(handleHistories);
   }, [interval]);
 
-  // React.useEffect(() => {
-  //   const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
-  //   return () => clean();
-  // }, [interval]);
+  React.useEffect(() => {
+    const clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
+    return () => clean();
+  }, [interval]);
 
-  // React.useEffect(() => {
-  //   const clean = client.ws.depth('BTCUSDT', handleDepthData);
-  //   return () => clean();
-  // }, []);
+  React.useEffect(() => {
+    const clean = client.ws.depth('BTCUSDT', handleDepthData);
+    return () => clean();
+  }, []);
 
   const handleDepthData = (data) => {
     const price = parseFloat(data.bidDepth[0].price.slice(0, -6));
@@ -59,6 +59,10 @@ export default function Home() {
     };
     dispatch({type: 'append', element: modified});
     // setPriceNow(`$ ${data.open.slice(0, -6)}`);
+  };
+
+  const handleGetTicker = (data) => {
+    console.log('ticker data', data);
   };
 
   const handleHistories = (candles) => {

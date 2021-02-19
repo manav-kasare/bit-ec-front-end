@@ -147,6 +147,18 @@ const Zoom = ({zoom, setZoom}) => {
 const Pricenow = ({priceNow}) => <Text style={styles.title}>$ {priceNow}</Text>;
 
 export default ({interval, setInterval, priceNow, zoom, setZoom}) => {
+  const [priceChangePercent, setPriceChangePercent] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT`)
+      .then((response) => response.json())
+      .then(handleGetTicker);
+  }, []);
+
+  const handleGetTicker = (data) => {
+    setPriceChangePercent(data.priceChangePercent);
+  };
+
   return (
     <View style={StyleSheet.absoluteFill}>
       <SafeAreaView style={styles.container}>
@@ -157,7 +169,13 @@ export default ({interval, setInterval, priceNow, zoom, setZoom}) => {
             </View>
             <View style={styles.leftColumn}>
               <Pricenow priceNow={priceNow} />
-              <Text style={[styles.subtitle, {color: '#37b526'}]}>+5.11%</Text>
+              <Text
+                style={[
+                  styles.subtitle,
+                  {color: priceChangePercent >= 0 ? '#37b526' : '#E33F64'},
+                ]}>
+                {priceChangePercent} %
+              </Text>
             </View>
           </View>
           <View style={styles.tabs}>

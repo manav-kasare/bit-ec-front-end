@@ -99,11 +99,11 @@ const Button = ({color, backgroundColor, label, onPress}) => (
   </TouchableWithoutFeedback>
 );
 
-export default ({priceNow, setBuyModal}) => {
+export default ({priceNow, setBuyModal, setSellModal}) => {
   const {user} = React.useContext(UserContext);
-  const [type, setType] = React.useState('price');
 
   const handleBuy = () => setBuyModal(true);
+  const handleSell = () => setSellModal(true);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -145,7 +145,12 @@ export default ({priceNow, setBuyModal}) => {
           color="white"
           onPress={handleBuy}
         />
-        <Button label="Sell" backgroundColor="#E33F64" color="white" />
+        <Button
+          label="Sell"
+          backgroundColor="#E33F64"
+          color="white"
+          onPress={handleSell}
+        />
       </View>
     </SafeAreaView>
   );

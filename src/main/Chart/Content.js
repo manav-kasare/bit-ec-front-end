@@ -1,12 +1,12 @@
 import React from 'react';
 import {
+  SafeAreaView,
   StyleSheet,
   Text,
-  View,
-  SafeAreaView,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import {UserContext} from '../../shared/context';
+import {useGlobal} from 'reactn';
 
 const styles = StyleSheet.create({
   container: {
@@ -100,7 +100,7 @@ const Button = ({color, backgroundColor, label, onPress}) => (
 );
 
 export default ({priceNow, setBuyModal, setSellModal}) => {
-  const {user} = React.useContext(UserContext);
+  const [user] = useGlobal('user');
 
   const handleBuy = () => setBuyModal(true);
   const handleSell = () => setSellModal(true);

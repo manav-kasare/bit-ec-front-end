@@ -1,20 +1,20 @@
-import React from 'react';
 import auth from '@react-native-firebase/auth';
+import React from 'react';
 import {Keyboard, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import OtpInputs from 'react-native-otp-inputs';
+import {Button} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
+import {useGlobal} from 'reactn';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
-import {Button} from 'react-native-paper';
-import {TokenContext, UserContext} from '../shared/context';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [code, setCode] = React.useState('');
   const [_confirmation, setConfirmation] = React.useState(confirmation);
   const [isLoadingCode, setIsLoadingCode] = React.useState(false);
   const [isLoadingResendCode, setIsLoadingResendCode] = React.useState(false);
-  const {user, setUser} = React.useContext(UserContext);
-  const {token, setToken} = React.useContext(TokenContext);
+  const [user, setUser] = useGlobal('user');
+  const [token, setToken] = useGlobal('token');
 
   const showToast = (text1) => {
     Toast.show({

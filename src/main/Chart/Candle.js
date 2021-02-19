@@ -5,7 +5,7 @@ const MARGIN = 4;
 
 export default ({candle, index, width, scaleY, scaleBody}) => {
   const {close, open, high, low} = candle;
-  const fill = close > open ? '#4AFA9A' : '#E33F64';
+  const fill = close > open ? '#37b526' : '#E33F64';
   const x = index * width;
   const max = Math.max(open, close);
   const min = Math.min(open, close);

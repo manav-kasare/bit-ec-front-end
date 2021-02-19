@@ -25,15 +25,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
-    fontSize: 20,
-    fontWeight: '500',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#d3d3d3',
+    fontVariant: ['tabular-nums'],
+    fontSize: 30,
+    fontWeight: '700',
   },
   rightColumn: {
     flex: 1,
+    marginTop: -20,
   },
   leftColumn: {
     flex: 1,
@@ -117,7 +115,6 @@ const Zoom = ({zoom, setZoom}) => {
   };
 
   const handleMinus = () => {
-    console.log('zoom', zoom);
     if (zoom >= 0 && zoom <= 0.75) {
       setZoom(zoom + 0.25);
     }
@@ -147,7 +144,7 @@ const Zoom = ({zoom, setZoom}) => {
   );
 };
 
-const Pricenow = ({priceNow}) => <Text style={styles.title}>{priceNow}</Text>;
+const Pricenow = ({priceNow}) => <Text style={styles.title}>$ {priceNow}</Text>;
 
 export default ({interval, setInterval, priceNow, zoom, setZoom}) => {
   return (
@@ -157,11 +154,10 @@ export default ({interval, setInterval, priceNow, zoom, setZoom}) => {
           <View style={styles.header}>
             <View style={styles.rightColumn}>
               <Text style={styles.title}>BTC - USD</Text>
-              <Text style={styles.subtitle}>2.2k BTC 24hr vol</Text>
             </View>
             <View style={styles.leftColumn}>
               <Pricenow priceNow={priceNow} />
-              <Text style={[styles.subtitle, {color: '#4AFA9A'}]}>+5.11%</Text>
+              <Text style={[styles.subtitle, {color: '#37b526'}]}>+5.11%</Text>
             </View>
           </View>
           <View style={styles.tabs}>

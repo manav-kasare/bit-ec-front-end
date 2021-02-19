@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {UserContext} from '../../shared/context';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,20 +35,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 16,
     alignItems: 'center',
-    backgroundColor: '#222324',
-    borderRadius: 8,
+    justifyContent: 'space-between',
     padding: 16,
   },
   content: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    marginLeft: 25,
   },
-  noOrders: {
-    color: '#222324',
-    marginLeft: 4,
+  bitcoinsBought: {
+    color: 'white',
+    fontSize: 24,
+  },
+  bitcoinsBoughtRight: {
+    color: 'white',
     fontSize: 20,
+    marginLeft: 10,
+  },
+  bitcoinsBoughtView: {
     marginTop: 16,
+    flexDirection: 'row',
   },
   values: {
     flex: 1,
@@ -57,13 +63,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    margin: 4,
-    borderRadius: 8,
+    borderRadius: 5,
+    width: constants.width * 0.4,
+    height: constants.height * 0.05,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
     fontSize: 20,
+  },
+  profit: {
+    color: '#37b526',
+    fontSize: 20,
+  },
+  loss: {
+    color: '#E33F64',
+    fontSize: 20,
+  },
+  pl: {
+    marginTop: 5,
   },
 });
 
@@ -73,28 +91,45 @@ const Button = ({color, backgroundColor, label}) => (
   </View>
 );
 
-export default () => {
+export default ({priceNow}) => {
+  const {user} = React.useContext(UserContext);
+  const [type, setType] = React.useState('price');
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         <View style={styles.tabs}>
           <View style={styles.tabActive}>
-            <Text style={styles.tabLabelActive}>Orders</Text>
+            <Text style={styles.tabLabelActive}>Wallet</Text>
           </View>
-          <View style={styles.tab}>
+          {/* <View style={styles.tab}>
             <Text style={styles.tabLabel}>Trade History</Text>
-          </View>
+          </View> */}
         </View>
         <View style={styles.content}>
-          <Text style={styles.noOrders}>You have no orders</Text>
+          <View style={styles.bitcoinsBoughtView}>
+            <Text style={styles.bitcoinsBought}>
+              {user.bitcoinsBought} BTC,
+            </Text>
+            <Text style={styles.bitcoinsBoughtRight}>
+              $ {user.bitcoinsBought * priceNow}
+            </Text>
+          </View>
+          <View style={styles.pl}>
+            <Text
+              style={
+                user.lastPrice - priceNow > 0 ? styles.profit : styles.loss
+              }>
+              Proit/Loss: ${' '}
+              {(user.lastPrice - priceNow).toString().includes('.')
+                ? (user.lastPrice - priceNow).toString().slice(0, -11)
+                : (user.lastPrice - priceNow).toString() + '.00'}
+            </Text>
+          </View>
         </View>
       </View>
       <View style={styles.actions}>
-        <View style={styles.values}>
-          <Text style={styles.value}>0 BTC</Text>
-          <Text style={styles.value}>0.00 USD</Text>
-        </View>
-        <Button label="Buy" backgroundColor="#4AFA9A" color="#222324" />
+        <Button label="Buy" backgroundColor={constants.accent} color="white" />
         <Button label="Sell" backgroundColor="#E33F64" color="white" />
       </View>
     </SafeAreaView>

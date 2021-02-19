@@ -1,7 +1,7 @@
 import Binance from 'binance-api-react-native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import CoinbasePro from './Chart/CoinbasePro';
+import ChartView from './Chart/ChartView';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -43,7 +43,8 @@ export default function Home() {
   // }, []);
 
   const handleDepthData = (data) => {
-    setPriceNow(`$ ${data.bidDepth[0].price.slice(0, -6)}`);
+    const price = parseFloat(data.bidDepth[0].price.slice(0, -6));
+    setPriceNow(price);
   };
 
   const handleBinanceData = (data) => {
@@ -81,7 +82,7 @@ export default function Home() {
   };
 
   return done ? (
-    <CoinbasePro
+    <ChartView
       data={chartData}
       interval={interval}
       setInterval={setInterval}

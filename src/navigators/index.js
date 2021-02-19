@@ -40,7 +40,7 @@ export default function Navigator() {
 
   return (
     <NavigationContainer>
-      {token ? <MainNavigator /> : <AuthNavigator />}
+      {!token ? <MainNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }

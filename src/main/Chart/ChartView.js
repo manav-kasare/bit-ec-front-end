@@ -25,11 +25,11 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: constants.primary,
   },
 });
 
-export default function CoinbasePro({data, interval, setInterval, priceNow}) {
+export default function ChartView({data, interval, setInterval, priceNow}) {
   const [zoom, setZoom] = React.useState(0.5);
   const candles = data.slice(0, zoom * 50);
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
@@ -64,8 +64,8 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
         </Animated.View>
       </View>
       <View>
-        {/* <Chart {...{candles, domain}} /> */}
-        <VictoryChart
+        <Chart {...{candles, domain}} />
+        {/* <VictoryChart
           width={size}
           height={size}
           theme={VictoryTheme.grayscale}
@@ -74,7 +74,7 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
           <VictoryAxis tickFormat={(t) => `${t.getDay()}`} />
           <VictoryAxis dependentAxis />
           <VictoryCandlestick
-            candleColors={{positive: '#4AFA9A', negative: '#E33F64'}}
+            candleColors={{positive: '#37b526', negative: '#E33F64'}}
             animate={{
               duration: 1000,
               easing: 'elasticInOut',
@@ -83,7 +83,7 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
             candleWidth={(1 - zoom) * 10}
             data={candles}
           />
-        </VictoryChart>
+        </VictoryChart> */}
         <PanGestureHandler minDist={0} {...gestureHandler}>
           <Animated.View style={StyleSheet.absoluteFill}>
             <Animated.View
@@ -106,7 +106,7 @@ export default function CoinbasePro({data, interval, setInterval, priceNow}) {
           </Animated.View>
         </PanGestureHandler>
       </View>
-      <Content />
+      <Content priceNow={priceNow} />
     </View>
   );
 }

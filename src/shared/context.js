@@ -1,9 +1,14 @@
 import React from 'react';
 
-const UserContext = React.createContext(null);
+export const UserContext = React.createContext(null);
 
 export const UserContextProvider = ({children}) => {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState({
+    name: 'Manav Kasare',
+    bitcoinsBought: 100,
+    lastPrice: 50000,
+  });
+  // const [user, setUser] = React.useState(null);
   return (
     <UserContext.Provider value={{user, setUser}}>
       {children}
@@ -11,7 +16,7 @@ export const UserContextProvider = ({children}) => {
   );
 };
 
-const TokenContext = React.createContext(null);
+export const TokenContext = React.createContext(null);
 
 export const TokenContextProvider = ({children}) => {
   const [token, setToken] = React.useState(null);

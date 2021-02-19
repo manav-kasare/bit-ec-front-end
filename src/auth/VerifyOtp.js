@@ -6,14 +6,15 @@ import Toast from 'react-native-toast-message';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
 import {Button} from 'react-native-paper';
+import {TokenContext, UserContext} from '../shared/context';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [code, setCode] = React.useState('');
   const [_confirmation, setConfirmation] = React.useState(confirmation);
   const [isLoadingCode, setIsLoadingCode] = React.useState(false);
   const [isLoadingResendCode, setIsLoadingResendCode] = React.useState(false);
-  const user = React.useContext('UserContext');
-  const token = React.useContext('TokenContext');
+  const {user, setUser} = React.useContext(UserContext);
+  const {token, setToken} = React.useContext(TokenContext);
 
   const showToast = (text1) => {
     Toast.show({
@@ -144,7 +145,7 @@ const styles = StyleSheet.create({
   },
   singleView: {
     width: constants.width * 0.1,
-    fontSize: 25,
+    fontSize: 35,
   },
   headingView: {
     marginBottom: constants.height * 0.025,

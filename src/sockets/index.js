@@ -20,6 +20,16 @@ class WebSocket {
     const response = await this.socket.request('getUserByPhone', data);
     return response;
   };
+
+  buy = async (data) => {
+    const response = await this.socket.request('buy', data);
+    return response;
+  };
+
+  sell = async (data) => {
+    const response = await this.socket.request('sell', data);
+    return response;
+  };
 }
 
 export const webSocket = new WebSocket();

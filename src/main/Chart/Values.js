@@ -76,7 +76,7 @@ export default ({translateX, caliber, candles}) => {
           <Row
             label="Change"
             value={`${change}%`}
-            color={close - open > 0 ? '#4AFA9A' : '#E33F64'}
+            color={close - open > 0 ? '#37b526' : '#E33F64'}
           />
         </View>
       </View>

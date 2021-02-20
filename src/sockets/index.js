@@ -69,6 +69,16 @@ class WebSocket {
     const response = await this.socket.request('getPendingTransactions');
     return response;
   };
+
+  approve = async (id) => {
+    const response = await this.socket.request('approve', id);
+    return response;
+  };
+
+  decline = async (id) => {
+    const response = await this.socket.request('decline', id);
+    return response;
+  };
 }
 
 export const webSocket = new WebSocket();

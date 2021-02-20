@@ -1,14 +1,39 @@
 import React from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  RefreshControl,
+} from 'react-native';
 import {List} from 'react-native-paper';
 import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
 import {webSocket} from '../../sockets';
 
 export default function Transaction({componentId}) {
-  const [user] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
+
+  const onRefresh = async () => {
+    const response = await webSocket.getUserById(user._id);
+    if (!response.err) setUser(response.user);
+    setRefreshing(false);
+  };
+
+  const refreshControl = (
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      style={{backgroundColor: constants.primary}}
+      tintColor="white"
+      size={Platform.os === 'ios' ? 'small' : 'default'}
+    />
+  );
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -21,6 +46,7 @@ export default function Transaction({componentId}) {
           renderItem={renderItem}
           key={(item, index) => index.toString()}
           ItemSeparatorComponent={ItemSeparatorComponent}
+          refreshControl={refreshControl}
         />
       </View>
     </SafeAreaView>
@@ -34,7 +60,7 @@ const Tile = ({id, componentId}) => {
     numberOfBitcoins: 0,
     atPrice: 0,
     type: '',
-    pending: true,
+    status: '',
     messages: [],
   });
 
@@ -53,14 +79,23 @@ const Tile = ({id, componentId}) => {
     push(componentId, 'Chat', {
       transactionId: id,
       prevMessages: transaction.messages,
+      setTransaction: setTransaction,
     });
   };
 
   const right = () => (
     <View
       style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
-      <Text style={{color: !transaction.pending ? '#37b526' : '#E33F64'}}>
-        {transaction.pending ? 'PENDING' : 'APPROVED'}
+      <Text
+        style={{
+          color:
+            transaction.status === 'approved'
+              ? '#37b526'
+              : transaction.status === 'pending'
+              ? 'yellow'
+              : '#E33F64',
+        }}>
+        {transaction.status && transaction.status.toUpperCase()}
       </Text>
     </View>
   );

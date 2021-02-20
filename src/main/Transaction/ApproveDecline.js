@@ -1,20 +1,40 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import {Navigation} from 'react-native-navigation';
 import {List} from 'react-native-paper';
+import {webSocket} from '../../sockets';
 
-export default function ApproveDecline() {
+export default function ApproveDecline({
+  transactionId,
+  componentId,
+  setTransaction,
+}) {
+  const handleApprove = async () => {
+    const transaction = await webSocket.approve(transactionId);
+    setTransaction(transaction);
+    Navigation.dismissOverlay(componentId);
+  };
+
+  const handleDecline = async () => {
+    const transaction = await webSocket.decline(transactionId);
+    setTransaction(transaction);
+    Navigation.dismissOverlay(componentId);
+  };
+
   return (
     <View style={styles.modal}>
       <List.Item
         style={styles.tile}
         title="Approve"
         titleStyle={styles.titleStyle}
+        onPress={handleApprove}
       />
       <View style={styles.seperator} />
       <List.Item
         style={styles.tile}
         title="Decline"
         titleStyle={[styles.titleStyle, {color: 'crimson'}]}
+        onPress={handleDecline}
       />
     </View>
   );

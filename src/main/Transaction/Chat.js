@@ -13,7 +13,12 @@ import {webSocket} from '../../sockets';
 import {showOverlay} from '../../navigation/functions';
 import ApproveDecline from './ApproveDecline';
 
-export default function Chat({transactionId, prevMessages, componentId}) {
+export default function Chat({
+  transactionId,
+  prevMessages,
+  componentId,
+  setTransaction,
+}) {
   const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
   const adminId = '6030f1846953581aff77df42';
@@ -53,7 +58,12 @@ export default function Chat({transactionId, prevMessages, componentId}) {
 
   const handleMore = () => {
     showOverlay('CustomModal', {
-      children: () => <ApproveDecline />,
+      children: () => (
+        <ApproveDecline
+          transactionId={transactionId}
+          setTransaction={setTransaction}
+        />
+      ),
       height: constants.height * 0.25,
     });
   };

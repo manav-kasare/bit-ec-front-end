@@ -8,3 +8,12 @@ export const push = (componentId, name, passProps) => {
     },
   });
 };
+
+export const showOverlay = (name, passProps) => {
+  Navigation.showOverlay({
+    component: {
+      name,
+      passProps,
+    },
+  });
+};

@@ -5,7 +5,7 @@ export const storeUser = async (user) => {
 };
 
 export const getUser = async () => {
-  const user = AsyncStorage.getItem('user');
+  const user = await AsyncStorage.getItem('user');
   return JSON.parse(user);
 };
 
@@ -23,6 +23,7 @@ export const storeMessages = async (messages) => {
 };
 
 export const getMessages = async () => {
-  const messages = AsyncStorage.getItem('messages');
-  return JSON.parse(messages).messages;
+  const messages = await AsyncStorage.getItem('messages');
+  if (message) return JSON.parse(messages).messages;
+  else return null;
 };

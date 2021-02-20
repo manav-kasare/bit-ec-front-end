@@ -1,82 +1,94 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Button, Modal, Portal, TextInput} from 'react-native-paper';
+import {Navigation} from 'react-native-navigation';
+import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
+import {useGlobal} from 'reactn';
+import {storeUser} from '../../shared/asyncStorage';
+import {webSocket} from '../../sockets';
 
-export default function SellModal({sellModal, setSellModal, priceNow}) {
+export default function SellModal({priceNow}) {
   const [value, setValue] = React.useState('0');
   const [isLoading, setIsLoading] = React.useState(false);
-
-  const onDismiss = () => setSellModal(false);
+  const [overlayId] = useGlobal('overlayId');
+  const [user, setUser] = useGlobal('user');
+  const onDismiss = () => {
+    Navigation.dismissOverlay(overlayId);
+  };
   const onChangeValue = (text) => setValue(text);
 
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    const response = await webSocket.sell({
+      userId: user._id,
+      numberOfBitcoins: value / priceNow,
+      atPrice: priceNow,
+    });
+    setUser(response.user);
+    setIsLoading(false);
+    storeUser(response.user);
+  };
 
   return (
-    <Portal>
-      <Modal
-        visible={sellModal}
-        onDismiss={onDismiss}
-        contentContainerStyle={styles.modal}>
-        <TouchableOpacity onPress={onDismiss} style={styles.x}>
-          <Feather name="x" size={25} color="white" />
-        </TouchableOpacity>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Sell</Text>
+    <View style={styles.modal}>
+      <TouchableOpacity onPress={onDismiss} style={styles.x}>
+        <Feather name="x" size={25} color="white" />
+      </TouchableOpacity>
+      <View style={styles.headingContainer}>
+        <Text style={styles.heading}>Sell</Text>
+      </View>
+      <View style={styles.content}>
+        <View style={styles.textInput}>
+          <Text style={styles.dollar}>$</Text>
+          <TextInput
+            autoFocus={true}
+            theme={{
+              colors: {
+                primary: 'transparent',
+                text: 'white',
+                background: 'transparent',
+              },
+            }}
+            selectionColor="white"
+            underlineColorAndroid="transparent"
+            underlineColor="transparent"
+            keyboardType="number-pad"
+            mode="flat"
+            placeholder="0"
+            value={value}
+            style={styles.textInputMain}
+            onChangeText={onChangeValue}
+            placeholderTextColor="grey"
+          />
         </View>
-        <View style={styles.content}>
-          <View style={styles.textInput}>
-            <Text style={styles.dollar}>$</Text>
-            <TextInput
-              autoFocus={true}
-              theme={{
-                colors: {
-                  primary: 'transparent',
-                  text: 'white',
-                  background: 'transparent',
-                },
-              }}
-              selectionColor="white"
-              underlineColorAndroid="transparent"
-              underlineColor="transparent"
-              keyboardType="number-pad"
-              mode="flat"
-              placeholder="0"
-              value={value}
-              style={styles.textInputMain}
-              onChangeText={onChangeValue}
-              placeholderTextColor="grey"
-            />
-          </View>
+      </View>
+      <View style={styles.extras}>
+        <View style={styles.tile}>
+          <Text style={styles.tileText}>Price</Text>
+          <Text style={styles.tileText}>$ {priceNow}</Text>
         </View>
-        <View style={styles.extras}>
-          <View style={styles.tile}>
-            <Text style={styles.tileText}>Price</Text>
-            <Text style={styles.tileText}>$ {priceNow}</Text>
-          </View>
-          <View style={styles.tile}>
-            <Text style={styles.tileText}>Amount</Text>
-            <Text style={styles.tileText}>
-              {(parseFloat(value) / priceNow).toString().slice(0, -10)} BTC
-            </Text>
-          </View>
-          <View style={styles.tile}>
-            <Text style={styles.tileText}>Fee</Text>
-            <Text style={styles.tileText}>0.0003 BTC</Text>
-          </View>
+        <View style={styles.tile}>
+          <Text style={styles.tileText}>Amount</Text>
+          <Text style={styles.tileText}>
+            {(parseFloat(value) / priceNow).toString().slice(0, -10)} BTC
+          </Text>
         </View>
-        <Button
-          loading={isLoading}
-          disabled={isLoading}
-          labelStyle={{textTransform: 'none', color: 'white'}}
-          mode="outlined"
-          style={styles.button}
-          contentStyle={styles.buttonContentStyle}
-          onPress={handleSubmit}>
-          Sell
-        </Button>
-      </Modal>
-    </Portal>
+        <View style={styles.tile}>
+          <Text style={styles.tileText}>Fee</Text>
+          <Text style={styles.tileText}>0.0003 BTC</Text>
+        </View>
+      </View>
+      <Button
+        loading={isLoading}
+        disabled={isLoading}
+        labelStyle={{textTransform: 'none', color: 'white'}}
+        mode="outlined"
+        style={styles.button}
+        contentStyle={styles.buttonContentStyle}
+        onPress={handleSubmit}>
+        Sell
+      </Button>
+    </View>
   );
 }
 
@@ -95,7 +107,7 @@ const styles = StyleSheet.create({
   x: {
     position: 'absolute',
     right: 25,
-    top: constants.height * 0.075,
+    top: constants.height * 0.025,
   },
   headingContainer: {
     marginTop: constants.height * 0.1,

@@ -139,3 +139,15 @@ const styles = StyleSheet.create({
     height: constants.height * 0.06,
   },
 });
+
+Login.options = {
+  topBar: {
+    title: {
+      text: '',
+    },
+    borderColor: 'transparent',
+    backButton: {
+      showTitle: false,
+    },
+  },
+};

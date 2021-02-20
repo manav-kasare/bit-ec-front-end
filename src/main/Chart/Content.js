@@ -7,6 +7,9 @@ import {
   View,
 } from 'react-native';
 import {useGlobal} from 'reactn';
+import {showOverlay} from '../../navigation/functions';
+import BuyModal from './BuyModal';
+import SellModal from './SellModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -99,11 +102,22 @@ const Button = ({color, backgroundColor, label, onPress}) => (
   </TouchableWithoutFeedback>
 );
 
-export default ({priceNow, setBuyModal, setSellModal}) => {
+export default ({priceNow}) => {
   const [user] = useGlobal('user');
 
-  const handleBuy = () => setBuyModal(true);
-  const handleSell = () => setSellModal(true);
+  const handleBuy = () => {
+    showOverlay('CustomModal', {
+      children: () => <BuyModal priceNow={priceNow} />,
+      height: constants.height,
+    });
+  };
+
+  const handleSell = () => {
+    showOverlay('CustomModal', {
+      children: () => <SellModal priceNow={priceNow} />,
+      height: constants.height,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>

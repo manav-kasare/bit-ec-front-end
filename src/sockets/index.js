@@ -11,7 +11,7 @@ class WebSocket {
     this.socket = socketIO(`http://192.168.0.100:9090/`, {
       transports: ['websocket'],
       reconnect: true,
-      jsonp: false,
+      jsonp: true,
     });
 
     this.socket.request = socketPromise(this.socket);
@@ -26,8 +26,23 @@ class WebSocket {
     return response;
   };
 
+  updateUser = async (token, data) => {
+    const response = await this.socket.request('updateUse,', {token, data});
+    return response;
+  };
+
   getUserByPhone = async (data) => {
     const response = await this.socket.request('getUserByPhone', data);
+    return response;
+  };
+
+  getUserByToken = async (token) => {
+    const response = await this.socket.request('getUserByToken', token);
+    return response;
+  };
+
+  getUserById = async (id) => {
+    const response = await this.socket.request('getUserById', id);
     return response;
   };
 
@@ -43,6 +58,11 @@ class WebSocket {
 
   sendMessageToAdmin = (data) => {
     this.socket.emit('sendMessageToAdmin', data);
+  };
+
+  getTransaction = async (id) => {
+    const response = await this.socket.request('getTransaction', id);
+    return response;
   };
 }
 

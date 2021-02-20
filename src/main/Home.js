@@ -1,4 +1,5 @@
 import Binance from 'binance-api-react-native';
+const client = Binance();
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useGlobal} from 'reactn';

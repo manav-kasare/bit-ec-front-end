@@ -44,7 +44,7 @@ export const setRoot = () => {
 
 export const setMain = async (phoneNumber) => {
   const homeIcon = require('../assets/icons/home/home.png');
-  const helpIcon = require('../assets/icons/help/help.png');
+  const transactionIcon = require('../assets/icons/transactions/transaction.png');
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -72,13 +72,14 @@ export const setMain = async (phoneNumber) => {
               children: [
                 {
                   component: {
-                    name: phoneNumber === '+593983873813' ? 'Admin' : 'Help',
+                    name:
+                      phoneNumber === '+593983873813' ? 'Admin' : 'Transaction',
                   },
                 },
               ],
               options: {
                 bottomTab: {
-                  icon: helpIcon,
+                  icon: transactionIcon,
                 },
                 animations,
               },

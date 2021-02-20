@@ -21,8 +21,6 @@ import {
   VictoryAxis,
   VictoryCandlestick,
 } from 'victory-native';
-import BuyModal from './BuyModal';
-import SellModal from './SellModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,8 +31,6 @@ const styles = StyleSheet.create({
 
 export default function ChartView({data, interval, setInterval, priceNow}) {
   const [zoom, setZoom] = React.useState(0.5);
-  const [buyModal, setBuyModal] = React.useState(false);
-  const [sellModal, setSellModal] = React.useState(false);
   const candles = data.slice(-(zoom * 50));
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
@@ -55,24 +51,6 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
 
   return (
     <>
-      {buyModal ? (
-        <BuyModal
-          buyModal={buyModal}
-          setBuyModal={setBuyModal}
-          priceNow={priceNow}
-        />
-      ) : (
-        <></>
-      )}
-      {sellModal ? (
-        <SellModal
-          sellModal={sellModal}
-          setSellModal={setSellModal}
-          priceNow={priceNow}
-        />
-      ) : (
-        <></>
-      )}
       <View style={styles.container}>
         <View>
           <Header
@@ -129,11 +107,7 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
             </Animated.View>
           </PanGestureHandler>
         </View>
-        <Content
-          priceNow={priceNow}
-          setBuyModal={setBuyModal}
-          setSellModal={setSellModal}
-        />
+        <Content priceNow={priceNow} />
       </View>
     </>
   );

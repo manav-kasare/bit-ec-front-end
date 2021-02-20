@@ -120,7 +120,11 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
           disabled={isLoadingCode}
           labelStyle={{textTransform: 'none', color: 'white'}}
           mode="outlined"
-          style={styles.button}
+          style={{
+            borderRadius: 10,
+            marginVertical: 10,
+            backgroundColor: constants.accent,
+          }}
           contentStyle={styles.buttonContentStyle}
           onPress={checkAndHandle}>
           Submit
@@ -182,3 +186,15 @@ const styles = StyleSheet.create({
     height: constants.height * 0.06,
   },
 });
+
+VerifyOtp.options = {
+  topBar: {
+    title: {
+      text: '',
+    },
+    borderColor: 'transparent',
+    backButton: {
+      showTitle: false,
+    },
+  },
+};

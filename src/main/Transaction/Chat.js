@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {RNS3} from 'react-native-aws3';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {TextInput} from 'react-native-paper';
@@ -13,20 +14,19 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
 import {getMessages, storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
-import {RNS3} from 'react-native-aws3';
 
-export default function Admin() {
+export default function Chat() {
   const [messages, setMessages] = React.useState([]);
-  const [user] = useGlobal('user');
   const [message, setMessage] = React.useState('');
-  const adminId = '';
+  const adminId = '6030f1846953581aff77df42';
+  const [user] = useGlobal('user');
 
   React.useEffect(() => {
     handleGetMessages();
   }, []);
 
   React.useEffect(() => {
-    const unsubscribe = webSocket.socket.on('getMessageFromUser', (data) => {
+    const unsubscribe = webSocket.socket.on('getMessageFromAdmin', (data) => {
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, data),
       );
@@ -81,7 +81,7 @@ export default function Admin() {
   };
 
   const handleSendMessage = (_message) => {
-    webSocket.sendMessage(_message);
+    webSocket.sendMessageToAdmin(_message);
   };
 
   const handleImage = () => {
@@ -161,25 +161,24 @@ export default function Admin() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.headingView}>
-        <Text style={styles.heading}>Chats</Text>
+      <View style={{flex: 1, marginBottom: constants.height * 0.05}}>
+        <GiftedChat
+          messages={messages}
+          user={{
+            _id: user._id,
+            name: user.name,
+          }}
+          renderInputToolbar={renderInputToolbar}
+        />
       </View>
-      <View style={styles.content}></View>
     </SafeAreaView>
   );
 }
 
-const theme = {
-  colors: {
-    primary: 'transparent',
-    text: 'white',
-    background: 'transparent',
-  },
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+
     backgroundColor: constants.primary,
   },
   textInput: {
@@ -211,6 +210,7 @@ const styles = StyleSheet.create({
   headingView: {
     width: constants.width,
     paddingLeft: 25,
+    marginBottom: constants.height * 0.05,
   },
   heading: {
     fontSize: 30,
@@ -222,3 +222,23 @@ const styles = StyleSheet.create({
     paddingBottom: constants.height * 0.05,
   },
 });
+
+const theme = {
+  colors: {
+    primary: 'transparent',
+    text: 'white',
+    background: 'transparent',
+  },
+};
+
+Chat.options = {
+  topBar: {
+    title: {
+      text: 'Chat',
+    },
+    borderColor: 'transparent',
+    backButton: {
+      showTitle: false,
+    },
+  },
+};

@@ -34,16 +34,28 @@ function registerScreens() {
           () => require('../auth/VerifyOtp').default,
         );
         break;
-      case 'Help':
+      case 'Transaction':
         Navigation.registerComponent(
-          'Help',
-          () => require('../main/Help/Help').default,
+          'Transaction',
+          () => require('../main/Transaction/Transaction').default,
+        );
+        break;
+      case 'Chat':
+        Navigation.registerComponent(
+          'Chat',
+          () => require('../main/Transaction/Chat').default,
         );
         break;
       case 'Admin':
         Navigation.registerComponent(
           'Admin',
-          () => require('../main/Help/Admin').default,
+          () => require('../main/Transaction/Admin').default,
+        );
+        break;
+      case 'CustomModal':
+        Navigation.registerComponent(
+          'CustomModal',
+          () => require('../shared/CustomModal').default,
         );
         break;
     }

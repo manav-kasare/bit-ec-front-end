@@ -2,12 +2,15 @@ import {setGlobal} from 'reactn';
 
 export const setGlobalData = () => {
   const user = {
-    name: 'Manav Kasare',
-    bitcoinsBought: 100,
-    lastPrice: 50000,
+    _id: '',
+    name: '',
+    bitcoinsBought: 0,
+    lastPrice: 0,
+    transactions: [],
   };
   setGlobal({
     user: user,
     token: null,
+    overlayId: null,
   });
 };

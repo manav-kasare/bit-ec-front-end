@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   tabContainer: {
-    backgroundColor: '#222324',
+    backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 8,
     flexDirection: 'row',
   },

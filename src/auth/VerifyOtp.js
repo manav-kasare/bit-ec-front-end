@@ -8,6 +8,7 @@ import {useGlobal} from 'reactn';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
 import {setMain} from '../navigation/navStart';
+import messaging from '@react-native-firebase/messaging';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [code, setCode] = React.useState('');
@@ -55,7 +56,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   };
 
   const handleCreateUser = async () => {
+    const fcmToken = await messaging().getToken();
     const response = await webSocket.createUser({
+      notificationId: fcmToken,
       name,
       phoneNumber,
     });

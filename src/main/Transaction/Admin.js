@@ -1,180 +1,95 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {TextInput} from 'react-native-paper';
-import Feather from 'react-native-vector-icons/Feather';
+import {FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {List} from 'react-native-paper';
 import {useGlobal} from 'reactn';
-import {getMessages, storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
-import {RNS3} from 'react-native-aws3';
+import {push} from '../../navigation/functions';
 
-export default function Admin() {
-  const [messages, setMessages] = React.useState([]);
+export default function Admin({componentId}) {
   const [user] = useGlobal('user');
-  const [message, setMessage] = React.useState('');
-  const adminId = '';
+  const [transactions, setTransactions] = React.useState([]);
 
   React.useEffect(() => {
-    handleGetMessages();
+    handleGetTransactions();
   }, []);
 
-  React.useEffect(() => {
-    const unsubscribe = webSocket.socket.on('getMessage', (data) => {
-      setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, data),
-      );
-      storeMessages(messages);
-    });
-    return () => unsubscribe;
-  }, []);
-
-  const handleGetMessages = async () => {
-    const asyncMessages = await getMessages();
-    setMessage(asyncMessages ? asyncMessages : []);
+  const handleGetTransactions = async () => {
+    const response = await webSocket.getPendingTransactions();
+    if (!response.err) setTransactions(response.transactions);
   };
 
-  const handleSend = (image) => {
-    const _message = {
-      _id: adminId,
-      text: message,
-      createdAt: new Date(),
-      user: {
-        _id: user._id,
-        name: user.name,
-      },
-      image,
-    };
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, _message),
-    );
-    setMessage('');
-    if (!image) {
-      handleSendMessage(_message);
-    }
-    storeMessages(messages);
-  };
-
-  const handleSendImage = (image) => {
-    const _message = {
-      _id: adminId,
-      text: message,
-      createdAt: new Date(),
-      user: {
-        _id: user._id,
-        name: user.name,
-      },
-      image,
-    };
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, _message),
-    );
-    setMessage('');
-    handleSendMessage(_message);
-    storeMessages(messages);
-  };
-
-  const handleSendMessage = (_message) => {
-    webSocket.sendMessage(_message);
-  };
-
-  const handleImage = () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: false,
-    };
-    launchImageLibrary(options, (response) => {
-      if (response.didCancel) {
-      } else if (response.error) {
-      } else {
-        imgObject = response;
-        handleSend(imgObject.uri);
-        handleUploadImage(response);
-      }
-    });
-  };
-
-  const handleUploadImage = async (imgObject) => {
-    const {accessKey, secretKey} = await webSocket.socket.request('getAwsKeys');
-    const config = {
-      keyPrefix: user._id,
-      bucket: 'bitec-images',
-      region: 'us-east-1',
-      accessKey: accessKey,
-      secretKey: secretKey,
-      successActionStatus: 201,
-    };
-
-    RNS3.put(
-      {
-        uri: imgObject.uri,
-        name: imgObject.fileName,
-        type: imgObject.type.substring(6),
-      },
-      config,
-    ).then(async (response) => {
-      if (response.status === 201) {
-        handleSendImage(response.body.postResponse.location);
-      }
-    });
-  };
-
-  const onChangeText = (text) => setMessage(text);
-
-  const renderInputToolbar = () => (
-    <View style={styles.textInput}>
-      <TextInput
-        theme={theme}
-        selectionColor="white"
-        underlineColorAndroid="transparent"
-        underlineColor="transparent"
-        mode="flat"
-        placeholder="Type here"
-        value={message}
-        style={styles.textInputMain}
-        onChangeText={onChangeText}
-        placeholderTextColor="grey"
-      />
-      <TouchableOpacity onPress={handleImage}>
-        <Feather
-          name="image"
-          size={20}
-          color="white"
-          style={{marginHorizontal: 8}}
-        />
-      </TouchableOpacity>
-      {message !== '' ? (
-        <TouchableOpacity onPress={handleSend} style={{marginRight: 5}}>
-          <Feather name="send" size={20} color="white" />
-        </TouchableOpacity>
-      ) : (
-        <></>
-      )}
-    </View>
-  );
+  const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
 
   return (
     <SafeAreaView style={styles.screen}>
       <View style={styles.headingView}>
-        <Text style={styles.heading}>Chats</Text>
+        <Text style={styles.heading}>Pending</Text>
       </View>
-      <View style={styles.content}></View>
+      <View style={styles.content}>
+        <FlatList
+          data={transactions}
+          renderItem={renderItem}
+          key={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
-const theme = {
-  colors: {
-    primary: 'transparent',
-    text: 'white',
-    background: 'transparent',
-  },
+const ItemSeparatorComponent = () => <View style={styles.seperator} />;
+
+const Tile = ({id, componentId}) => {
+  const [transaction, setTransaction] = React.useState({
+    numberOfBitcoins: 0,
+    atPrice: 0,
+    type: '',
+    pending: true,
+    messages: [],
+  });
+  React.useEffect(() => {
+    handleGetTransaction();
+  }, []);
+
+  const handleGetTransaction = async () => {
+    const response = await webSocket.getTransaction(id);
+    if (!response.err) setTransaction(response.transaction);
+  };
+
+  const title = `${transaction.numberOfBitcoins} BTC at $ ${transaction.atPrice}`;
+
+  const onPress = () => {
+    push(componentId, 'Chat', {
+      transactionId: id,
+      prevMessages: transaction.messages,
+    });
+  };
+
+  const right = () => (
+    <View
+      style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
+      <Text style={{color: !transaction.pending ? '#37b526' : '#E33F64'}}>
+        {transaction.pending ? 'PENDING' : 'APPROVED'}
+      </Text>
+    </View>
+  );
+
+  return (
+    <>
+      <List.Item
+        title={title}
+        titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
+        description={transaction.type.toUpperCase()}
+        descriptionStyle={{
+          color: transaction.type === 'buy' ? '#37b526' : '#E33F64',
+        }}
+        onPress={onPress}
+        style={styles.tile}
+        right={right}
+      />
+      <ItemSeparatorComponent />
+    </>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -182,31 +97,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: constants.primary,
   },
-  textInput: {
-    width: constants.width * 0.9,
-    alignSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: constants.height * 0.06,
-    marginTop: 15,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 0,
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-  },
-  textInputMain: {
-    //   width: constants.width * 0.8,
-    flex: 1,
-    height: constants.height * 0.06,
-    margin: 0,
-    borderWidth: 0,
-    borderColor: 'transparent',
-  },
-  sendButton: {
-    color: constants.accent,
-    fontSize: 20,
-    fontWeight: '600',
+  seperator: {
+    height: 0.3,
+    width: constants.width * 0.95,
+    position: 'relative',
+    left: constants.width * 0.05,
+    backgroundColor: 'grey',
   },
   headingView: {
     width: constants.width,
@@ -220,5 +116,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingBottom: constants.height * 0.05,
+  },
+  tile: {
+    height: constants.height * 0.1,
+    width: constants.width,
+    alignItems: 'center',
   },
 });

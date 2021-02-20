@@ -12,5 +12,6 @@ export const setGlobalData = () => {
     user: user,
     token: null,
     overlayId: null,
+    isAdmin: false,
   });
 };

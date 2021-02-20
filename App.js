@@ -7,6 +7,7 @@ import {webSocket} from './src/sockets';
 export default function App() {
   const setToken = useGlobal('token')[1];
   const setUser = useGlobal('user')[1];
+  const setIsAdmin = useGlobal('isAdmin')[1];
 
   React.useEffect(() => {
     webSocket.init();
@@ -19,13 +20,13 @@ export default function App() {
     if (asyncToken) {
       const user = await getUser();
       setMain(user.phoneNumber);
+      setUser(user);
+      if (user.phoneNumber === '+593983873813') setIsAdmin(true);
       if (user) {
         const response = await webSocket.getUserByToken(asyncToken);
-        console.log('user', response.user._id);
         if (!response.err) {
+          if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
           setUser(response.user);
-        } else {
-          setUser(user);
         }
       }
     } else {

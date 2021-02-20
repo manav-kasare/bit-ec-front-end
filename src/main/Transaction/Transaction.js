@@ -35,7 +35,9 @@ const Tile = ({id, componentId}) => {
     atPrice: 0,
     type: '',
     pending: true,
+    messages: [],
   });
+
   React.useEffect(() => {
     handleGetTransaction();
   }, []);
@@ -48,7 +50,10 @@ const Tile = ({id, componentId}) => {
   const title = `${transaction.numberOfBitcoins} BTC at $ ${transaction.atPrice}`;
 
   const onPress = () => {
-    push(componentId, 'Chat');
+    push(componentId, 'Chat', {
+      transactionId: id,
+      prevMessages: transaction.messages,
+    });
   };
 
   const right = () => (
@@ -93,7 +98,7 @@ const styles = StyleSheet.create({
   headingView: {
     width: constants.width,
     paddingLeft: 25,
-    marginBottom: constants.height * 0.05,
+    marginBottom: 20,
   },
   heading: {
     fontSize: 30,

@@ -19,7 +19,7 @@ const reducer = (state, action) => {
   }
 };
 
-export default function Home() {
+export default function Home({componentId}) {
   const [user] = useGlobal('user');
   const [{chartData}, dispatch] = React.useReducer(reducer, {chartData: []});
   const [interval, setInterval] = React.useState('1m');
@@ -93,6 +93,7 @@ export default function Home() {
 
   return done ? (
     <ChartView
+      componentId={componentId}
       data={chartData}
       interval={interval}
       setInterval={setInterval}

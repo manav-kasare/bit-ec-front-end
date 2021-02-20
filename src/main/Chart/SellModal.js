@@ -4,14 +4,16 @@ import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
+import {push} from '../../navigation/functions';
 import {storeUser} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 
-export default function SellModal({priceNow}) {
-  const [value, setValue] = React.useState('0');
+export default function SellModal({componentId, priceNow}) {
+  const [value, setValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [overlayId] = useGlobal('overlayId');
   const [user, setUser] = useGlobal('user');
+
   const onDismiss = () => {
     Navigation.dismissOverlay(overlayId);
   };
@@ -26,6 +28,11 @@ export default function SellModal({priceNow}) {
     });
     setUser(response.user);
     setIsLoading(false);
+    Navigation.dismissOverlay(overlayId);
+    push(componentId, 'Chat', {
+      transactionId: response.transactionId,
+      prevMessages: [],
+    });
     storeUser(response.user);
   };
 

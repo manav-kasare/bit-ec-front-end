@@ -107,14 +107,18 @@ export default ({priceNow}) => {
 
   const handleBuy = () => {
     showOverlay('CustomModal', {
-      children: () => <BuyModal priceNow={priceNow} />,
+      children: () => (
+        <BuyModal priceNow={priceNow} componentId={componentId} />
+      ),
       height: constants.height,
     });
   };
 
   const handleSell = () => {
     showOverlay('CustomModal', {
-      children: () => <SellModal priceNow={priceNow} />,
+      children: () => (
+        <SellModal priceNow={priceNow} componentId={componentId} />
+      ),
       height: constants.height,
     });
   };

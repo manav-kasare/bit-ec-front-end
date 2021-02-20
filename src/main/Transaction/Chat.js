@@ -1,29 +1,62 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RNS3} from 'react-native-aws3';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {Navigation} from 'react-native-navigation';
 import {TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
-import {getMessages, storeMessages} from '../../shared/asyncStorage';
+import {fcmService} from '../../notifications/FCMService';
+import {storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
+import {showOverlay} from '../../navigation/functions';
+import ApproveDecline from './ApproveDecline';
 
-export default function Chat() {
-  const [messages, setMessages] = React.useState([]);
+export default function Chat({transactionId, prevMessages, componentId}) {
+  const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
   const adminId = '6030f1846953581aff77df42';
   const [user] = useGlobal('user');
+  const [isAdmin] = useGlobal('isAdmin');
 
   React.useEffect(() => {
-    handleGetMessages();
+    if (!isAdmin) {
+      Navigation.mergeOptions(componentId, {
+        topBar: {
+          title: {
+            text: 'Chat',
+            fontSize: 25,
+            fontWeight: '700',
+          },
+          borderColor: 'transparent',
+          backButton: {
+            showTitle: false,
+          },
+          rightButtons: [
+            {
+              id: 'More',
+              component: {
+                name: 'CustomTopBarButton',
+                passProps: {
+                  onPress: handleMore,
+                  child: moreIcon,
+                },
+              },
+            },
+          ],
+        },
+      });
+    } else {
+    }
   }, []);
+
+  const handleMore = () => {
+    showOverlay('CustomModal', {
+      children: () => <ApproveDecline />,
+      height: constants.height * 0.25,
+    });
+  };
 
   React.useEffect(() => {
     const unsubscribe = webSocket.socket.on('getMessageFromAdmin', (data) => {
@@ -34,11 +67,6 @@ export default function Chat() {
     });
     return () => unsubscribe;
   }, []);
-
-  const handleGetMessages = async () => {
-    const asyncMessages = await getMessages();
-    setMessage(asyncMessages ? asyncMessages : []);
-  };
 
   const handleSend = (image) => {
     const _message = {
@@ -76,12 +104,23 @@ export default function Chat() {
       GiftedChat.append(previousMessages, _message),
     );
     setMessage('');
-    handleSendMessage(_message);
+    handleSendMessage(_message, image);
     storeMessages(messages);
   };
 
-  const handleSendMessage = (_message) => {
-    webSocket.sendMessageToAdmin(_message);
+  const handleSendMessage = (_message, image) => {
+    webSocket.sendMessageToAdmin({message: _message, transactionId});
+    handleSendNotification(image);
+  };
+
+  const handleSendNotification = async (image) => {
+    const adminUser = await webSocket.getUserById(adminId);
+    fcmService.sendNotification(
+      data,
+      [adminUser.notificationId],
+      user.name,
+      image ? 'Sent you an image' : message,
+    );
   };
 
   const handleImage = () => {
@@ -175,6 +214,10 @@ export default function Chat() {
   );
 }
 
+const moreIcon = () => (
+  <Feather name="more-horizontal" size={20} color="white" />
+);
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -235,6 +278,8 @@ Chat.options = {
   topBar: {
     title: {
       text: 'Chat',
+      fontSize: 25,
+      fontWeight: '700',
     },
     borderColor: 'transparent',
     backButton: {

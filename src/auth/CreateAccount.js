@@ -1,5 +1,5 @@
-import auth from '@react-native-firebase/auth';
 import React from 'react';
+import auth from '@react-native-firebase/auth';
 import {SafeAreaView, StyleSheet, Text, View, Keyboard} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
 import {Button, Provider, TextInput} from 'react-native-paper';

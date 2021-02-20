@@ -58,6 +58,12 @@ function registerScreens() {
           () => require('../shared/CustomModal').default,
         );
         break;
+      case 'CustomTopBarButton':
+        Navigation.registerComponent(
+          'CustomTopBarButton',
+          () => require('../shared/CustomTopBarButton').default,
+        );
+        break;
     }
   });
 }

@@ -29,7 +29,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ChartView({data, interval, setInterval, priceNow}) {
+export default function ChartView({
+  componentId,
+  data,
+  interval,
+  setInterval,
+  priceNow,
+}) {
   const [zoom, setZoom] = React.useState(0.5);
   const candles = data.slice(-(zoom * 50));
   const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
@@ -107,7 +113,7 @@ export default function ChartView({data, interval, setInterval, priceNow}) {
             </Animated.View>
           </PanGestureHandler>
         </View>
-        <Content priceNow={priceNow} />
+        <Content priceNow={priceNow} componentId={componentId} />
       </View>
     </>
   );

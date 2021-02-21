@@ -1,26 +1,175 @@
+import Binance from 'binance-api-react-native';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
-import Animated, {
-  add,
-  diffClamp,
-  eq,
-  modulo,
-  sub,
-} from 'react-native-reanimated';
-import {onGestureEvent, useValues} from 'react-native-redash';
-import Chart, {size} from './Chart';
+import {ActivityIndicator} from 'react-native-paper';
+import Animated, {add, eq, modulo, sub} from 'react-native-reanimated';
+import {clamp, diffClamp, onGestureEvent, useValues} from 'react-native-redash';
+import {useGlobal} from 'reactn';
+import {webSocket} from '../../sockets';
+import Chart from './Chart';
 import Content from './Content';
 import Header from './Header';
 import Label from './Label';
 import Line from './Line';
 import Values from './Values';
-import {
-  VictoryChart,
-  VictoryTheme,
-  VictoryAxis,
-  VictoryCandlestick,
-} from 'victory-native';
+
+const client = Binance();
+
+export default function ChartView({componentId}) {
+  const [user] = useGlobal('user');
+  const [chartData, setChartData] = React.useState({});
+  const [candles, setCandles] = React.useState([]);
+  const [interval, setInterval] = React.useState('1m');
+  const [done, setDone] = React.useState(false);
+  const [priceNow, setPriceNow] = React.useState('');
+  const [domain, setDomain] = React.useState([0, 1]);
+  const caliber = constants.width / 25;
+  const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
+  const gestureHandler = onGestureEvent({
+    x,
+    y,
+    state,
+  });
+  const opacity = eq(state, State.ACTIVE);
+  const translateY = diffClamp(y, 10, constants.width);
+  const translateX = add(sub(x, modulo(x, caliber)), caliber / 2);
+
+  React.useEffect(() => {
+    webSocket.connected(user._id);
+  }, []);
+
+  React.useEffect(() => {
+    fetch(
+      `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}`,
+    )
+      .then((response) => response.json())
+      .then(handleHistories);
+  }, [interval]);
+
+  React.useEffect(() => {
+    let clean;
+    if (done) {
+      clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
+    }
+    return () => clean;
+  }, [interval, done]);
+
+  React.useEffect(() => {
+    let clean;
+    if (done) {
+      clean = client.ws.depth('BTCUSDT', handleDepthData);
+    }
+    return () => clean;
+  }, [done]);
+
+  const handleDepthData = (data) => {
+    const price = parseFloat(data.bidDepth[0].price.slice(0, -6));
+    setPriceNow(price);
+  };
+
+  const handleBinanceData = (data) => {
+    const candleDate = new Date(data.startTime);
+    const modified = {
+      date: candleDate,
+      day: candleDate.getDay(),
+      open: data.open,
+      close: data.close,
+      volume: data.volume,
+      high: data.high,
+      low: data.low,
+    };
+
+    const _chartData = chartData;
+    _chartData[candleDate] = modified;
+    const newChartData = {...chartData, ..._chartData};
+    setChartData(newChartData);
+    handleSetCandles(newChartData);
+  };
+
+  const handleHistories = (candles) => {
+    const _chartData = {};
+    const promise = candles.map((candle) => {
+      const candleDate = new Date(candle[0]);
+      const element = {
+        date: candleDate,
+        day: candleDate.getDay(),
+        high: candle[2],
+        low: candle[3],
+        open: candle[1],
+        close: candle[4],
+        volume: candle[5],
+      };
+      _chartData[candleDate] = element;
+    });
+    Promise.all(promise).then(() => {
+      setChartData(_chartData);
+      handleSetCandles(_chartData);
+      setDone(true);
+    });
+  };
+
+  const handleSetCandles = (data) => {
+    setCandles(Object.values(data).slice(-25));
+    getDomain(Object.values(data));
+  };
+
+  const getDomain = (data) => {
+    const values = data.map(({high, low}) => [high, low]).flat();
+    const modified = [Math.min(...values), Math.max(...values)];
+    if (modified[0] !== domain[0] && modified[1] !== domain[1]) {
+      setDomain(modified);
+    }
+  };
+
+  return done ? (
+    <View style={styles.container}>
+      <View>
+        <Header
+          interval={interval}
+          setInterval={setInterval}
+          priceNow={priceNow}
+        />
+        <Animated.View style={{opacity}} pointerEvents="none">
+          <Values {...{candles, translateX, caliber}} />
+        </Animated.View>
+      </View>
+      <View>
+        <Chart {...{candles, domain}} />
+        <PanGestureHandler minDist={0} {...gestureHandler}>
+          <Animated.View style={StyleSheet.absoluteFill}>
+            <Animated.View
+              style={{
+                transform: [{translateY}],
+                opacity,
+                ...StyleSheet.absoluteFillObject,
+              }}>
+              <Line x={constants.width} y={0} />
+            </Animated.View>
+            <Animated.View
+              style={{
+                transform: [{translateX}],
+                opacity,
+                ...StyleSheet.absoluteFillObject,
+              }}>
+              <Line x={0} y={constants.width} />
+            </Animated.View>
+            <Label y={translateY} {...{domain, opacity}} />
+          </Animated.View>
+        </PanGestureHandler>
+      </View>
+      <Content priceNow={priceNow} componentId={componentId} />
+    </View>
+  ) : (
+    <View
+      style={[
+        styles.container,
+        {alignItems: 'center', justifyContent: 'center'},
+      ]}>
+      <ActivityIndicator size="large" color="white" animating={true} />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -28,93 +177,3 @@ const styles = StyleSheet.create({
     backgroundColor: constants.primary,
   },
 });
-
-export default function ChartView({
-  componentId,
-  data,
-  interval,
-  setInterval,
-  priceNow,
-}) {
-  const [zoom, setZoom] = React.useState(0.5);
-  const candles = data.slice(-(zoom * 50));
-  const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({
-    x,
-    y,
-    state,
-  });
-  const caliber = size / candles.length;
-  const translateY = diffClamp(y, 10, size);
-  const translateX = add(sub(x, modulo(x, caliber)), caliber / 2);
-  const opacity = eq(state, State.ACTIVE);
-
-  const getDomain = (rows) => {
-    const values = rows.map(({high, low}) => [high, low]).flat();
-    return [Math.min(...values), Math.max(...values)];
-  };
-  const domain = getDomain(candles);
-
-  return (
-    <>
-      <View style={styles.container}>
-        <View>
-          <Header
-            interval={interval}
-            setInterval={setInterval}
-            priceNow={priceNow}
-            zoom={zoom}
-            setZoom={setZoom}
-          />
-          <Animated.View style={{opacity}} pointerEvents="none">
-            <Values {...{candles, translateX, caliber}} />
-          </Animated.View>
-        </View>
-        <View>
-          <Chart {...{candles, domain}} />
-          {/* <VictoryChart
-            width={size}
-            height={size}
-            theme={VictoryTheme.grayscale}
-            domainPadding={{x: 5}}
-            scale={{x: 'time'}}>
-            <VictoryAxis tickFormat={(t) => `${t.getTime()}`} />
-            <VictoryAxis dependentAxis />
-            <VictoryCandlestick
-              candleColors={{positive: '#37b526', negative: '#E33F64'}}
-              animate={{
-                duration: 1000,
-                easing: 'elasticInOut',
-                onLoad: {duration: 1000},
-              }}
-              candleWidth={(1 - zoom) * 10}
-              data={candles}
-            />
-          </VictoryChart> */}
-          <PanGestureHandler minDist={0} {...gestureHandler}>
-            <Animated.View style={StyleSheet.absoluteFill}>
-              <Animated.View
-                style={{
-                  transform: [{translateY}],
-                  opacity,
-                  ...StyleSheet.absoluteFillObject,
-                }}>
-                <Line x={size} y={0} />
-              </Animated.View>
-              <Animated.View
-                style={{
-                  transform: [{translateX}],
-                  opacity,
-                  ...StyleSheet.absoluteFillObject,
-                }}>
-                <Line x={0} y={size} />
-              </Animated.View>
-              <Label y={translateY} {...{size, domain, opacity}} />
-            </Animated.View>
-          </PanGestureHandler>
-        </View>
-        <Content priceNow={priceNow} componentId={componentId} />
-      </View>
-    </>
-  );
-}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {List} from 'react-native-paper';
 import {webSocket} from '../../sockets';

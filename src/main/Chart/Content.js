@@ -53,16 +53,19 @@ const styles = StyleSheet.create({
   },
   bitcoinsBought: {
     color: 'white',
+    fontWeight: '700',
     fontSize: 24,
   },
   bitcoinsBoughtRight: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 24,
+    fontWeight: '700',
     marginLeft: 10,
   },
   bitcoinsBoughtView: {
     marginTop: 16,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   values: {
     flex: 1,
@@ -79,7 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   label: {
-    fontSize: 20,
+    fontSize: 25,
+    fontWeight: '700',
   },
   profit: {
     color: '#37b526',
@@ -102,7 +106,7 @@ const Button = ({color, backgroundColor, label, onPress}) => (
   </TouchableWithoutFeedback>
 );
 
-export default ({priceNow}) => {
+export default ({priceNow, componentId}) => {
   const [user] = useGlobal('user');
 
   const handleBuy = () => {
@@ -130,9 +134,6 @@ export default ({priceNow}) => {
           <View style={styles.tabActive}>
             <Text style={styles.tabLabelActive}>Wallet</Text>
           </View>
-          {/* <View style={styles.tab}>
-            <Text style={styles.tabLabel}>Trade History</Text>
-          </View> */}
         </View>
         <View style={styles.content}>
           <View style={styles.bitcoinsBoughtView}>

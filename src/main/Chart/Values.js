@@ -1,20 +1,17 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
-import Animated, {
-  call,
-  divide,
-  floor,
-  onChange,
-  useCode,
-} from 'react-native-reanimated';
 import moment from 'moment';
-
-import {Candle} from './Candle';
+import React, {useState} from 'react';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {call, divide, floor, onChange, useCode} from 'react-native-reanimated';
 import Row from './Row';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
+    backgroundColor: constants.primary,
   },
   table: {
     flexDirection: 'row',
@@ -47,13 +44,15 @@ const formatValue = (value) => {
 };
 
 export default ({translateX, caliber, candles}) => {
-  const [{date, open, close, high, low}, setCandle] = useState(candles[0]);
+  const [{date, open, close, high, low, volume}, setCandle] = useState(
+    candles[0],
+  );
   useCode(
     () =>
       onChange(
         translateX,
         call([floor(divide(translateX, caliber))], ([index]) => {
-          //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          ReactNativeHapticFeedback.trigger('impactLight', options);
           setCandle(candles[index]);
         }),
       ),
@@ -67,7 +66,7 @@ export default ({translateX, caliber, candles}) => {
         <View style={styles.column}>
           <Row label="Open" value={formatValue(open)} />
           <Row label="Close" value={formatValue(close)} />
-          <Row label="Volume" value="" />
+          <Row label="Volume" value={parseFloat(volume).toFixed()} />
         </View>
         <View style={styles.separator} />
         <View style={styles.column}>

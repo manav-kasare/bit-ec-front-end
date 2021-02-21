@@ -45,9 +45,9 @@ const format = (value) => {
   return concat('$', formatInt(int), '.', formattedDec);
 };
 
-export default ({domain: [min, max], size, y, opacity}) => {
+export default ({domain: [min, max], y, opacity}) => {
   const value = interpolate(y, {
-    inputRange: [0, size],
+    inputRange: [0, constants.width],
     outputRange: [min, max],
   });
   return (

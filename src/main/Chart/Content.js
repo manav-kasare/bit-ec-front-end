@@ -127,6 +127,8 @@ export default ({priceNow, componentId}) => {
     });
   };
 
+  const handleTrade = () => {};
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -160,7 +162,7 @@ export default ({priceNow, componentId}) => {
       <View style={styles.actions}>
         <Button
           label="Buy"
-          backgroundColor={constants.accent}
+          backgroundColor="#37b526et"
           color="white"
           onPress={handleBuy}
         />
@@ -169,6 +171,12 @@ export default ({priceNow, componentId}) => {
           backgroundColor="#E33F64"
           color="white"
           onPress={handleSell}
+        />
+        <Button
+          label="Trade"
+          backgroundColor={constants.accent}
+          color="white"
+          onPress={handleTrade}
         />
       </View>
     </SafeAreaView>

@@ -9,6 +9,7 @@ target 'rnJuanCrypto' do
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'RNReactNativeHapticFeedback', :path => '../node_modules/react-native-haptic-feedback'
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   target 'rnJuanCryptoTests' do
     inherit! :complete

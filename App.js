@@ -3,6 +3,7 @@ import {useGlobal} from 'reactn';
 import {navStart, setMain, setRoot} from './src/navigation/navStart';
 import {getToken, getUser} from './src/shared/asyncStorage';
 import {webSocket} from './src/sockets';
+import SplashScreen from 'react-native-splash-screen';
 
 export default function App() {
   const setToken = useGlobal('token')[1];
@@ -20,6 +21,7 @@ export default function App() {
     if (asyncToken) {
       const user = await getUser();
       setMain(user.phoneNumber);
+      SplashScreen.hide();
       setUser(user);
       if (user.phoneNumber === '+593983873813') setIsAdmin(true);
       if (user) {
@@ -31,6 +33,7 @@ export default function App() {
       }
     } else {
       setRoot();
+      SplashScreen.hide();
     }
   };
 

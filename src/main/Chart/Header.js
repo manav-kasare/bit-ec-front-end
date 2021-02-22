@@ -98,7 +98,7 @@ const Tabs = ({tabs, interval, setInterval}) => {
               style={
                 tab === interval ? styles.tabLabelActive : styles.tabLabel
               }>
-              {tab.toUpperCase()}
+              {tab}
             </Text>
           </View>
         </TouchableWithoutFeedback>

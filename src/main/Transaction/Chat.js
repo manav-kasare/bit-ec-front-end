@@ -26,7 +26,7 @@ export default function Chat({
   const [isAdmin] = useGlobal('isAdmin');
 
   React.useEffect(() => {
-    if (!isAdmin) {
+    if (isAdmin) {
       Navigation.mergeOptions(componentId, {
         topBar: {
           title: {

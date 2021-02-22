@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native-paper';
 import Animated, {add, eq, modulo, sub} from 'react-native-reanimated';
-import {clamp, diffClamp, onGestureEvent, useValues} from 'react-native-redash';
+import {diffClamp, onGestureEvent, useValues} from 'react-native-redash';
 import {useGlobal} from 'reactn';
 import {webSocket} from '../../sockets';
 import Chart from './Chart';
@@ -34,32 +34,35 @@ export default function ChartView({componentId}) {
   const opacity = eq(state, State.ACTIVE);
   const translateY = diffClamp(y, 10, constants.width);
   const translateX = add(sub(x, modulo(x, caliber)), caliber / 2);
+  const unsubscribe = React.useRef(null);
 
   React.useEffect(() => {
     webSocket.connected(user._id);
   }, []);
 
   React.useEffect(() => {
+    if (unsubscribe.current) unsubscribe.current();
+    setDone(false);
+    setChartData({});
+    setCandles([]);
+    setDomain([0, 1]);
     fetch(
-      `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}`,
+      `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=25`,
     )
       .then((response) => response.json())
       .then(handleHistories);
   }, [interval]);
 
   React.useEffect(() => {
-    let clean;
-    if (done) {
-      clean = client.ws.candles('BTCUSDT', interval, handleBinanceData);
-    }
-    return () => clean;
-  }, [interval, done]);
+    unsubscribe.current = client.ws.candles(
+      'BTCUSDT',
+      interval,
+      handleBinanceData,
+    );
+  }, [interval]);
 
   React.useEffect(() => {
-    let clean;
-    if (done) {
-      clean = client.ws.depth('BTCUSDT', handleDepthData);
-    }
+    const clean = client.ws.depth('BTCUSDT', handleDepthData);
     return () => clean;
   }, [done]);
 
@@ -80,16 +83,20 @@ export default function ChartView({componentId}) {
       low: data.low,
     };
 
-    const _chartData = chartData;
-    _chartData[candleDate] = modified;
-    const newChartData = {...chartData, ..._chartData};
-    setChartData(newChartData);
-    handleSetCandles(newChartData);
+    const lastDate = candles.length > 0 && candles.slice(-1)[0].date;
+
+    if (Date.parse(lastDate) - Date.parse(candleDate) >= 0) {
+      const _chartData = chartData;
+      _chartData[candleDate] = modified;
+      const newChartData = {...chartData, ..._chartData};
+      setChartData(newChartData);
+      handleSetCandles(newChartData);
+    }
   };
 
-  const handleHistories = (candles) => {
+  const handleHistories = (data) => {
     const _chartData = {};
-    const promise = candles.map((candle) => {
+    const promise = data.map((candle) => {
       const candleDate = new Date(candle[0]);
       const element = {
         date: candleDate,
@@ -110,7 +117,7 @@ export default function ChartView({componentId}) {
   };
 
   const handleSetCandles = (data) => {
-    setCandles(Object.values(data).slice(-25));
+    setCandles(Object.values(data));
     getDomain(Object.values(data));
   };
 

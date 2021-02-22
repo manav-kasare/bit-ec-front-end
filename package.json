@@ -15,8 +15,6 @@
     "@react-native-firebase/app": "^10.8.0",
     "@react-native-firebase/auth": "^10.8.0",
     "@react-native-firebase/messaging": "^10.8.0",
-    "babel": "^6.23.0",
-    "babel-preset-react-app": "^10.0.0",
     "binance-api-react-native": "^0.1.5",
     "d3-scale": "3.2.1",
     "moment": "^2.29.1",

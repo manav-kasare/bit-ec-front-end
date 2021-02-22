@@ -81,8 +81,12 @@ export default function BuyModal({componentId, priceNow}) {
           </Text>
         </View>
         <View style={styles.tile}>
-          <Text style={styles.tileText}>Fee</Text>
-          <Text style={styles.tileText}>0.0003 BTC</Text>
+          <Text style={styles.tileText}>Surcharge</Text>
+          <Text style={styles.tileText}>5 %</Text>
+        </View>
+        <View style={styles.tile}>
+          <Text style={styles.tileText}>Payable</Text>
+          <Text style={styles.tileText}>{parseFloaft(value) * 1.05}</Text>
         </View>
       </View>
       <Button

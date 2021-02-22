@@ -18,7 +18,6 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* rnJuanCryptoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* rnJuanCryptoTests.m */; };
 		4C384926A725F122911BAEF8 /* libPods-rnJuanCrypto-rnJuanCryptoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA258D25499E7BFC05DDC025 /* libPods-rnJuanCrypto-rnJuanCryptoTests.a */; };
-		6998479D25E4712E00ED2E0F /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6998479725E4711700ED2E0F /* libSplashScreen.a */; };
 		69CC362F25DD78B3002FA8D1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 69CC362E25DD78B3002FA8D1 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C5F26D9AC378F7042C6206A2 /* libPods-rnJuanCrypto-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5391AF8D03AF83B4B6C4940 /* libPods-rnJuanCrypto-tvOS.a */; };
@@ -38,13 +37,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
 			remoteInfo = "rnJuanCrypto-tvOS";
-		};
-		6998479625E4711700ED2E0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6998479225E4711600ED2E0F /* SplashScreen.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D7682761D8E76B80014119E;
-			remoteInfo = SplashScreen;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -79,7 +71,6 @@
 		690B212325DD417C000C91B4 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
 		690B212425DD417C000C91B4 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		690B212525DD417C000C91B4 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
-		6998479225E4711600ED2E0F /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		69CC362E25DD78B3002FA8D1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6E7E2422066CF8F4BD2D1D35 /* Pods-rnJuanCrypto-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnJuanCrypto-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-rnJuanCrypto-tvOSTests/Pods-rnJuanCrypto-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = rnJuanCrypto/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -109,7 +100,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6998479D25E4712E00ED2E0F /* libSplashScreen.a in Frameworks */,
 				038D1FBEF7B93D86CF1FE24A /* libPods-rnJuanCrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,14 +192,6 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
-		6998479325E4711600ED2E0F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6998479725E4711700ED2E0F /* libSplashScreen.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,7 +202,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				6998479225E4711600ED2E0F /* SplashScreen.xcodeproj */,
 				13B07FAE1A68108700A75B9A /* rnJuanCrypto */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* rnJuanCryptoTests */,
@@ -382,12 +363,6 @@
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 6998479325E4711600ED2E0F /* Products */;
-					ProjectRef = 6998479225E4711600ED2E0F /* SplashScreen.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* rnJuanCrypto */,
@@ -397,16 +372,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		6998479725E4711700ED2E0F /* libSplashScreen.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSplashScreen.a;
-			remoteRef = 6998479625E4711700ED2E0F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		00E356EC1AD99517003FC87E /* Resources */ = {

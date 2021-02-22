@@ -46,6 +46,12 @@ function registerScreens() {
           () => require('../main/Transaction/Chat').default,
         );
         break;
+      case 'Trade':
+        Navigation.registerComponent(
+          'Trade',
+          () => require('../main/Chart/Trade').default,
+        );
+        break;
       case 'Admin':
         Navigation.registerComponent(
           'Admin',

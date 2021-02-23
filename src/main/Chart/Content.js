@@ -14,7 +14,6 @@ import SellModal from './SellModal';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
   },
   tabs: {
     flexDirection: 'row',
@@ -76,13 +75,13 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 5,
-    width: constants.width * 0.4,
+    width: constants.width * 0.25,
     height: constants.height * 0.05,
     alignItems: 'center',
     justifyContent: 'center',
   },
   label: {
-    fontSize: 25,
+    fontSize: 18,
     fontWeight: '700',
   },
   profit: {
@@ -162,7 +161,7 @@ export default ({priceNow, componentId}) => {
       <View style={styles.actions}>
         <Button
           label="Buy"
-          backgroundColor="#37b526et"
+          backgroundColor="#37b526"
           color="white"
           onPress={handleBuy}
         />

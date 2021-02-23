@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_dark">#020017</color>
-     <color name="status_bar_color">#fff</color>
+    <color name="splashscreen_bg">#2255b5</color>
+    <color name="app_bg">#020017</color>
 </resources>

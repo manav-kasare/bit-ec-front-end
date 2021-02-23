@@ -1,7 +1,12 @@
 import React from 'react';
 import {useGlobal} from 'reactn';
 import {navStart, setMain, setRoot} from './src/navigation/navStart';
-import {getToken, getUser} from './src/shared/asyncStorage';
+import {
+  getToken,
+  getUser,
+  storeToken,
+  storeUser,
+} from './src/shared/asyncStorage';
 import {webSocket} from './src/sockets';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -29,8 +34,10 @@ export default function App() {
         if (!response.err) {
           if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
           setUser(response.user);
+          storeUser(response.user);
         }
       }
+      storeUser();
     } else {
       setRoot();
       SplashScreen.hide();

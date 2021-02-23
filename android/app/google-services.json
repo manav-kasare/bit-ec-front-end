@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:709117709364:android:829303f9e62000ed6f0e61",
+        "mobilesdk_app_id": "1:709117709364:android:f2f3b396b36dbf056f0e61",
         "android_client_info": {
-          "package_name": "com.rnJuanCrypto"
+          "package_name": "com.bitandec"
         }
       },
       "oauth_client": [
         {
-          "client_id": "709117709364-238abrhobqi0dcqp6p0h0ntttbhni6bs.apps.googleusercontent.com",
+          "client_id": "709117709364-362bqtd32g7kk3ppa9m8d4o0r5fkboju.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.rnJuanCrypto",
+            "package_name": "com.bitandec",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },

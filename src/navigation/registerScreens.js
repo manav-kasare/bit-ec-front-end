@@ -22,6 +22,12 @@ function registerScreens() {
           () => require('../auth/Login').default,
         );
         break;
+      case 'Toast':
+        Navigation.registerComponent(
+          'Toast',
+          () => require('../shared/Toast').default,
+        );
+        break;
       case 'CreateAccount':
         Navigation.registerComponent(
           'CreateAccount',

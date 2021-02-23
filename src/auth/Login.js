@@ -1,11 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, Keyboard} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
 import {Button, Provider, TextInput} from 'react-native-paper';
-import Toast from 'react-native-toast-message';
 import countries from '../assets/countries.json';
-import {push} from '../navigation/functions';
+import {push, showToast} from '../navigation/functions';
 import CountryPicker from './CountryPicker';
 import PhoneInput from './PhoneInput';
 
@@ -43,23 +42,11 @@ export default function Login({componentId}) {
       console.log(err);
       setIsLoading(false);
       if (err.code === 'auth/invalid-phone-number') {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'Invalid Phone number',
-        });
+        showToast('error', 'Invalid Phone number');
       } else if (err.code === 'auth/too-many-requests') {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'Too many attempts, try again after some time',
-        });
+        showToast('error', 'Too many attempts, try again after some time');
       } else {
-        Toast.show({
-          type: 'error',
-          position: 'bottom',
-          text1: 'An unexpected error occured',
-        });
+        showToast('error', 'An unexpected error occured');
       }
     }
   };

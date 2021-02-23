@@ -3,12 +3,12 @@ import React from 'react';
 import {Keyboard, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import OtpInputs from 'react-native-otp-inputs';
 import {Button} from 'react-native-paper';
-import Toast from 'react-native-toast-message';
 import {useGlobal} from 'reactn';
 import {storeToken, storeUser} from '../shared/asyncStorage';
 import {webSocket} from '../sockets';
 import {setMain} from '../navigation/navStart';
 import messaging from '@react-native-firebase/messaging';
+import {showToast} from '../navigation/functions';
 
 export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [code, setCode] = React.useState('');
@@ -17,14 +17,6 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [isLoadingResendCode, setIsLoadingResendCode] = React.useState(false);
   const [user, setUser] = useGlobal('user');
   const [token, setToken] = useGlobal('token');
-
-  const showToast = (text1) => {
-    Toast.show({
-      type: 'error',
-      position: 'bottom',
-      text1,
-    });
-  };
 
   const checkAndHandle = () => {
     Keyboard.dismiss();
@@ -38,18 +30,18 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
           } else {
             handleLogin();
           }
-        } catch (err) {
-          showToast('An unexpected error occured');
+        } catch (error) {
+          showToast('error', 'An unexpected error occured');
           setIsLoadingCode(false);
         }
       })
       .catch((err) => {
         if (err.code === 'auth/invalid-verification-code') {
-          showToast('Invalid Code');
+          showToast('error', 'Invalid Code');
         } else if (err.code === 'auth/code-expired') {
-          showToast('Code has expired');
+          showToast('error', 'Code has expired');
         } else {
-          showToast('An unexpected error occured');
+          showToast('error', 'An unexpected error occured');
         }
         setIsLoadingCode(false);
       });
@@ -62,7 +54,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       name,
       phoneNumber,
     });
-    if (response.err) showToast(err);
+    if (response.err) showToast(response.err);
     else {
       setUser(response.user);
       setToken(response.token);
@@ -74,8 +66,8 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   };
 
   const handleLogin = async () => {
-    const response = await webSocket.getUserByPhone(phoneNumber);
-    if (response.err) showToast(err);
+    const response = await webSocket.loginUser({phoneNumber});
+    if (response.err) showToast(response.err);
     else {
       setUser(response.user);
       setToken(response.token);

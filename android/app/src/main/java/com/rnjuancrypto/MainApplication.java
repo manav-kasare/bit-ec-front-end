@@ -1,10 +1,9 @@
-package com.rnjuancrypto;
+package com.bitandec;
 
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.reactnativenavigation.NavigationApplication;
-import com.github.wuxudong.rncharts.MPAndroidChartPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
@@ -29,7 +28,7 @@ public class MainApplication extends NavigationApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // // Packages that cannot be autolinked yet can be added manually here, for example:
-          packages.add(new SplashScreenReactPackage());
+          // packages.add(new SplashScreenReactPackage());
           return packages;
         }
 
@@ -66,7 +65,7 @@ public class MainApplication extends NavigationApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.rnjuancrypto.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.bitandec.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

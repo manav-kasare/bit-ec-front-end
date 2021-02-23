@@ -1,4 +1,4 @@
-package com.rnjuancrypto;
+package com.bitandec;
 import android.os.Bundle; 
 import com.reactnativenavigation.NavigationActivity;
 

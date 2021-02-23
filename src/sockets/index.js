@@ -8,7 +8,7 @@ class WebSocket {
 
   init = () => {
     console.log('connecting');
-    this.socket = socketIO(`http://192.168.0.100:9090/`, {
+    this.socket = socketIO(`http://192.168.0.102:9090/`, {
       transports: ['websocket'],
       reconnect: true,
       jsonp: true,
@@ -23,6 +23,11 @@ class WebSocket {
 
   createUser = async (data) => {
     const response = await this.socket.request('createUser', data);
+    return response;
+  };
+
+  loginUser = async (data) => {
+    const response = await this.socket.request('loginUser', data);
     return response;
   };
 

@@ -1,13 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.rnjuancrypto">
-
+  package="com.bitandec">
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
-      android:roundIcon="@mipmap/ic_launcher_round"
+      android:icon="@mipmap/logo"
+      android:roundIcon="@mipmap/logo_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <activity
@@ -17,18 +16,9 @@
         android:launchMode="singleTask"
         android:exported="true"
         android:windowSoftInputMode="adjustResize">
-        
       </activity>
+      
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-       <activity
-        android:name="com.zoontek.rnbootsplash.RNBootSplashActivity"
-        android:theme="@style/BootTheme"
-        android:launchMode="singleTask">
-        <intent-filter>
-          <action android:name="android.intent.action.MAIN" />
-          <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-      </activity>
     </application>
 
 </manifest>

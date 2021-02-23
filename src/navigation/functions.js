@@ -17,3 +17,16 @@ export const showOverlay = (name, passProps) => {
     },
   });
 };
+
+export const showToast = (type, message) => {
+  Navigation.showOverlay({
+    component: {
+      name: 'Toast',
+      passProps: {
+        type: 'feedback',
+        feedbackType: type,
+        message,
+      },
+    },
+  });
+};

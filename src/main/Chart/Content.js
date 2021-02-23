@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {useGlobal} from 'reactn';
-import {showOverlay} from '../../navigation/functions';
+import {push, showOverlay} from '../../navigation/functions';
 import BuyModal from './BuyModal';
 import SellModal from './SellModal';
 
@@ -105,28 +105,27 @@ const Button = ({color, backgroundColor, label, onPress}) => (
   </TouchableWithoutFeedback>
 );
 
-export default ({priceNow, componentId}) => {
+export default ({componentId}) => {
   const [user] = useGlobal('user');
+  const [priceNow] = useGlobal('priceNow');
 
   const handleBuy = () => {
     showOverlay('CustomModal', {
-      children: () => (
-        <BuyModal priceNow={priceNow} componentId={componentId} />
-      ),
+      children: () => <BuyModal componentId={componentId} />,
       height: constants.height,
     });
   };
 
   const handleSell = () => {
     showOverlay('CustomModal', {
-      children: () => (
-        <SellModal priceNow={priceNow} componentId={componentId} />
-      ),
+      children: () => <SellModal componentId={componentId} />,
       height: constants.height,
     });
   };
 
-  const handleTrade = () => {};
+  const handleTrade = () => {
+    push(componentId, 'Trade');
+  };
 
   return (
     <SafeAreaView style={styles.container}>

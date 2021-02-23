@@ -374,8 +374,6 @@ PODS:
     - React-Core
     - React-RCTImage
     - React-RCTText
-  - RNBootSplash (3.1.5):
-    - React-Core
   - RNCAsyncStorage (1.14.1):
     - React-Core
   - RNCClipboard (1.5.1):
@@ -459,7 +457,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
-  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-community/clipboard`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -558,8 +555,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   ReactNativeNavigation:
     :path: "../node_modules/react-native-navigation"
-  RNBootSplash:
-    :path: "../node_modules/react-native-bootsplash"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
@@ -639,7 +634,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   ReactNativeNavigation: 16d97374852c2e23f6d6b5e4ff9cd616fb037f02
-  RNBootSplash: c7304515f0b7502878ecc0fdcce8136134419cdc
   RNCAsyncStorage: fe58eec522885718d6b297b7b658bf87d7ca557b
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNFBApp: 02bde3edecf2e9694b908a5d3504e03449980f20

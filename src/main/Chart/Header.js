@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {useGlobal} from 'reactn';
 
 const formatInt = (value) => {
   const t = Math.floor(value / 1000);
@@ -111,8 +112,9 @@ const Pricenow = ({priceNow}) => (
   <Text style={styles.title}>{formatValue(priceNow)}</Text>
 );
 
-export default ({interval, setInterval, priceNow}) => {
+export default ({interval, setInterval}) => {
   const [priceChangePercent, setPriceChangePercent] = React.useState(null);
+  const [priceNow] = useGlobal('priceNow');
 
   React.useEffect(() => {
     fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT`)

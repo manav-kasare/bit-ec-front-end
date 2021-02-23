@@ -13,5 +13,6 @@ export const setGlobalData = () => {
     token: null,
     overlayId: null,
     isAdmin: false,
+    priceNow: null,
   });
 };

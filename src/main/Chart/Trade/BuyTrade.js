@@ -4,14 +4,15 @@ import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
-import {push} from '../../navigation/functions';
-import {storeUser} from '../../shared/asyncStorage';
-import {webSocket} from '../../sockets';
+import {push} from '../../../navigation/functions';
+import {storeUser} from '../../../shared/asyncStorage';
+import {webSocket} from '../../../sockets';
 
-export default function SellModal({componentId}) {
+export default function BuyTrade({componentId}) {
   const [value, setValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [overlayId] = useGlobarlobal('user');
+  const [overlayId] = useGlobal('overlayId');
+  const [user, setUser] = useGlobal('user');
   const [priceNow] = useGlobal('priceNow');
 
   const onDismiss = () => {
@@ -20,26 +21,19 @@ export default function SellModal({componentId}) {
   const onChangeValue = (text) => setValue(text);
 
   const handleSubmit = async () => {
-    if (
-      parseFloat(value) <= 500 &&
-      parseFloat(value) > 0 &&
-      parseFloat(value) <= user.bitcoinsBought * priceNow
-    ) {
-      setIsLoading(true);
-      const response = await webSocket.sell({
-        userId: user._id,
-        numberOfBitcoins: value / priceNow,
-        atPrice: priceNow,
-      });
+    setIsLoading(true);
+    const response = await webSocket.addListing({
+      from: user._id,
+      type: 'buy',
+      atPrice: priceNow,
+      amount: value,
+      createdAt: Date.now(),
+    });
+    if (!response.err) {
       setUser(response.user);
-      setIsLoading(false);
-      Navigation.dismissOverlay(overlayId);
-      push(componentId, 'Chat', {
-        transactionId: response.transactionId,
-        prevMessages: [],
-      });
       storeUser(response.user);
     }
+    onDismiss();
   };
 
   return (
@@ -48,7 +42,7 @@ export default function SellModal({componentId}) {
         <Feather name="x" size={25} color="white" />
       </TouchableOpacity>
       <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Sell</Text>
+        <Text style={styles.heading}>Buy listing</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.textInput}>
@@ -58,12 +52,7 @@ export default function SellModal({componentId}) {
             theme={{
               colors: {
                 primary: 'transparent',
-                text:
-                  parseFloat(value) <= 500 &&
-                  parseFloat(value) > 0 &&
-                  parseFloat(value) <= user.bitcoinsBought * priceNow
-                    ? 'white'
-                    : 'crimson',
+                text: 'white',
                 background: 'transparent',
               },
             }}
@@ -79,14 +68,6 @@ export default function SellModal({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
-        <Text style={styles.max}>
-          {parseFloat(value) > user.bitcoinsBought * priceNow
-            ? 'Not enough balance'
-            : 'Max: $ 500'}
-        </Text>
-        <Text style={styles.max}>
-          Balance: {user.bitcoinsBought * priceNow}
-        </Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
@@ -96,23 +77,24 @@ export default function SellModal({componentId}) {
         <View style={styles.tile}>
           <Text style={styles.tileText}>Amount</Text>
           <Text style={styles.tileText}>
-            {(parseFloat(value) / priceNow).toString().slice(0, -10)} BTC
+            {parseFloat(value) / priceNow - 0.0001 > 0
+              ? `${(parseFloat(value) / priceNow - 0.0001)
+                  .toString()
+                  .slice(0, -10)} `
+              : '0 '}
+            BTC
           </Text>
-        </View>
-        <View style={styles.tile}>
-          <Text style={styles.tileText}>Fee</Text>
-          <Text style={styles.tileText}>0.0003 BTC</Text>
         </View>
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading || parseFloat(value) > 500}
+        disabled={isLoading}
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}
         contentStyle={styles.buttonContentStyle}
         onPress={handleSubmit}>
-        Sell
+        Buy
       </Button>
     </View>
   );
@@ -155,9 +137,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 40,
     marginRight: -8,
-  },
-  max: {
-    color: 'grey',
   },
   textInput: {
     flexDirection: 'row',

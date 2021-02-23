@@ -8,11 +8,12 @@ import {push} from '../../navigation/functions';
 import {storeUser} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 
-export default function BuyModal({componentId, priceNow}) {
+export default function BuyModal({componentId}) {
   const [value, setValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [overlayId] = useGlobal('overlayId');
   const [user, setUser] = useGlobal('user');
+  const [priceNow] = useGlobal('priceNow');
 
   const onDismiss = () => {
     Navigation.dismissOverlay(overlayId);

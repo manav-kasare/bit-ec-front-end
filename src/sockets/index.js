@@ -84,6 +84,11 @@ class WebSocket {
     const response = await this.socket.request('decline', id);
     return response;
   };
+
+  addListing = async (data) => {
+    const response = await this.socket.request('addListing', id);
+    return response;
+  };
 }
 
 export const webSocket = new WebSocket();

@@ -1,22 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useGlobal} from 'reactn';
-import Animated, {
-  call,
-  cond,
-  eq,
-  set,
-  SpringUtils,
-  useCode,
-} from 'react-native-reanimated';
-import {
-  mix,
-  onGestureEvent,
-  useValue,
-  withSpringTransition,
-} from 'react-native-redash';
-import {State, TapGestureHandler} from 'react-native-gesture-handler';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
+import Animated, {SpringUtils} from 'react-native-reanimated';
+import {mix, useValue, withSpringTransition} from 'react-native-redash';
+import {useGlobal} from 'reactn';
 
 export default function CustomModal({
   componentId,
@@ -32,20 +19,15 @@ export default function CustomModal({
 
   // Transition
   const open = useValue(1);
-  const state = useValue(State.UNDETERMINED);
-  const gestureHandler = onGestureEvent({state});
   const yT = withSpringTransition(open, {
     ...SpringUtils.makeDefaultConfig(),
     overshootClamping: true,
     damping: useValue(20),
   });
   const translateY = mix(yT, height, 0);
-  useCode(
-    () => cond(eq(state, State.END), [set(open, 0), call([], hideModal)]),
-    [state],
-  );
 
   const hideModal = () => {
+    console.log('hideModal');
     setTimeout(() => {
       Navigation.dismissOverlay(componentId);
     }, 400);
@@ -54,7 +36,7 @@ export default function CustomModal({
   const styles = StyleSheet.create({
     backDrop: {
       flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: 'rgba(0,0,0,0.4)',
     },
     modal: {
       width: constants.width,
@@ -82,9 +64,10 @@ export default function CustomModal({
 
   return (
     <>
-      <TapGestureHandler {...gestureHandler}>
+      <TouchableWithoutFeedback onPress={hideModal}>
         <Animated.View style={[styles.backDrop, {opacity: open}]} />
-      </TapGestureHandler>
+      </TouchableWithoutFeedback>
+
       <Animated.View style={[styles.modal, {transform: [{translateY}]}]}>
         <View style={styles.topView} />
         {children()}

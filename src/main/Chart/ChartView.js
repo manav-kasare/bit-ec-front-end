@@ -4,7 +4,12 @@ import {StyleSheet, View} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native-paper';
 import Animated, {add, eq, modulo, sub} from 'react-native-reanimated';
-import {diffClamp, onGestureEvent, useValues} from 'react-native-redash';
+import {
+  diffClamp,
+  onGestureEvent,
+  useValue,
+  useValues,
+} from 'react-native-redash';
 import {useGlobal} from 'reactn';
 import {webSocket} from '../../sockets';
 import Chart from './Chart';
@@ -22,10 +27,12 @@ export default function ChartView({componentId}) {
   const [candles, setCandles] = React.useState([]);
   const [interval, setInterval] = React.useState('1m');
   const [done, setDone] = React.useState(false);
-  const [priceNow, setPriceNow] = React.useState('');
+  const [priceNow, setPriceNow] = useGlobal('priceNow');
   const [domain, setDomain] = React.useState([0, 1]);
   const caliber = constants.width / 25;
-  const [x, y, state] = useValues(0, 0, State.UNDETERMINED);
+  const x = useValue(0);
+  const y = useValue(0);
+  const state = useValue(State.UNDETERMINED);
   const gestureHandler = onGestureEvent({
     x,
     y,
@@ -132,11 +139,7 @@ export default function ChartView({componentId}) {
   return done ? (
     <View style={styles.container}>
       <View>
-        <Header
-          interval={interval}
-          setInterval={setInterval}
-          priceNow={priceNow}
-        />
+        <Header interval={interval} setInterval={setInterval} />
         <Animated.View style={{opacity}} pointerEvents="none">
           <Values {...{candles, translateX, caliber}} />
         </Animated.View>
@@ -165,7 +168,7 @@ export default function ChartView({componentId}) {
           </Animated.View>
         </PanGestureHandler>
       </View>
-      <Content priceNow={priceNow} componentId={componentId} />
+      <Content componentId={componentId} />
     </View>
   ) : (
     <View

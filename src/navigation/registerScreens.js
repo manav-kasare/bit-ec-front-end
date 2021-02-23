@@ -55,7 +55,7 @@ function registerScreens() {
       case 'Trade':
         Navigation.registerComponent(
           'Trade',
-          () => require('../main/Chart/Trade').default,
+          () => require('../main/Chart/Trade/Trade').default,
         );
         break;
       case 'Admin':

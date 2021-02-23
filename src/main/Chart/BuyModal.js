@@ -77,7 +77,12 @@ export default function BuyModal({componentId, priceNow}) {
         <View style={styles.tile}>
           <Text style={styles.tileText}>Amount</Text>
           <Text style={styles.tileText}>
-            {(parseFloat(value) / priceNow).toString().slice(0, -10)} BTC
+            {parseFloat(value) / priceNow - 0.0001 > 0
+              ? `${(parseFloat(value) / priceNow - 0.0001)
+                  .toString()
+                  .slice(0, -10)} `
+              : '0 '}
+            BTC
           </Text>
         </View>
         <View style={styles.tile}>
@@ -86,7 +91,9 @@ export default function BuyModal({componentId, priceNow}) {
         </View>
         <View style={styles.tile}>
           <Text style={styles.tileText}>Payable</Text>
-          <Text style={styles.tileText}>{parseFloaft(value) * 1.05}</Text>
+          <Text style={styles.tileText}>
+            {(parseFloat(value) * 1.05).toString()}
+          </Text>
         </View>
       </View>
       <Button

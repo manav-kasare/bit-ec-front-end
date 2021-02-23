@@ -20,20 +20,22 @@ export default function SellModal({componentId, priceNow}) {
   const onChangeValue = (text) => setValue(text);
 
   const handleSubmit = async () => {
-    setIsLoading(true);
-    const response = await webSocket.sell({
-      userId: user._id,
-      numberOfBitcoins: value / priceNow,
-      atPrice: priceNow,
-    });
-    setUser(response.user);
-    setIsLoading(false);
-    Navigation.dismissOverlay(overlayId);
-    push(componentId, 'Chat', {
-      transactionId: response.transactionId,
-      prevMessages: [],
-    });
-    storeUser(response.user);
+    if (parseFloat(value) <= 500) {
+      setIsLoading(true);
+      const response = await webSocket.sell({
+        userId: user._id,
+        numberOfBitcoins: value / priceNow,
+        atPrice: priceNow,
+      });
+      setUser(response.user);
+      setIsLoading(false);
+      Navigation.dismissOverlay(overlayId);
+      push(componentId, 'Chat', {
+        transactionId: response.transactionId,
+        prevMessages: [],
+      });
+      storeUser(response.user);
+    }
   };
 
   return (
@@ -52,7 +54,7 @@ export default function SellModal({componentId, priceNow}) {
             theme={{
               colors: {
                 primary: 'transparent',
-                text: 'white',
+                text: parseFloat(value) <= 500 ? 'white' : 'crimson',
                 background: 'transparent',
               },
             }}
@@ -68,6 +70,7 @@ export default function SellModal({componentId, priceNow}) {
             placeholderTextColor="grey"
           />
         </View>
+        <Text style={styles.max}>Max. $ 500</Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
@@ -87,7 +90,7 @@ export default function SellModal({componentId, priceNow}) {
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading}
+        disabled={isLoading || parseFloat(value) > 500}
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}
@@ -136,6 +139,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 40,
     marginRight: -8,
+  },
+  max: {
+    color: 'grey',
   },
   textInput: {
     flexDirection: 'row',

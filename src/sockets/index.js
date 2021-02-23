@@ -85,8 +85,18 @@ class WebSocket {
     return response;
   };
 
-  addListing = async (data) => {
+  addListing = async (id) => {
     const response = await this.socket.request('addListing', id);
+    return response;
+  };
+
+  getBuyListings = async () => {
+    const response = await this.socket.request('getBuyListings');
+    return response;
+  };
+
+  getSellListings = async () => {
+    const response = await this.socket.request('getSellListings');
     return response;
   };
 }

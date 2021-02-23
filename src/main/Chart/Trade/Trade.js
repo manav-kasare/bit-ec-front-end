@@ -3,20 +3,20 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import Animated from 'react-native-reanimated';
 import {SceneMap, TabView} from 'react-native-tab-view';
-import Buyers from './Buyers';
-import Sellers from './Sellers';
+import Buy from './Buy';
+import Sell from './Sell';
 import Feather from 'react-native-vector-icons/Feather';
 import {showOverlay} from '../../../navigation/functions';
 import BuyOrSell from './BuyOrSell';
 
-const FirstRoute = () => <Sellers />;
-const SecondRoute = () => <Buyers />;
+const FirstRoute = () => <Sell />;
+const SecondRoute = () => <Buy />;
 
 export default function Trade({componentId}) {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'Sellers'},
-    {key: 'second', title: 'Buyers'},
+    {key: 'first', title: 'Buy trades'},
+    {key: 'second', title: 'Sell trades'},
   ]);
 
   React.useEffect(() => {
@@ -101,11 +101,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'rgba(255,255,255,0.1)',
   },
 });
 const moreIcon = () => (
-  <Feather name="more-horizontal" size={20} color="white" />
+  <Feather
+    name="more-horizontal"
+    size={20}
+    color="white"
+    style={{marginRight: 15}}
+  />
 );
 
 Trade.options = {

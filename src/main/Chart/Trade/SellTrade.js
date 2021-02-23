@@ -4,7 +4,6 @@ import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
-import {push} from '../../../navigation/functions';
 import {storeUser} from '../../../shared/asyncStorage';
 import {webSocket} from '../../../sockets';
 

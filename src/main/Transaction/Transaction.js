@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 30,
-    fontWeight: '900',
+    fontWeight: '800',
     color: 'white',
   },
   content: {

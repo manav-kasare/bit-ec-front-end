@@ -29,8 +29,8 @@ export default function SellTrade({componentId}) {
       const response = await webSocket.addListing({
         from: user._id,
         type: 'buy',
-        atPrice: priceNow,
-        amount: value,
+        atPrice: parseFloat(priceNow),
+        amount: parseFloat(value),
         createdAt: Date.now(),
       });
       if (!response.err) {

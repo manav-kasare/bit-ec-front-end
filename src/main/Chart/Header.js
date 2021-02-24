@@ -52,11 +52,14 @@ const styles = StyleSheet.create({
   tabs: {
     flexDirection: 'row',
     marginTop: 16,
+    alignSelf: 'center',
+    borderRadius: 8,
+    alignItems: 'center',
   },
   tabContainer: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     flexDirection: 'row',
-    width: constants.width,
+    width: constants.width * 0.9,
     alignSelf: 'center',
     justifyContent: 'space-around',
   },

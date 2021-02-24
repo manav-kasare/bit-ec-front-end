@@ -19,7 +19,7 @@ export default function Sell() {
   }, []);
 
   const handleGetData = async () => {
-    const response = await webSocket.getSellListings();
+    const response = await webSocket.getBuyListings();
     if (!response.err) setListings(response.listings);
   };
 
@@ -57,48 +57,44 @@ export default function Sell() {
 const ItemSeparatorComponent = () => <View style={styles.seperator} />;
 
 const Tile = ({id, componentId}) => {
-  const [transaction, setTransaction] = React.useState({
-    numberOfBitcoins: 0,
-    atPrice: 0,
+  const [listing, setListing] = React.useState({
+    from: '',
     type: '',
-    status: '',
-    messages: [],
+    atPrice: null,
+    amount: null,
+    createdAt: null,
   });
 
   React.useEffect(() => {
-    handleGetTransaction();
+    handleGetListing();
   }, []);
 
-  const handleGetTransaction = async () => {
-    const response = await webSocket.getTransaction(id);
-    if (!response.err) setTransaction(response.transaction);
+  const handleGetListing = async () => {
+    const response = await webSocket.getListing(id);
+    if (!response.err) setListing(response.listing);
   };
 
-  const title = `${transaction.numberOfBitcoins} BTC at $ ${transaction.atPrice}`;
+  const title = `${listing.amount / atPrice}  BTC`;
 
   const onPress = () => {
     push(componentId, 'Chat', {
       transactionId: id,
-      prevMessages: transaction.messages,
-      setTransaction: setTransaction,
+      prevMessages: listing.messages,
+      setListing: setListing,
     });
   };
 
+  const handleSell = () => {};
+
   const right = () => (
-    <View
-      style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
-      <Text
-        style={{
-          color:
-            transaction.status === 'approved'
-              ? '#37b526'
-              : transaction.status === 'pending'
-              ? 'yellow'
-              : '#E33F64',
-        }}>
-        {transaction.status && transaction.status.toUpperCase()}
-      </Text>
-    </View>
+    <Button
+      color={constants.accent}
+      loading={isLoading}
+      disabled={isLoading}
+      labelStyle={{textTransform: 'none', color: constants.accent}}
+      onPress={handleSell}>
+      Sell
+    </Button>
   );
 
   return (
@@ -106,10 +102,8 @@ const Tile = ({id, componentId}) => {
       <List.Item
         title={title}
         titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
-        description={transaction.type.toUpperCase()}
-        descriptionStyle={{
-          color: transaction.type === 'buy' ? '#37b526' : '#E33F64',
-        }}
+        description={`At price: ${listing.atPrice}`}
+        descriptionStyle={{color: 'grey'}}
         onPress={onPress}
         style={styles.tile}
         right={right}

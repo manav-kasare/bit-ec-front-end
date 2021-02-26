@@ -10,7 +10,8 @@ import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
-import {push} from '../../navigation/functions';
+import {push, showToast} from '../../navigation/functions';
+import {fcmService} from '../../notifications/FCMService';
 import {storeUser} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 
@@ -41,11 +42,20 @@ export default function SellModal({componentId}) {
       setUser(response.user);
       setIsLoading(false);
       Navigation.dismissOverlay(overlayId);
-      push(componentId, 'Chat', {
-        id: response.transactionId,
-        type: 'transaction',
-        prevMessages: [],
-      });
+      showToast('success', 'Sell request will be processed in some time');
+      const adminRes = await webSocket.getAdmin();
+      if (!adminRes.err) {
+        fcmService.sendNotification(
+          {},
+          [adminRes.notificationId],
+          `${user.name}: Sell request`,
+          `${value / priceNow} BTC`,
+        );
+        webSocket.notifyAdmin({
+          title: `${user.name}: Sell request`,
+          description: `${value / priceNow} BTC`,
+        });
+      }
       storeUser(response.user);
     }
   };

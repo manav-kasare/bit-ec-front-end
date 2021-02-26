@@ -70,7 +70,7 @@ export default function Admin({componentId}) {
           ListEmptyComponent={ListEmptyComponent}
           refreshControl={refreshControl}
         />
-        <View style={styles.headingView}>
+        <View style={[styles.headingView, {marginTop: 50}]}>
           <Text style={styles.heading}>Trades</Text>
         </View>
         <FlatList
@@ -147,7 +147,7 @@ const Tile = ({id, componentId}) => {
     <>
       <List.Item
         title={title}
-        titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
+        titleStyle={{color: 'white', fontSize: 20, fontWeight: '700'}}
         description={transaction.type.toUpperCase()}
         descriptionStyle={{
           color: transaction.type === 'buy' ? '#37b526' : '#E33F64',
@@ -209,7 +209,7 @@ const TradeTile = ({id, componentId}) => {
     <>
       <List.Item
         title={title}
-        titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
+        titleStyle={{color: 'white', fontSize: 20, fontWeight: '700'}}
         description={trade.type.toUpperCase()}
         descriptionStyle={{
           color: trade.type === 'buy' ? '#37b526' : '#E33F64',
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   headingView: {
     width: constants.width,
-    paddingLeft: 25,
+    paddingLeft: 15,
   },
   heading: {
     fontSize: 30,

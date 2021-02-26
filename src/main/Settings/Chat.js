@@ -1,5 +1,11 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  _Image,
+} from 'react-native';
 import {RNS3} from 'react-native-aws3';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -13,13 +19,46 @@ import {webSocket} from '../../sockets';
 import {showOverlay} from '../../navigation/functions';
 import ApproveDecline from './ApproveDecline';
 
-export default function Chat({id, prevMessages, componentId, setTransaction}) {
+export default function Chat({
+  id,
+  type,
+  prevMessages,
+  componentId,
+  setTransaction,
+}) {
   const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
   const adminId = '6030066eace592fe6ba705a7';
   // const adminId = '6030f1846953581aff77df42';
   const [user] = useGlobal('user');
   const [isAdmin] = useGlobal('isAdmin');
+  const [userId, setUserId] = React.useState(null);
+
+  React.useState(() => {
+    if (type === 'transaction') {
+      handleGetTransactionData();
+    } else if (type === 'trade') {
+      handleGetTradeData();
+    }
+  }, []);
+
+  const handleGetTransactionData = async () => {
+    const response = await webSocket.getTransaction(id);
+    if (!response.err) {
+      setUserId(response.transaction.userId);
+    }
+  };
+
+  const handleGetTradeData = async () => {
+    const response = await webSocket.getTrade(id);
+    if (!response.err) {
+      if (response.type === 'buy') {
+        setUserId(response.trade.creator);
+      } else {
+        setUserId(response.trade.trader);
+      }
+    }
+  };
 
   React.useEffect(() => {
     if (isAdmin) {
@@ -62,7 +101,7 @@ export default function Chat({id, prevMessages, componentId, setTransaction}) {
   };
 
   React.useEffect(() => {
-    const unsubscribe = webSocket.socket.on('getMessageFromAdmin', (data) => {
+    const unsubscribe = webSocket.socket.on('getChatMsg', (data) => {
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, data),
       );
@@ -112,8 +151,13 @@ export default function Chat({id, prevMessages, componentId, setTransaction}) {
   };
 
   const handleSendMessage = (_message, image) => {
-    webSocket.sendMessageToAdmin({message: _message, id});
-    handleSendNotification(image);
+    if (!isAdmin) {
+      webSocket.sendMessageToAdmin({message: _message, id, type});
+      handleSendNotification(image);
+    } else {
+      webSocket.sendChatMsg({message: _message, userId, id, type});
+      handleSendNotification(image);
+    }
   };
 
   const handleSendNotification = async (image) => {

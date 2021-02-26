@@ -138,12 +138,23 @@ export default ({componentId}) => {
         <View style={styles.content}>
           <View style={styles.bitcoinsBoughtView}>
             <Text style={styles.bitcoinsBought}>
-              {user.bitcoinsBought ? user.bitcoinsBought : 0} BTC,
+              {user.bitcoinsBought
+                ? user.bitcoinsBought.toString().includes('.')
+                  ? user.bitcoinsBought.toString().slice(0, -15)
+                  : user.bitcoinsBought.toString() + '.00'
+                  ? user.bitcoinsBought
+                  : 0
+                : 0}
+              BTC,
             </Text>
             <Text style={styles.bitcoinsBoughtRight}>
               ${' '}
               {user.bitcoinsBought * priceNow
-                ? user.bitcoinsBought * priceNow
+                ? (user.bitcoinsBought * priceNow).toString().includes('.')
+                  ? (user.bitcoinsBought * priceNow).toString().slice(0, -10)
+                  : (user.bitcoinsBought * priceNow).toString() + '.00'
+                  ? user.bitcoinsBought * priceNow
+                  : 0
                 : 0}
             </Text>
           </View>

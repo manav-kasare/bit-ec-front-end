@@ -13,11 +13,9 @@ import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
 import {webSocket} from '../../sockets';
 
-export default function Transaction({componentId}) {
+export default function Trades({componentId}) {
   const [user, setUser] = useGlobal('user');
   const [refreshing, setRefreshing] = React.useState(false);
-
-  const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
 
   const renderTrade = ({item}) => (
     <TradeTile id={item} componentId={componentId} />
@@ -41,30 +39,14 @@ export default function Transaction({componentId}) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.headingView}>
-        <Text style={styles.heading}>Transactions</Text>
-      </View>
-      <View style={styles.content}>
-        <FlatList
-          data={user.transactions}
-          renderItem={renderItem}
-          key={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={refreshControl}
-        />
-        <View style={styles.headingView}>
-          <Text style={styles.heading}>Trades</Text>
-        </View>
-        <FlatList
-          data={user.trades}
-          renderItem={renderTrade}
-          key={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={refreshControl}
-        />
-      </View>
+      <FlatList
+        data={user.trades}
+        renderItem={renderTrade}
+        key={(item, index) => index.toString()}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={ListEmptyComponent}
+        refreshControl={refreshControl}
+      />
     </SafeAreaView>
   );
 }
@@ -81,69 +63,6 @@ const ListEmptyComponent = () => (
     <Text style={{color: 'grey'}}>None</Text>
   </View>
 );
-
-const Tile = ({id, componentId}) => {
-  const [transaction, setTransaction] = React.useState({
-    amount: null,
-    atPrice: null,
-    type: '',
-    status: '',
-    messages: [],
-  });
-
-  React.useEffect(() => {
-    handleGetTransaction();
-  }, []);
-
-  const handleGetTransaction = async () => {
-    const response = await webSocket.getTransaction(id);
-    if (!response.err) setTransaction(response.transaction);
-  };
-
-  const title = `${transaction.amount / transaction.atPrice} BTC`;
-
-  const onPress = () => {
-    push(componentId, 'Chat', {
-      id: id,
-      prevMessages: transaction.messages,
-      setTransaction: setTransaction,
-    });
-  };
-
-  const right = () => (
-    <View
-      style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
-      <Text
-        style={{
-          color:
-            transaction.status === 'approved'
-              ? '#37b526'
-              : transaction.status === 'pending'
-              ? 'yellow'
-              : '#E33F64',
-        }}>
-        {transaction.status && transaction.status.toUpperCase()}
-      </Text>
-    </View>
-  );
-
-  return (
-    <>
-      <List.Item
-        title={title}
-        titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
-        description={transaction.type.toUpperCase()}
-        descriptionStyle={{
-          color: transaction.type === 'buy' ? '#37b526' : '#E33F64',
-        }}
-        onPress={onPress}
-        style={styles.tile}
-        right={right}
-      />
-      <ItemSeparatorComponent />
-    </>
-  );
-};
 
 const TradeTile = ({id, componentId}) => {
   const [trade, setTrade] = React.useState({
@@ -193,11 +112,12 @@ const TradeTile = ({id, componentId}) => {
     <>
       <List.Item
         title={title}
-        titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
+        titleStyle={{color: 'white', fontSize: 20, fontWeight: '700'}}
         description={trade.type.toUpperCase()}
         descriptionStyle={{
           color: trade.type === 'buy' ? '#37b526' : '#E33F64',
         }}
+        disabled={trade.type !== 'buy'}
         onPress={onPress}
         style={styles.tile}
         right={right}
@@ -221,16 +141,13 @@ const styles = StyleSheet.create({
   },
   headingView: {
     width: constants.width,
-    paddingLeft: 25,
-    marginBottom: 20,
+    paddingLeft: 15,
+    marginTop: 50,
   },
   heading: {
     fontSize: 30,
     fontWeight: '800',
     color: 'white',
-  },
-  content: {
-    // flex: 1,
   },
   tile: {
     height: constants.height * 0.1,
@@ -238,3 +155,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+Trades.options = {
+  topBar: {
+    title: {
+      text: 'Trades',
+      fontSize: 25,
+      fontWeight: '700',
+    },
+    borderColor: 'transparent',
+    backButton: {
+      showTitle: false,
+    },
+  },
+};

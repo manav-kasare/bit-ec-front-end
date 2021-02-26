@@ -20,41 +20,6 @@ export default function Toast({componentId, feedbackType, message}) {
 
   const translateY = mix(yT, 50, 0);
 
-  const styles = StyleSheet.create({
-    root: {
-      flex: 1,
-      flexDirection: 'column-reverse',
-    },
-    toast: {
-      elevation: 2,
-      flexDirection: 'row',
-      height: 50,
-      margin: 16,
-      marginBottom: 100,
-      borderRadius: 8,
-      alignItems: 'center',
-      backgroundColor: 'red',
-      justifyContent: 'space-between',
-      position: 'absolute',
-      width: constants.width * 0.9,
-      alignSelf: 'center',
-      bottom: constants.height * 0.025,
-    },
-    text: {
-      color: 'white',
-      fontSize: 16,
-      marginLeft: 16,
-    },
-    button: {
-      marginRight: 16,
-    },
-    buttonText: {
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-  });
-
   React.useEffect(() => {
     setTimeout(() => {
       Navigation.dismissOverlay(componentId);
@@ -89,3 +54,38 @@ Toast.options = {
     interceptTouchOutside: false,
   },
 };
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    flexDirection: 'column-reverse',
+  },
+  toast: {
+    elevation: 2,
+    flexDirection: 'row',
+    height: 50,
+    margin: 16,
+    marginBottom: 100,
+    borderRadius: 8,
+    alignItems: 'center',
+    backgroundColor: 'red',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    width: constants.width * 0.9,
+    alignSelf: 'center',
+    bottom: constants.height * 0.025,
+  },
+  text: {
+    color: 'white',
+    fontSize: 16,
+    marginLeft: 16,
+  },
+  button: {
+    marginRight: 16,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

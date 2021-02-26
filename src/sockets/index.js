@@ -51,6 +51,11 @@ class WebSocket {
     return response;
   };
 
+  getAdmin = async () => {
+    const response = await this.socket.request('getAdmin');
+    return response;
+  };
+
   buy = async (data) => {
     const response = await this.socket.request('buy', data);
     return response;
@@ -63,6 +68,10 @@ class WebSocket {
 
   sendMessageToAdmin = (data) => {
     this.socket.emit('sendMessageToAdmin', data);
+  };
+
+  sendChatMsg = (data) => {
+    this.socket.emit('sendChatMsg', data);
   };
 
   getTransaction = async (id) => {
@@ -90,8 +99,8 @@ class WebSocket {
     return response;
   };
 
-  getBuyListings = async () => {
-    const response = await this.socket.request('getBuyListings');
+  getBuyListings = async (data) => {
+    const response = await this.socket.request('getBuyListings', data);
     return response;
   };
 
@@ -118,6 +127,10 @@ class WebSocket {
   getPendingTrades = async () => {
     const response = await this.socket.request('getPendingTrades');
     return response;
+  };
+
+  notifyAdmin = async (data) => {
+    await this.socket.emit('notifyAdmin', data);
   };
 }
 

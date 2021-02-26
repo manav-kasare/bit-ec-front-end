@@ -40,16 +40,28 @@ function registerScreens() {
           () => require('../auth/VerifyOtp').default,
         );
         break;
-      case 'Transaction':
+      case 'Settings':
         Navigation.registerComponent(
-          'Transaction',
-          () => require('../main/Transaction/Transaction').default,
+          'Settings',
+          () => require('../main/Settings/Settings').default,
+        );
+        break;
+      case 'Transactions':
+        Navigation.registerComponent(
+          'Transactions',
+          () => require('../main/Settings/Transactions').default,
+        );
+        break;
+      case 'Trades':
+        Navigation.registerComponent(
+          'Trades',
+          () => require('../main/Settings/Trades').default,
         );
         break;
       case 'Chat':
         Navigation.registerComponent(
           'Chat',
-          () => require('../main/Transaction/Chat').default,
+          () => require('../main/Settings/Chat').default,
         );
         break;
       case 'Trade':
@@ -61,13 +73,19 @@ function registerScreens() {
       case 'Admin':
         Navigation.registerComponent(
           'Admin',
-          () => require('../main/Transaction/Admin').default,
+          () => require('../main/Settings/Admin').default,
         );
         break;
       case 'CustomModal':
         Navigation.registerComponent(
           'CustomModal',
           () => require('../shared/CustomModal').default,
+        );
+        break;
+      case 'CustomAlert':
+        Navigation.registerComponent(
+          'CustomAlert',
+          () => require('../shared/CustomAlert').default,
         );
         break;
       case 'CustomTopBarButton':

@@ -5,10 +5,12 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  Text,
 } from 'react-native';
 import {Button, List} from 'react-native-paper';
 import {useGlobal} from 'reactn';
 import {push} from '../../../navigation/functions';
+import {fcmService} from '../../../notifications/FCMService';
 import {storeUser} from '../../../shared/asyncStorage';
 import {webSocket} from '../../../sockets';
 
@@ -50,6 +52,7 @@ export default function Buy({componentId}) {
         renderItem={renderItem}
         key={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={ListEmptyComponent}
         refreshControl={refreshControl}
       />
     </View>
@@ -57,6 +60,18 @@ export default function Buy({componentId}) {
 }
 
 const ItemSeparatorComponent = () => <View style={styles.seperator} />;
+
+const ListEmptyComponent = () => (
+  <View
+    style={{
+      flex: 1,
+      height: constants.height * 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <Text style={{color: 'grey'}}>No trades listed</Text>
+  </View>
+);
 
 const Tile = ({id, componentId}) => {
   const [listing, setListing] = React.useState({
@@ -106,6 +121,19 @@ const Tile = ({id, componentId}) => {
         type: 'trade',
         prevMessages: [],
       });
+      const adminRes = await webSocket.getAdmin();
+      if (!adminRes.err) {
+        fcmService.sendNotification(
+          {},
+          [adminRes.notificationId],
+          `${user.name}: Buy trade request`,
+          `${listing.amount / listing.atPrice} BTC`,
+        );
+        webSocket.notifyAdmin({
+          title: `${user.name}: Buy trade request`,
+          description: `${listing.amount / listing.atPrice} BTC`,
+        });
+      }
       setIsLoading(false);
       storeUser(response.user);
     } else setIsLoading(false);

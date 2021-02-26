@@ -11,6 +11,7 @@ import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
+import {fcmService} from '../../notifications/FCMService';
 import {storeUser} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 
@@ -30,7 +31,7 @@ export default function BuyModal({componentId}) {
     setIsLoading(true);
     const response = await webSocket.buy({
       userId: user._id,
-      numberOfBitcoins: value / priceNow,
+      numberOfBitcoins: parseFloat(value) / priceNow,
       atPrice: priceNow,
     });
     setUser(response.user);
@@ -41,6 +42,20 @@ export default function BuyModal({componentId}) {
       type: 'transaction',
       prevMessages: [],
     });
+
+    const adminRes = await webSocket.getAdmin();
+    if (!adminRes.err) {
+      fcmService.sendNotification(
+        {},
+        [adminRes.notificationId],
+        `${user.name}: Buy request`,
+        `${parseFloat(value) / priceNow} BTC`,
+      );
+      webSocket.notifyAdmin({
+        title: `${user.name}: Buy request`,
+        description: `${parseFloat(value) / priceNow} BTC`,
+      });
+    }
     storeUser(response.user);
   };
 

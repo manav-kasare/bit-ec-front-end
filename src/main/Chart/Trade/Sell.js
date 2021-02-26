@@ -9,27 +9,36 @@ import {
 } from 'react-native';
 import {Button, List} from 'react-native-paper';
 import {useGlobal} from 'reactn';
-import {push} from '../../../navigation/functions';
+import {push, showToast} from '../../../navigation/functions';
+import {fcmService} from '../../../notifications/FCMService';
 import {storeUser} from '../../../shared/asyncStorage';
 import {webSocket} from '../../../sockets';
 
 export default function Sell({componentId}) {
   const [listings, setListings] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [priceNow] = useGlobal('priceNow');
+  const [user] = useGlobal('user');
 
   React.useEffect(() => {
     handleGetData();
   }, []);
 
   const handleGetData = async () => {
-    const response = await webSocket.getBuyListings();
+    user.bitcoinsBought * priceNow;
+    const response = await webSocket.getBuyListings({
+      limit: user.bitcoinsBought * priceNow,
+    });
+    console.log(response);
     if (!response.err) setListings(response.listings);
   };
 
   const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
 
   const onRefresh = async () => {
-    const response = await webSocket.getBuyListings();
+    const response = await webSocket.getBuyListings({
+      limit: user.bitcoinsBought * priceNow,
+    });
     if (!response.err) setListings(response.listings);
     setRefreshing(false);
   };
@@ -51,6 +60,7 @@ export default function Sell({componentId}) {
         renderItem={renderItem}
         key={(item, index) => index.toString()}
         ItemSeparatorComponent={ItemSeparatorComponent}
+        ListEmptyComponent={ListEmptyComponent}
         refreshControl={refreshControl}
       />
     </View>
@@ -58,6 +68,18 @@ export default function Sell({componentId}) {
 }
 
 const ItemSeparatorComponent = () => <View style={styles.seperator} />;
+
+const ListEmptyComponent = () => (
+  <View
+    style={{
+      flex: 1,
+      height: constants.height * 0.8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    }}>
+    <Text style={{color: 'grey'}}>No trades listed</Text>
+  </View>
+);
 
 const Tile = ({id, componentId}) => {
   const [listing, setListing] = React.useState({
@@ -67,6 +89,7 @@ const Tile = ({id, componentId}) => {
     amount: null,
     createdAt: null,
   });
+
   const [user, setUser] = useGlobal('user');
   const [isLoading, setIsLoading] = React.useState(false);
   const [already, setAlready] = React.useState(false);
@@ -78,7 +101,7 @@ const Tile = ({id, componentId}) => {
   const handleGetListing = async () => {
     const response = await webSocket.getListing(id);
     if (!response.err) {
-      response.listing.from === user._id && setAlready(true);
+      if (response.listing.from === user._id) setAlready(true);
       setListing(response.listing);
     }
   };
@@ -100,12 +123,21 @@ const Tile = ({id, componentId}) => {
     });
     if (!response.err) {
       setAlready(true);
+      const adminRes = await webSocket.getAdmin();
+      if (!adminRes.err) {
+        fcmService.sendNotification(
+          {},
+          [adminRes.notificationId],
+          `${user.name}: Sell trade request`,
+          `${listing.amount / listing.atPrice} BTC`,
+        );
+        webSocket.notifyAdmin({
+          title: `${user.name}: Sell trade request`,
+          description: `${listing.amount / listing.atPrice} BTC`,
+        });
+      }
+      showToast('success', 'Sell request will be processed in some time');
       setUser(response.user);
-      push(componentId, 'Chat', {
-        id: response.tradeId,
-        type: 'trade',
-        prevMessages: [],
-      });
       setIsLoading(false);
       storeUser(response.user);
     } else setIsLoading(false);

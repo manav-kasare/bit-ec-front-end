@@ -30,7 +30,9 @@ export default function CountryPicker({visible, setVisible, setCountry}) {
 
   const left = (_country) => (
     <View style={{marginTop: 5, width: 50}}>
-      <Text>+{countries[_country].callingCode[0]}</Text>
+      <Text style={{color: 'black'}}>
+        +{countries[_country].callingCode[0]}
+      </Text>
     </View>
   );
 

@@ -16,7 +16,8 @@ import ApproveDecline from './ApproveDecline';
 export default function Chat({id, prevMessages, componentId, setTransaction}) {
   const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
-  const adminId = '6030f1846953581aff77df42';
+  const adminId = '6030066eace592fe6ba705a7';
+  // const adminId = '6030f1846953581aff77df42';
   const [user] = useGlobal('user');
   const [isAdmin] = useGlobal('isAdmin');
 

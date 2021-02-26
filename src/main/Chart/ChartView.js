@@ -29,6 +29,7 @@ export default function ChartView({componentId}) {
   const [done, setDone] = React.useState(false);
   const [priceNow, setPriceNow] = useGlobal('priceNow');
   const [domain, setDomain] = React.useState([0, 1]);
+  const [isAdmin] = useGlobal('isAdmin');
   const caliber = constants.width / 25;
   const x = useValue(0);
   const y = useValue(0);
@@ -168,7 +169,7 @@ export default function ChartView({componentId}) {
           </Animated.View>
         </PanGestureHandler>
       </View>
-      <Content componentId={componentId} />
+      {!isAdmin && <Content componentId={componentId} />}
     </View>
   ) : (
     <View

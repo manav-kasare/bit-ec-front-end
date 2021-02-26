@@ -1,14 +1,9 @@
 import React from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {useGlobal} from 'reactn';
 import {navStart, setMain, setRoot} from './src/navigation/navStart';
-import {
-  getToken,
-  getUser,
-  storeToken,
-  storeUser,
-} from './src/shared/asyncStorage';
+import {getToken, getUser, storeUser} from './src/shared/asyncStorage';
 import {webSocket} from './src/sockets';
-import SplashScreen from 'react-native-splash-screen';
 
 export default function App() {
   const setToken = useGlobal('token')[1];
@@ -29,17 +24,18 @@ export default function App() {
       setMain(user.phoneNumber);
       SplashScreen.hide();
       setUser(user);
-      if (user.phoneNumber === '+593983873813') setIsAdmin(true);
+      if (user.phoneNumber === '+918433802669') setIsAdmin(true);
+      // if (user.phoneNumber === '+593983873813') setIsAdmin(true);
       if (user) {
         const response = await webSocket.getUserByToken(asyncToken);
         console.log('response', response);
         if (!response.err) {
-          if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
+          if (response.user.phoneNumber === '+918433802669') setIsAdmin(true);
+          // if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
           setUser(response.user);
           storeUser(response.user);
         }
       }
-      storeUser();
     } else {
       setRoot();
       SplashScreen.hide();

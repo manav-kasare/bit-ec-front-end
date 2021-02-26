@@ -60,7 +60,7 @@ export default function CreateBuyListing({componentId}) {
             theme={{
               colors: {
                 primary: 'transparent',
-                text: 'white',
+                text: parseFloat(value) >= 100 ? 'white' : 'crimson',
                 background: 'transparent',
               },
             }}
@@ -76,6 +76,7 @@ export default function CreateBuyListing({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
+        <Text style={styles.min}>Min: $ 100</Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
@@ -96,7 +97,7 @@ export default function CreateBuyListing({componentId}) {
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading}
+        disabled={isLoading || parseFloat(amount) < 100}
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}
@@ -135,6 +136,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 45,
     fontVariant: ['tabular-nums'],
+  },
+  min: {
+    color: 'grey',
   },
   content: {
     marginVertical: constants.height * 0.05,

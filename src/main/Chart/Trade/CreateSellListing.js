@@ -28,8 +28,8 @@ export default function CreateSellListing({componentId}) {
 
   const handleSubmit = async () => {
     if (
+      parseFloat(value) >= 100 &&
       parseFloat(value) <= 500 &&
-      parseFloat(value) > 0 &&
       parseFloat(value) <= user.bitcoinsBought * priceNow
     ) {
       setIsLoading(true);
@@ -87,6 +87,7 @@ export default function CreateSellListing({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
+        <Text style={styles.max}>Min: $ 100</Text>
         <Text style={styles.max}>
           {parseFloat(value) > user.bitcoinsBought * priceNow
             ? 'Not enough balance'
@@ -115,7 +116,9 @@ export default function CreateSellListing({componentId}) {
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading}
+        disabled={
+          isLoading || parseFloat(value) > 500 || parseFloat(value) > 100
+        }
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}

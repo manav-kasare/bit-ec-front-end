@@ -138,10 +138,13 @@ export default ({componentId}) => {
         <View style={styles.content}>
           <View style={styles.bitcoinsBoughtView}>
             <Text style={styles.bitcoinsBought}>
-              {user.bitcoinsBought} BTC,
+              {user.bitcoinsBought ? user.bitcoinsBought : 0} BTC,
             </Text>
             <Text style={styles.bitcoinsBoughtRight}>
-              $ {user.bitcoinsBought * priceNow}
+              ${' '}
+              {user.bitcoinsBought * priceNow
+                ? user.bitcoinsBought * priceNow
+                : 0}
             </Text>
           </View>
           <View style={styles.pl}>
@@ -150,9 +153,11 @@ export default ({componentId}) => {
                 user.lastPrice - priceNow > 0 ? styles.profit : styles.loss
               }>
               Proit/Loss: ${' '}
-              {(user.lastPrice - priceNow).toString().includes('.')
-                ? (user.lastPrice - priceNow).toString().slice(0, -11)
-                : (user.lastPrice - priceNow).toString() + '.00'}
+              {user.lastPrice - priceNow
+                ? (user.lastPrice - priceNow).toString().includes('.')
+                  ? (user.lastPrice - priceNow).toString().slice(0, -11)
+                  : (user.lastPrice - priceNow).toString() + '.00'
+                : 0}
             </Text>
           </View>
         </View>

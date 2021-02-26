@@ -67,8 +67,8 @@ export default function SellModal({componentId}) {
               colors: {
                 primary: 'transparent',
                 text:
+                  parseFloat(value) >= 100 &&
                   parseFloat(value) <= 500 &&
-                  parseFloat(value) > 0 &&
                   parseFloat(value) <= user.bitcoinsBought * priceNow
                     ? 'white'
                     : 'crimson',
@@ -87,6 +87,7 @@ export default function SellModal({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
+        <Text style={styles.max}>Min: $ 100</Text>
         <Text style={styles.max}>
           {parseFloat(value) > user.bitcoinsBought * priceNow
             ? 'Not enough balance'
@@ -114,7 +115,9 @@ export default function SellModal({componentId}) {
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading || parseFloat(value) > 500}
+        disabled={
+          isLoading || parseFloat(value) > 500 || parseFloat(value) > 100
+        }
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}

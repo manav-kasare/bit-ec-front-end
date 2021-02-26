@@ -54,6 +54,11 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
       notificationId: fcmToken,
       name,
       phoneNumber,
+      numberOfBitcoins: 0,
+      trades: [],
+      listings: [],
+      transactions: [],
+      lastPrice: 0,
     });
     if (response.err) showToast(response.err);
     else {

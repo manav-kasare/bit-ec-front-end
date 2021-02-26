@@ -60,7 +60,7 @@ export default function BuyModal({componentId}) {
             theme={{
               colors: {
                 primary: 'transparent',
-                text: 'white',
+                text: parseFloat(value) >= 100 ? 'white' : 'crimson',
                 background: 'transparent',
               },
             }}
@@ -76,6 +76,7 @@ export default function BuyModal({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
+        <Text style={styles.min}>Min: $ 100</Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
@@ -106,7 +107,7 @@ export default function BuyModal({componentId}) {
       </View>
       <Button
         loading={isLoading}
-        disabled={isLoading}
+        disabled={isLoading || parseFloat(value) < 100}
         labelStyle={{textTransform: 'none', color: 'white'}}
         mode="outlined"
         style={styles.button}
@@ -165,6 +166,9 @@ const styles = StyleSheet.create({
     height: constants.height * 0.06,
     borderRadius: 10,
     borderWidth: 0,
+  },
+  min: {
+    color: 'grey',
   },
   textInputMain: {
     alignContent: 'center',

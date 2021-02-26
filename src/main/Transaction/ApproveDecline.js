@@ -4,19 +4,15 @@ import {Navigation} from 'react-native-navigation';
 import {List} from 'react-native-paper';
 import {webSocket} from '../../sockets';
 
-export default function ApproveDecline({
-  transactionId,
-  componentId,
-  setTransaction,
-}) {
+export default function ApproveDecline({id, componentId, setTransaction}) {
   const handleApprove = async () => {
-    const transaction = await webSocket.approve(transactionId);
+    const transaction = await webSocket.approve(id);
     setTransaction(transaction);
     Navigation.dismissOverlay(componentId);
   };
 
   const handleDecline = async () => {
-    const transaction = await webSocket.decline(transactionId);
+    const transaction = await webSocket.decline(id);
     setTransaction(transaction);
     Navigation.dismissOverlay(componentId);
   };

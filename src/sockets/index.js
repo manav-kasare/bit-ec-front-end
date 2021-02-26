@@ -114,6 +114,11 @@ class WebSocket {
     const response = await this.socket.request('getTrade', id);
     return response;
   };
+
+  getPendingTrades = async () => {
+    const response = await this.socket.request('getPendingTrades');
+    return response;
+  };
 }
 
 export const webSocket = new WebSocket();

@@ -36,6 +36,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
         }
       })
       .catch((err) => {
+        console.log(err);
         if (err.code === 'auth/invalid-verification-code') {
           showToast('error', 'Invalid Code');
         } else if (err.code === 'auth/code-expired') {
@@ -66,8 +67,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   };
 
   const handleLogin = async () => {
-    const response = await webSocket.loginUser({phoneNumber});
-    if (response.err) showToast(response.err);
+    const response = await webSocket.loginUser(phoneNumber);
+    console.log(response);
+    if (response.err) showToast('error', response.err);
     else {
       setUser(response.user);
       setToken(response.token);
@@ -79,6 +81,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   };
 
   const resendConfirmationCode = async () => {
+    console.log(phoneNumber);
     setIsLoadingResendCode(true);
     await auth()
       .signInWithPhoneNumber(phoneNumber)

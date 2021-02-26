@@ -3,11 +3,6 @@ import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {call, divide, floor, onChange, useCode} from 'react-native-reanimated';
 import Row from './Row';
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -52,7 +47,6 @@ export default ({translateX, caliber, candles}) => {
       onChange(
         translateX,
         call([floor(divide(translateX, caliber))], ([index]) => {
-          ReactNativeHapticFeedback.trigger('impactLight', options);
           setCandle(candles[index]);
         }),
       ),

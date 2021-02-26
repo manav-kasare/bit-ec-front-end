@@ -30,7 +30,7 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   
-  [RNSplashScreen show];
+  
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
@@ -39,6 +39,9 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
   [ReactNativeNavigation bootstrapWithDelegate:self launchOptions:launchOptions];
+  
+  [RNSplashScreen show];
+  
   return YES;
 }
 

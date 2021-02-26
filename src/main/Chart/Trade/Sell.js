@@ -7,10 +7,13 @@ import {
   Text,
   View,
 } from 'react-native';
-import {List} from 'react-native-paper';
+import {Button, List} from 'react-native-paper';
+import {useGlobal} from 'reactn';
+import {push} from '../../../navigation/functions';
+import {storeUser} from '../../../shared/asyncStorage';
 import {webSocket} from '../../../sockets';
 
-export default function Sell() {
+export default function Sell({componentId}) {
   const [listings, setListings] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -26,8 +29,8 @@ export default function Sell() {
   const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
 
   const onRefresh = async () => {
-    const response = await webSocket.getUserById(user._id);
-    if (!response.err) setUser(response.user);
+    const response = await webSocket.getBuyListings();
+    if (!response.err) setListings(response.listings);
     setRefreshing(false);
   };
 
@@ -64,6 +67,9 @@ const Tile = ({id, componentId}) => {
     amount: null,
     createdAt: null,
   });
+  const [user, setUser] = useGlobal('user');
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [already, setAlready] = React.useState(false);
 
   React.useEffect(() => {
     handleGetListing();
@@ -71,20 +77,39 @@ const Tile = ({id, componentId}) => {
 
   const handleGetListing = async () => {
     const response = await webSocket.getListing(id);
-    if (!response.err) setListing(response.listing);
+    if (!response.err) {
+      response.listing.from === user._id && setAlready(true);
+      setListing(response.listing);
+    }
   };
 
-  const title = `${listing.amount / atPrice}  BTC`;
+  const title = `${(listing.amount / listing.atPrice)
+    .toString()
+    .slice(0, -10)}  BTC`;
 
-  const onPress = () => {
-    push(componentId, 'Chat', {
-      transactionId: id,
-      prevMessages: listing.messages,
-      setListing: setListing,
+  const handleSell = async () => {
+    setIsLoading(true);
+    const response = await webSocket.trade({
+      listingId: id,
+      creator: listing.from,
+      type: listing.type,
+      atPrice: listing.atPrice,
+      amount: listing.amount,
+      status: 'pending',
+      createdAt: listing.createdAt,
     });
+    if (!response.err) {
+      setAlready(true);
+      setUser(response.user);
+      push(componentId, 'Chat', {
+        id: response.tradeId,
+        type: 'trade',
+        prevMessages: [],
+      });
+      setIsLoading(false);
+      storeUser(response.user);
+    } else setIsLoading(false);
   };
-
-  const handleSell = () => {};
 
   const right = () => (
     <Button
@@ -97,19 +122,20 @@ const Tile = ({id, componentId}) => {
     </Button>
   );
 
-  return (
+  return !already ? (
     <>
       <List.Item
         title={title}
         titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
         description={`At price: ${listing.atPrice}`}
         descriptionStyle={{color: 'grey'}}
-        onPress={onPress}
         style={styles.tile}
         right={right}
       />
       <ItemSeparatorComponent />
     </>
+  ) : (
+    <></>
   );
 };
 
@@ -142,6 +168,6 @@ const styles = StyleSheet.create({
   tile: {
     height: constants.height * 0.1,
     width: constants.width,
-    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

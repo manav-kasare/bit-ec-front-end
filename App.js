@@ -25,12 +25,14 @@ export default function App() {
     setToken(asyncToken);
     if (asyncToken) {
       const user = await getUser();
+      console.log('user', user);
       setMain(user.phoneNumber);
       SplashScreen.hide();
       setUser(user);
       if (user.phoneNumber === '+593983873813') setIsAdmin(true);
       if (user) {
         const response = await webSocket.getUserByToken(asyncToken);
+        console.log('response', response);
         if (!response.err) {
           if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
           setUser(response.user);

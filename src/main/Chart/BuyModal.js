@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
@@ -31,14 +37,15 @@ export default function BuyModal({componentId}) {
     setIsLoading(false);
     Navigation.dismissOverlay(overlayId);
     push(componentId, 'Chat', {
-      transactionId: response.transactionId,
+      id: response.transactionId,
+      type: 'transaction',
       prevMessages: [],
     });
     storeUser(response.user);
   };
 
   return (
-    <View style={styles.modal}>
+    <SafeAreaView style={styles.modal}>
       <TouchableOpacity onPress={onDismiss} style={styles.x}>
         <Feather name="x" size={25} color="white" />
       </TouchableOpacity>
@@ -107,7 +114,7 @@ export default function BuyModal({componentId}) {
         onPress={handleSubmit}>
         Buy
       </Button>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   tabs: {
     flexDirection: 'row',
-    marginTop: 16,
+    marginVertical: 10,
     alignSelf: 'center',
     borderRadius: 8,
     alignItems: 'center',
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: constants.width * 0.9,
     alignSelf: 'center',
+    borderRadius: 8,
     justifyContent: 'space-around',
   },
   tab: {

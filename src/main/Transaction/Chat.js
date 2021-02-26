@@ -13,12 +13,7 @@ import {webSocket} from '../../sockets';
 import {showOverlay} from '../../navigation/functions';
 import ApproveDecline from './ApproveDecline';
 
-export default function Chat({
-  transactionId,
-  prevMessages,
-  componentId,
-  setTransaction,
-}) {
+export default function Chat({id, prevMessages, componentId, setTransaction}) {
   const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
   const adminId = '6030f1846953581aff77df42';
@@ -59,10 +54,7 @@ export default function Chat({
   const handleMore = () => {
     showOverlay('CustomModal', {
       children: () => (
-        <ApproveDecline
-          transactionId={transactionId}
-          setTransaction={setTransaction}
-        />
+        <ApproveDecline id={id} setTransaction={setTransaction} />
       ),
       height: constants.height * 0.25,
     });
@@ -119,7 +111,7 @@ export default function Chat({
   };
 
   const handleSendMessage = (_message, image) => {
-    webSocket.sendMessageToAdmin({message: _message, transactionId});
+    webSocket.sendMessageToAdmin({message: _message, id});
     handleSendNotification(image);
   };
 

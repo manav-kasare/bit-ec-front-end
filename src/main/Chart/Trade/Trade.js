@@ -9,14 +9,14 @@ import Feather from 'react-native-vector-icons/Feather';
 import {showOverlay} from '../../../navigation/functions';
 import BuyOrSell from './BuyOrSell';
 
-const FirstRoute = () => <Sell />;
-const SecondRoute = () => <Buy />;
+const FirstRoute = () => <Buy />;
+const SecondRoute = () => <Sell />;
 
 export default function Trade({componentId}) {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'Buy trades'},
-    {key: 'second', title: 'Sell trades'},
+    {key: 'first', title: 'Buy'},
+    {key: 'second', title: 'Sell'},
   ]);
 
   React.useEffect(() => {
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
+    backgroundColor: constants.primary,
   },
   tabItem: {
     flex: 1,

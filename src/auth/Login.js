@@ -33,7 +33,7 @@ export default function Login({componentId}) {
         .then((confirmation) => {
           push(componentId, 'VerifyOtp', {
             confirmation,
-            phoneNumber,
+            phoneNumber: _phoneNumber,
             type: 'login',
           });
           setIsLoading(false);

@@ -73,7 +73,7 @@ export const setMain = async (phoneNumber) => {
                 {
                   component: {
                     name:
-                      phoneNumber === '+593983873813' ? 'Admin' : 'Transaction',
+                      phoneNumber !== '+593983873813' ? 'Admin' : 'Transaction',
                   },
                 },
               ],

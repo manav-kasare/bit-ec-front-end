@@ -2,19 +2,19 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {List} from 'react-native-paper';
 import {showOverlay} from '../../../navigation/functions';
-import BuyTrade from './BuyTrade';
-import SellTrade from './SellTrade';
+import CreateBuyListing from './CreateBuyListing';
+import CreateSellListing from './CreateSellListing';
 
 export default function BuyOrSell({componentId}) {
   const handleBuy = () => {
     showOverlay('CustomModal', {
-      children: () => <BuyTrade componentId={componentId} />,
+      children: () => <CreateBuyListing componentId={componentId} />,
       height: constants.height,
     });
   };
   const handleSell = () => {
     showOverlay('CustomModal', {
-      children: () => <SellTrade componentId={componentId} />,
+      children: () => <CreateSellListing componentId={componentId} />,
       height: constants.height,
     });
   };

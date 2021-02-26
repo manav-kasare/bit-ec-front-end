@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {Button, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
@@ -11,7 +17,8 @@ import {webSocket} from '../../sockets';
 export default function SellModal({componentId}) {
   const [value, setValue] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
-  const [overlayId] = useGlobarlobal('user');
+  const [user] = useGlobal('user');
+  const [overlayId] = useGlobal('overlayId');
   const [priceNow] = useGlobal('priceNow');
 
   const onDismiss = () => {
@@ -35,7 +42,8 @@ export default function SellModal({componentId}) {
       setIsLoading(false);
       Navigation.dismissOverlay(overlayId);
       push(componentId, 'Chat', {
-        transactionId: response.transactionId,
+        id: response.transactionId,
+        type: 'transaction',
         prevMessages: [],
       });
       storeUser(response.user);
@@ -43,7 +51,7 @@ export default function SellModal({componentId}) {
   };
 
   return (
-    <View style={styles.modal}>
+    <SafeAreaView style={styles.modal}>
       <TouchableOpacity onPress={onDismiss} style={styles.x}>
         <Feather name="x" size={25} color="white" />
       </TouchableOpacity>
@@ -114,7 +122,7 @@ export default function SellModal({componentId}) {
         onPress={handleSubmit}>
         Sell
       </Button>
-    </View>
+    </SafeAreaView>
   );
 }
 

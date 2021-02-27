@@ -122,6 +122,7 @@ const Tile = ({id, componentId}) => {
   const onPress = () => {
     push(componentId, 'Chat', {
       id: id,
+      type: 'transaction',
       prevMessages: transaction.messages,
     });
   };
@@ -200,6 +201,7 @@ const TradeTile = ({id, componentId}) => {
   const onPress = () => {
     push(componentId, 'Chat', {
       id: id,
+      type: 'trade',
       prevMessages: trade.messages,
       setTransaction: setTrade,
     });

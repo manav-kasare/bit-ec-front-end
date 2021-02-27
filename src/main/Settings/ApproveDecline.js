@@ -3,17 +3,132 @@ import {StyleSheet, View} from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {List} from 'react-native-paper';
 import {webSocket} from '../../sockets';
+import {fcmService} from '../../notifications/FCMService';
 
-export default function ApproveDecline({id, componentId, setTransaction}) {
+export default function ApproveDecline({id, componentId, type}) {
   const handleApprove = async () => {
-    const transaction = await webSocket.approve(id);
-    setTransaction(transaction);
+    if (type === 'transaction') {
+      const response = await webSocket.approveTransaction(id);
+      if (!response.err) {
+        const someUser = await webSocket.getUserById(
+          response.transaction.userId,
+        );
+        fcmService.sendNotification(
+          {},
+          [someUser.notificationId],
+          `Your buy transaction of ${
+            response.transaction.amount / response.transaction.atPrice
+          } has been approved`,
+          '',
+        );
+      }
+    } else if (type === 'trade') {
+      const response = await webSocket.approveTrade(id);
+      if (!response.err) {
+        if (response.trade.type === 'buy') {
+          const creator = await webSocket.getUserById(response.trade.creator);
+          fcmService.sendNotification(
+            {},
+            [creator.notificationId],
+            `Your buy trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been approved`,
+            '',
+          );
+          const trader = await webSocket.getUserById(response.trade.trader);
+          fcmService.sendNotification(
+            {},
+            [trader.notificationId],
+            `Your sell trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been approved`,
+            '',
+          );
+        } else if (response.trade.type === 'sell') {
+          const creator = await webSocket.getUserById(response.trade.creator);
+          fcmService.sendNotification(
+            {},
+            [creator.notificationId],
+            `Your sell trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been approved`,
+            '',
+          );
+          const trader = await webSocket.getUserById(response.trade.trader);
+          fcmService.sendNotification(
+            {},
+            [trader.notificationId],
+            `Your buy trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been approved`,
+            '',
+          );
+        }
+      }
+    }
     Navigation.dismissOverlay(componentId);
   };
 
   const handleDecline = async () => {
-    const transaction = await webSocket.decline(id);
-    setTransaction(transaction);
+    if (type === 'transaction') {
+      const response = await webSocket.declineTransaction(id);
+      if (!response.err) {
+        const someUser = await webSocket.getUserById(
+          response.transaction.userId,
+        );
+        fcmService.sendNotification(
+          {},
+          [someUser.notificationId],
+          `Your buy transaction of ${
+            response.transaction.amount / response.transaction.atPrice
+          } has been declined`,
+          '',
+        );
+      }
+    } else if (type === 'trade') {
+      const response = await webSocket.declineTrade(id);
+      if (!response.err) {
+        if (response.trade.type === 'buy') {
+          const creator = await webSocket.getUserById(response.trade.creator);
+          fcmService.sendNotification(
+            {},
+            [creator.notificationId],
+            `Your buy trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been declined`,
+            '',
+          );
+          const trader = await webSocket.getUserById(response.trade.trader);
+          fcmService.sendNotification(
+            {},
+            [trader.notificationId],
+            `Your sell trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been declined`,
+            '',
+          );
+        } else if (response.trade.type === 'sell') {
+          const creator = await webSocket.getUserById(response.trade.creator);
+          fcmService.sendNotification(
+            {},
+            [creator.notificationId],
+            `Your sell trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been declined`,
+            '',
+          );
+          const trader = await webSocket.getUserById(response.trade.trader);
+          fcmService.sendNotification(
+            {},
+            [trader.notificationId],
+            `Your buy trade of ${
+              response.trade.amount / response.trade.atPrice
+            } has been declined`,
+            '',
+          );
+        }
+      }
+    }
     Navigation.dismissOverlay(componentId);
   };
 

@@ -53,8 +53,8 @@ const ItemSeparatorComponent = () => <View style={styles.seperator} />;
 const ListEmptyComponent = () => (
   <View
     style={{
-      width: constants.width,
-      height: constants.height * 0.25,
+      flex: 1,
+      height: constants.height * 0.8,
       alignItems: 'center',
       justifyContent: 'center',
     }}>
@@ -85,6 +85,7 @@ const Tile = ({id, componentId}) => {
   const onPress = () => {
     push(componentId, 'Chat', {
       id: id,
+      type: 'transaction',
       prevMessages: transaction.messages,
       setTransaction: setTransaction,
     });

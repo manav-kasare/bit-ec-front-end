@@ -84,13 +84,23 @@ class WebSocket {
     return response;
   };
 
-  approve = async (id) => {
-    const response = await this.socket.request('approve', id);
+  approveTransaction = async (id) => {
+    const response = await this.socket.request('approveTransaction', id);
     return response;
   };
 
-  decline = async (id) => {
-    const response = await this.socket.request('decline', id);
+  declineTransaction = async (id) => {
+    const response = await this.socket.request('declineTransaction', id);
+    return response;
+  };
+
+  approveTrade = async (id) => {
+    const response = await this.socket.request('approveTrade', id);
+    return response;
+  };
+
+  declineTrade = async (id) => {
+    const response = await this.socket.request('declineTrade', id);
     return response;
   };
 

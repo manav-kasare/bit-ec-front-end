@@ -1,23 +1,25 @@
 import React from 'react';
 import {
+  FlatList,
   SafeAreaView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
-  _Image,
+  Image,
 } from 'react-native';
 import {RNS3} from 'react-native-aws3';
-import {GiftedChat} from 'react-native-gifted-chat';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Navigation} from 'react-native-navigation';
 import {TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
+import {showOverlay} from '../../navigation/functions';
 import {fcmService} from '../../notifications/FCMService';
 import {storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
-import {showOverlay} from '../../navigation/functions';
 import ApproveDecline from './ApproveDecline';
+import _ from 'lodash';
 
 export default function Chat({
   id,
@@ -26,7 +28,8 @@ export default function Chat({
   componentId,
   setTransaction,
 }) {
-  const [messages, setMessages] = React.useState(prevMessages);
+  const [messages, setMessages] = React.useState([]);
+  // const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
   const adminId = '6030066eace592fe6ba705a7';
   // const adminId = '6030f1846953581aff77df42';
@@ -34,7 +37,8 @@ export default function Chat({
   const [isAdmin] = useGlobal('isAdmin');
   const [userId, setUserId] = React.useState(null);
 
-  React.useState(() => {
+  React.useEffect(() => {
+    console.log('type', type);
     if (type === 'transaction') {
       handleGetTransactionData();
     } else if (type === 'trade') {
@@ -44,6 +48,7 @@ export default function Chat({
 
   const handleGetTransactionData = async () => {
     const response = await webSocket.getTransaction(id);
+    console.log('transaction', response.transaction);
     if (!response.err) {
       setUserId(response.transaction.userId);
     }
@@ -93,37 +98,46 @@ export default function Chat({
 
   const handleMore = () => {
     showOverlay('CustomModal', {
-      children: () => (
-        <ApproveDecline id={id} setTransaction={setTransaction} />
-      ),
+      children: () => <ApproveDecline id={id} type={type} />,
       height: constants.height * 0.25,
     });
   };
 
   React.useEffect(() => {
-    const unsubscribe = webSocket.socket.on('getChatMsg', (data) => {
-      setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, data),
-      );
-      storeMessages(messages);
-    });
+    const unsubscribe = webSocket.socket.on(
+      'getChatMsg',
+      _.throttle((data) => {
+        console.log('getChatMsg', data);
+        setMessages((previousMessages) => previousMessages.concat(data));
+        storeMessages(messages);
+      }, 500),
+    );
     return () => unsubscribe;
   }, []);
 
   const handleSend = (image) => {
-    const _message = {
-      _id: adminId,
-      text: message,
-      createdAt: new Date(),
-      user: {
-        _id: user._id,
-        name: user.name,
-      },
-      image,
-    };
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, _message),
-    );
+    const _message = image
+      ? {
+          _id: isAdmin ? userId : adminId,
+          text: message,
+          createdAt: new Date(),
+          user: {
+            _id: user._id,
+            name: user.name,
+          },
+          image,
+        }
+      : {
+          _id: isAdmin ? userId : adminId,
+          text: message,
+          createdAt: new Date(),
+          user: {
+            _id: user._id,
+            name: user.name,
+          },
+        };
+    // const newMessages = messages.concat(_message);
+    setMessages((previousMessages) => previousMessages.concat(_message));
     setMessage('');
     if (!image) {
       handleSendMessage(_message);
@@ -133,7 +147,7 @@ export default function Chat({
 
   const handleSendImage = (image) => {
     const _message = {
-      _id: adminId,
+      _id: isAdmin ? userId : adminId,
       text: message,
       createdAt: new Date(),
       user: {
@@ -142,9 +156,7 @@ export default function Chat({
       },
       image,
     };
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, _message),
-    );
+    setMessages((previousMessages) => previousMessages.concat(_message));
     setMessage('');
     handleSendMessage(_message, image);
     storeMessages(messages);
@@ -152,7 +164,7 @@ export default function Chat({
 
   const handleSendMessage = (_message, image) => {
     if (!isAdmin) {
-      webSocket.sendMessageToAdmin({message: _message, id, type});
+      webSocket.sendMessageToAdmin({message: _message, userId, id, type});
       handleSendNotification(image);
     } else {
       webSocket.sendChatMsg({message: _message, userId, id, type});
@@ -161,10 +173,10 @@ export default function Chat({
   };
 
   const handleSendNotification = async (image) => {
-    const adminUser = await webSocket.getUserById(adminId);
+    const _user = await webSocket.getUserById(isAdmin ? userId : adminId);
     fcmService.sendNotification(
-      data,
-      [adminUser.notificationId],
+      {},
+      [_user.notificationId],
       user.name,
       image ? 'Sent you an image' : message,
     );
@@ -188,8 +200,9 @@ export default function Chat({
 
   const handleUploadImage = async (imgObject) => {
     const {accessKey, secretKey} = await webSocket.socket.request('getAwsKeys');
+    console.log('awsKeys', accessKey, secretKey);
     const config = {
-      keyPrefix: user._id,
+      keyPrefix: `pictures/${user._id}`,
       bucket: 'bitec-images',
       region: 'us-east-1',
       accessKey: accessKey,
@@ -205,6 +218,7 @@ export default function Chat({
       },
       config,
     ).then(async (response) => {
+      console.log('handleUploadImage put response', response);
       if (response.status === 201) {
         handleSendImage(response.body.postResponse.location);
       }
@@ -213,49 +227,54 @@ export default function Chat({
 
   const onChangeText = (text) => setMessage(text);
 
-  const renderInputToolbar = () => (
-    <View style={styles.textInput}>
-      <TextInput
-        theme={theme}
-        selectionColor="white"
-        underlineColorAndroid="transparent"
-        underlineColor="transparent"
-        mode="flat"
-        placeholder="Type here"
-        value={message}
-        style={styles.textInputMain}
-        onChangeText={onChangeText}
-        placeholderTextColor="grey"
-      />
-      <TouchableOpacity onPress={handleImage}>
-        <Feather
-          name="image"
-          size={20}
-          color="white"
-          style={{marginHorizontal: 8}}
-        />
-      </TouchableOpacity>
-      {message !== '' ? (
-        <TouchableOpacity onPress={handleSend} style={{marginRight: 5}}>
-          <Feather name="send" size={20} color="white" />
-        </TouchableOpacity>
-      ) : (
-        <></>
-      )}
-    </View>
-  );
+  const renderItem = ({item}) =>
+    item.user._id === user._id ? (
+      <RightBubble message={item} />
+    ) : (
+      <LeftBubble message={item} />
+    );
 
   return (
     <SafeAreaView style={styles.screen}>
       <View style={{flex: 1, marginBottom: constants.height * 0.05}}>
-        <GiftedChat
-          messages={messages}
-          user={{
-            _id: user._id,
-            name: user.name,
-          }}
-          renderInputToolbar={renderInputToolbar}
+        <FlatList
+          style={{flex: 1}}
+          inverted={true}
+          data={messages.reverse()}
+          key={(item, index) => index.toString()}
+          renderItem={renderItem}
         />
+        <View style={styles.textInput}>
+          <TextInput
+            theme={theme}
+            selectionColor="white"
+            underlineColorAndroid="transparent"
+            underlineColor="transparent"
+            mode="flat"
+            placeholder="Type here"
+            value={message}
+            style={styles.textInputMain}
+            onChangeText={onChangeText}
+            placeholderTextColor="grey"
+          />
+          <TouchableOpacity onPress={handleImage}>
+            <Feather
+              name="image"
+              size={25}
+              color="white"
+              style={{marginHorizontal: 10}}
+            />
+          </TouchableOpacity>
+          {message !== '' ? (
+            <TouchableOpacity
+              onPress={() => handleSend()}
+              style={{marginRight: 5}}>
+              <Feather name="send" size={25} color="white" />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -265,11 +284,76 @@ const moreIcon = () => (
   <Feather name="more-horizontal" size={20} color="white" />
 );
 
+const RightBubble = ({message}) => (
+  <View style={styles.rightContainer}>
+    {message.image ? (
+      <Image source={{uri: message.image}} style={styles.image} />
+    ) : (
+      <>
+        <Text style={{color: 'white'}}>{message.name}</Text>
+        <View style={styles.rightBubble}>
+          <Text style={{color: 'white', fontSize: 16}}>{message.text}</Text>
+        </View>
+      </>
+    )}
+  </View>
+);
+
+const LeftBubble = ({message}) => (
+  <View style={styles.leftContainer}>
+    {message.image ? (
+      <Image
+        source={{uri: message.image}}
+        style={styles.image}
+        resizeMode="contain"
+      />
+    ) : (
+      <>
+        <Text style={{color: 'white'}}>{message.name}</Text>
+        <View style={styles.leftBubble}>
+          <Text style={{color: 'black', fontSize: 16}}>{message.text}</Text>
+        </View>
+      </>
+    )}
+  </View>
+);
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-
     backgroundColor: constants.primary,
+  },
+  image: {
+    width: constants.width * 0.5,
+    height: constants.height * 0.4,
+    marginVertical: 10,
+    borderRadius: 10,
+  },
+  rightContainer: {
+    width: constants.width,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 15,
+  },
+  leftContainer: {
+    width: constants.width,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    paddingHorizontal: 15,
+  },
+  rightBubble: {
+    padding: 10,
+    paddingHorizontal: 15,
+    borderRadius: 15,
+    backgroundColor: constants.accent,
+    marginVertical: 10,
+  },
+  leftBubble: {
+    padding: 10,
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    backgroundColor: 'white',
+    marginVertical: 10,
   },
   textInput: {
     width: constants.width * 0.9,

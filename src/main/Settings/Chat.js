@@ -1,17 +1,20 @@
 import React from 'react';
 import {
   FlatList,
+  KeyboardAvoidingView,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
-  Image,
 } from 'react-native';
 import {RNS3} from 'react-native-aws3';
+import FastImage from 'react-native-fast-image';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Navigation} from 'react-native-navigation';
-import {TextInput} from 'react-native-paper';
+import {ActivityIndicator, TextInput} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
 import {showOverlay} from '../../navigation/functions';
@@ -21,13 +24,7 @@ import {webSocket} from '../../sockets';
 import ApproveDecline from './ApproveDecline';
 import _ from 'lodash';
 
-export default function Chat({
-  id,
-  type,
-  prevMessages,
-  componentId,
-  setTransaction,
-}) {
+export default function Chat({id, type, prevMessages, componentId}) {
   const [messages, setMessages] = React.useState([]);
   // const [messages, setMessages] = React.useState(prevMessages);
   const [message, setMessage] = React.useState('');
@@ -36,9 +33,10 @@ export default function Chat({
   const [user] = useGlobal('user');
   const [isAdmin] = useGlobal('isAdmin');
   const [userId, setUserId] = React.useState(null);
+  const [focus, setFocus] = React.useState(false);
+  const [uploading, setUploading] = React.useState(false);
 
   React.useEffect(() => {
-    console.log('type', type);
     if (type === 'transaction') {
       handleGetTransactionData();
     } else if (type === 'trade') {
@@ -48,9 +46,27 @@ export default function Chat({
 
   const handleGetTransactionData = async () => {
     const response = await webSocket.getTransaction(id);
-    console.log('transaction', response.transaction);
     if (!response.err) {
       setUserId(response.transaction.userId);
+      handleGetMessages(response.transaction.messages);
+    }
+  };
+
+  const handleGetMessages = (ids) => {
+    if (ids) {
+      let _messages = [];
+      const promise = ids.map(async (_id) => {
+        const response = await webSocket.getMessage(_id);
+        if (!response.err)
+          _messages.push({
+            user: {_id: user._id, name: user.name},
+            ...response.message,
+          });
+      });
+
+      Promise.all(promise).then(() => {
+        setMessages(_messages);
+      });
     }
   };
 
@@ -192,15 +208,14 @@ export default function Chat({
       } else if (response.error) {
       } else {
         imgObject = response;
-        handleSend(imgObject.uri);
         handleUploadImage(response);
       }
     });
   };
 
   const handleUploadImage = async (imgObject) => {
+    setUploading(true);
     const {accessKey, secretKey} = await webSocket.socket.request('getAwsKeys');
-    console.log('awsKeys', accessKey, secretKey);
     const config = {
       keyPrefix: `pictures/${user._id}`,
       bucket: 'bitec-images',
@@ -217,12 +232,18 @@ export default function Chat({
         type: imgObject.type.substring(6),
       },
       config,
-    ).then(async (response) => {
-      console.log('handleUploadImage put response', response);
-      if (response.status === 201) {
-        handleSendImage(response.body.postResponse.location);
-      }
-    });
+    )
+      .then((response) => {
+        console.log('handleUploadImage put response', response);
+        if (response.status === 201) {
+          setUploading(false);
+          handleSendImage(response.body.postResponse.location);
+        }
+      })
+      .catch((err) => {
+        setUploading(false);
+        console.log('handleImageUpload err', err);
+      });
   };
 
   const onChangeText = (text) => setMessage(text);
@@ -236,46 +257,63 @@ export default function Chat({
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={{flex: 1, marginBottom: constants.height * 0.05}}>
-        <FlatList
-          style={{flex: 1}}
-          inverted={true}
-          data={messages.reverse()}
-          key={(item, index) => index.toString()}
-          renderItem={renderItem}
-        />
-        <View style={styles.textInput}>
-          <TextInput
-            theme={theme}
-            selectionColor="white"
-            underlineColorAndroid="transparent"
-            underlineColor="transparent"
-            mode="flat"
-            placeholder="Type here"
-            value={message}
-            style={styles.textInputMain}
-            onChangeText={onChangeText}
-            placeholderTextColor="grey"
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-end',
+            marginBottom: constants.height * 0.025,
+          }}>
+          <FlatList
+            style={{flex: 1}}
+            inverted={true}
+            data={messages.reverse()}
+            key={(item, index) => index.toString()}
+            renderItem={renderItem}
           />
-          <TouchableOpacity onPress={handleImage}>
-            <Feather
-              name="image"
-              size={25}
-              color="white"
-              style={{marginHorizontal: 10}}
+          <View style={styles.textInput}>
+            <TextInput
+              onFocus={() => setFocus(true)}
+              onBlur={() => setFocus(false)}
+              theme={theme}
+              selectionColor="white"
+              underlineColorAndroid="transparent"
+              underlineColor="transparent"
+              mode="flat"
+              placeholder="Type here"
+              value={message}
+              style={styles.textInputMain}
+              onChangeText={onChangeText}
+              placeholderTextColor="grey"
             />
-          </TouchableOpacity>
-          {message !== '' ? (
-            <TouchableOpacity
-              onPress={() => handleSend()}
-              style={{marginRight: 5}}>
-              <Feather name="send" size={25} color="white" />
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )}
+            {uploading ? (
+              <ActivityIndicator size="small" color="white" animating={true} />
+            ) : (
+              <TouchableOpacity onPress={handleImage}>
+                <Feather
+                  name="image"
+                  size={25}
+                  color="white"
+                  style={{marginHorizontal: 10}}
+                />
+              </TouchableOpacity>
+            )}
+
+            {message !== '' ? (
+              <TouchableOpacity
+                onPress={() => handleSend()}
+                style={{marginRight: 5}}>
+                <Feather name="send" size={25} color="white" />
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
+          </View>
         </View>
-      </View>
+        <View style={{height: focus ? constants.height * 0.1 : 0}} />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -284,10 +322,27 @@ const moreIcon = () => (
   <Feather name="more-horizontal" size={20} color="white" />
 );
 
+const onPressImage = (uri) => {
+  Navigation.showOverlay({
+    component: {
+      name: 'FullImage',
+      passProps: {uri},
+    },
+  });
+};
+
 const RightBubble = ({message}) => (
   <View style={styles.rightContainer}>
     {message.image ? (
-      <Image source={{uri: message.image}} style={styles.image} />
+      <TouchableWithoutFeedback onPress={() => onPressImage(message.image)}>
+        <View>
+          <FastImage
+            source={{uri: message.image, priority: FastImage.priority.normal}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     ) : (
       <>
         <Text style={{color: 'white'}}>{message.name}</Text>
@@ -302,11 +357,15 @@ const RightBubble = ({message}) => (
 const LeftBubble = ({message}) => (
   <View style={styles.leftContainer}>
     {message.image ? (
-      <Image
-        source={{uri: message.image}}
-        style={styles.image}
-        resizeMode="contain"
-      />
+      <TouchableWithoutFeedback onPress={() => onPressImage(message.image)}>
+        <View>
+          <FastImage
+            source={{uri: message.image, priority: FastImage.priority.normal}}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     ) : (
       <>
         <Text style={{color: 'white'}}>{message.name}</Text>

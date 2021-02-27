@@ -140,7 +140,12 @@ class WebSocket {
   };
 
   notifyAdmin = async (data) => {
-    await this.socket.emit('notifyAdmin', data);
+    this.socket.emit('notifyAdmin', data);
+  };
+
+  getMessage = async (id) => {
+    const response = await this.socket.request('getMessage', id);
+    return response;
   };
 }
 

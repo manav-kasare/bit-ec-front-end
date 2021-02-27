@@ -94,6 +94,12 @@ function registerScreens() {
           () => require('../shared/CustomTopBarButton').default,
         );
         break;
+      case 'FullImage':
+        Navigation.registerComponent(
+          'FullImage',
+          () => require('../main/Settings/FullImage').default,
+        );
+        break;
     }
   });
 }

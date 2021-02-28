@@ -31,7 +31,7 @@ export default function BuyModal({componentId}) {
     setIsLoading(true);
     const response = await webSocket.buy({
       userId: user._id,
-      numberOfBitcoins: parseFloat(value) / priceNow,
+      amount: parseFloat(value),
       atPrice: priceNow,
     });
     setUser(response.user);

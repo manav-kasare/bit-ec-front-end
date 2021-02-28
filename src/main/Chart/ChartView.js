@@ -1,5 +1,5 @@
 import Binance from 'binance-api-react-native';
-import React, {useCallback} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native-paper';
@@ -13,7 +13,6 @@ import Header from './Header';
 import Label from './Label';
 import Line from './Line';
 import Values from './Values';
-import _ from 'lodash';
 
 const client = Binance();
 
@@ -78,7 +77,6 @@ export default function ChartView({componentId}) {
   };
 
   const handleBinanceData = (data) => {
-    console.log(candles.length);
     const candleDate = new Date(data.startTime);
     const modified = {
       date: candleDate,

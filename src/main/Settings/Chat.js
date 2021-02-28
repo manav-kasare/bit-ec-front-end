@@ -19,7 +19,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import {useGlobal} from 'reactn';
 import {showOverlay} from '../../navigation/functions';
 import {fcmService} from '../../notifications/FCMService';
-import {storeMessages} from '../../shared/asyncStorage';
 import {webSocket} from '../../sockets';
 import ApproveDecline from './ApproveDecline';
 import _ from 'lodash';
@@ -129,7 +128,6 @@ export default function Chat({id, type, prevMessages, componentId}) {
       _.throttle((data) => {
         console.log('getChatMsg', data);
         setMessages((previousMessages) => previousMessages.concat(data));
-        storeMessages(messages);
       }, 500),
     );
     return () => unsubscribe;
@@ -156,7 +154,6 @@ export default function Chat({id, type, prevMessages, componentId}) {
     if (!image) {
       handleSendMessage(_message);
     }
-    storeMessages(messages);
   };
 
   const handleSendImage = (image) => {
@@ -170,7 +167,6 @@ export default function Chat({id, type, prevMessages, componentId}) {
     setMessages((previousMessages) => previousMessages.concat(_message));
     setMessage('');
     handleSendMessage(_message, image);
-    storeMessages(messages);
   };
 
   const handleSendMessage = (_message, image) => {
@@ -244,7 +240,7 @@ export default function Chat({id, type, prevMessages, componentId}) {
   const onChangeText = (text) => setMessage(text);
 
   const renderItem = ({item}) =>
-    item.user._id === user._id ? (
+    item.from === user._id ? (
       <RightBubble message={item} />
     ) : (
       <LeftBubble message={item} />

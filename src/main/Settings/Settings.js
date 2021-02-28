@@ -1,8 +1,7 @@
 import React from 'react';
-import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {List} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
-import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
 
 export default function Settings({componentId}) {

@@ -77,10 +77,13 @@ const Tile = ({id, componentId}) => {
 
   const handleGetTransaction = async () => {
     const response = await webSocket.getTransaction(id);
+    console.log(response);
     if (!response.err) setTransaction(response.transaction);
   };
 
-  const title = `${transaction.amount / transaction.atPrice} BTC`;
+  const title = `${(
+    parseFloat(transaction.amount) / parseFloat(transaction.atPrice)
+  ).toString()} BTC`;
 
   const onPress = () => {
     push(componentId, 'Chat', {

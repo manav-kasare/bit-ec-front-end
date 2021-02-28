@@ -136,7 +136,9 @@ export default ({interval, setInterval}) => {
         <View style={styles.content}>
           <View style={styles.header}>
             <View style={styles.rightColumn}>
-              <Text style={styles.title}>BTC - USD</Text>
+              <Text style={styles.title}>
+                {lang('btc')} - {lang('usd')}
+              </Text>
             </View>
             <View style={styles.leftColumn}>
               <Pricenow priceNow={priceNow} />

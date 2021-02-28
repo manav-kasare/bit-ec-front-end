@@ -93,7 +93,6 @@ export default function ChartView({componentId}) {
       low: data.low,
     };
 
-    console.log(candles);
     const lastDate = candles.length > 0 && candles.slice(-1)[0].date;
 
     if (Date.parse(lastDate) - Date.parse(candleDate) >= 0) {

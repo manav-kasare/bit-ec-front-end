@@ -61,7 +61,7 @@ export default function Login({componentId}) {
         />
         <View style={styles.container}>
           <View style={styles.headingView}>
-            <Text style={styles.heading}>Log In</Text>
+            <Text style={styles.heading}>{lang('login')}</Text>
           </View>
           <PhoneInput
             handleOnPress={handleOnPress}

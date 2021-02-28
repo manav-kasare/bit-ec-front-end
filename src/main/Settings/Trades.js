@@ -60,7 +60,7 @@ const ListEmptyComponent = () => (
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-    <Text style={{color: 'grey'}}>None</Text>
+    <Text style={{color: 'grey'}}>{lang('none')}</Text>
   </View>
 );
 

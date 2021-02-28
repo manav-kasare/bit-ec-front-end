@@ -3,12 +3,18 @@ import SplashScreen from 'react-native-splash-screen';
 import {useGlobal} from 'reactn';
 import {showOverlay} from './src/navigation/functions';
 import {navStart, setMain, setRoot} from './src/navigation/navStart';
-import {getToken, getUser, storeUser} from './src/shared/asyncStorage';
+import {
+  getLanguage,
+  getToken,
+  getUser,
+  storeUser,
+} from './src/shared/asyncStorage';
 import {webSocket} from './src/sockets';
 
 export default function App() {
   const setToken = useGlobal('token')[1];
   const setUser = useGlobal('user')[1];
+  const setLanguage = useGlobal('language')[1];
   const setIsAdmin = useGlobal('isAdmin')[1];
 
   React.useEffect(() => {
@@ -30,6 +36,8 @@ export default function App() {
 
   const handleGetToken = async () => {
     const asyncToken = await getToken();
+    const asyncLang = await getLanguage();
+    setLanguage(asyncLang);
     setToken(asyncToken);
     if (asyncToken) {
       const user = await getUser();

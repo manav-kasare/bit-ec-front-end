@@ -3,5 +3,5 @@ global.constants = {
   width: Dimensions.get('screen').width,
   height: Dimensions.get('screen').height,
   primary: '#010017',
-  accent: '#005cdb',
+  accent: '#2255b5',
 };

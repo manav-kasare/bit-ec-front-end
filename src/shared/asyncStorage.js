@@ -18,12 +18,12 @@ export const getToken = async () => {
   return token;
 };
 
-export const storeMessages = async (messages) => {
-  await AsyncStorage.setItem('messages', JSON.stringify({messages}));
+export const storeLanguage = async (language) => {
+  await AsyncStorage.setItem('language', language);
 };
 
-export const getMessages = async () => {
-  const messages = await AsyncStorage.getItem('messages');
-  if (message) return JSON.parse(messages).messages;
+export const getLanguage = async () => {
+  const language = await AsyncStorage.getItem('language');
+  if (language) return language;
   else return null;
 };

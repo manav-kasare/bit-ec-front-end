@@ -50,7 +50,7 @@ export default function CreateBuyListing({componentId}) {
         <Feather name="x" size={25} color="white" />
       </TouchableOpacity>
       <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Buy listing</Text>
+        <Text style={styles.heading}>{lang('buyListing')}</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.textInput}>
@@ -76,15 +76,15 @@ export default function CreateBuyListing({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
-        <Text style={styles.min}>Min: $ 100</Text>
+        <Text style={styles.min}>{lang('min')}: $ 100</Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
-          <Text style={styles.tileText}>Price</Text>
+          <Text style={styles.tileText}>{lang('price')}</Text>
           <Text style={styles.tileText}>$ {priceNow}</Text>
         </View>
         <View style={styles.tile}>
-          <Text style={styles.tileText}>Amount</Text>
+          <Text style={styles.tileText}>{lang('amount')}</Text>
           <Text style={styles.tileText}>
             {parseFloat(value) / priceNow - 0.0001 > 0
               ? `${(parseFloat(value) / priceNow - 0.0001)
@@ -103,7 +103,7 @@ export default function CreateBuyListing({componentId}) {
         style={styles.button}
         contentStyle={styles.buttonContentStyle}
         onPress={handleSubmit}>
-        Buy
+        {lang('buy')}
       </Button>
     </SafeAreaView>
   );

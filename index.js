@@ -1,4 +1,5 @@
 import './src/shared/constants';
+import './src/shared/localization';
 import {start} from './App';
 import messaging from '@react-native-firebase/messaging';
 import {AppState, Platform} from 'react-native';

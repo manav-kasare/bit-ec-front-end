@@ -56,7 +56,7 @@ export default function CreateSellListing({componentId}) {
         <Feather name="x" size={25} color="white" />
       </TouchableOpacity>
       <View style={styles.headingContainer}>
-        <Text style={styles.heading}>Sell listing</Text>
+        <Text style={styles.heading}>{lang('sellListing')}</Text>
       </View>
       <View style={styles.content}>
         <View style={styles.textInput}>
@@ -87,30 +87,30 @@ export default function CreateSellListing({componentId}) {
             placeholderTextColor="grey"
           />
         </View>
-        <Text style={styles.max}>Min: $ 100</Text>
+        <Text style={styles.max}>{lang('min')}: $ 100</Text>
         <Text style={styles.max}>
           {parseFloat(value) > user.bitcoinsBought * priceNow
             ? 'Not enough balance'
             : 'Max: $ 500'}
         </Text>
         <Text style={styles.max}>
-          Balance: {user.bitcoinsBought * priceNow}
+          {lang('balance')}: {user.bitcoinsBought * priceNow}
         </Text>
       </View>
       <View style={styles.extras}>
         <View style={styles.tile}>
-          <Text style={styles.tileText}>Price</Text>
+          <Text style={styles.tileText}>{lang('price')}</Text>
           <Text style={styles.tileText}>$ {priceNow}</Text>
         </View>
         <View style={styles.tile}>
-          <Text style={styles.tileText}>Amount</Text>
+          <Text style={styles.tileText}>{lang('amount')}</Text>
           <Text style={styles.tileText}>
             {parseFloat(value) / priceNow - 0.0003 > 0
               ? `${(parseFloat(value) / priceNow - 0.0003)
                   .toString()
                   .slice(0, -10)} `
               : '0 '}
-            BTC
+            {lang('btc')}
           </Text>
         </View>
       </View>
@@ -124,7 +124,7 @@ export default function CreateSellListing({componentId}) {
         style={styles.button}
         contentStyle={styles.buttonContentStyle}
         onPress={handleSubmit}>
-        Buy
+        {lang('buy')}
       </Button>
     </SafeAreaView>
   );

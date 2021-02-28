@@ -69,7 +69,7 @@ const ListEmptyComponent = () => (
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-    <Text style={{color: 'grey'}}>No trades listed</Text>
+    <Text style={{color: 'grey'}}>{lang('noTradesListed')}</Text>
   </View>
 );
 
@@ -101,7 +101,7 @@ const Tile = ({id, componentId}) => {
 
   const title = `${(listing.amount / listing.atPrice)
     .toString()
-    .slice(0, -10)}  BTC`;
+    .slice(0, -10)}  ${lang('btc')}`;
 
   const handleBuy = async () => {
     setIsLoading(true);
@@ -146,7 +146,7 @@ const Tile = ({id, componentId}) => {
       disabled={isLoading}
       labelStyle={{textTransform: 'none', color: constants.accent}}
       onPress={handleBuy}>
-      Buy
+      {lang('buy')}
     </Button>
   );
 
@@ -155,7 +155,7 @@ const Tile = ({id, componentId}) => {
       <List.Item
         title={title}
         titleStyle={{color: 'white', fontSize: 25, fontWeight: '700'}}
-        description={`At price: ${listing.atPrice}`}
+        description={`${lang('atPrice')}: ${listing.atPrice}`}
         descriptionStyle={{color: 'grey'}}
         onPress={onPress}
         style={styles.tile}

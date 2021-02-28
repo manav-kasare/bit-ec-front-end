@@ -132,7 +132,7 @@ export default ({componentId}) => {
       <View>
         <View style={styles.tabs}>
           <View style={styles.tabActive}>
-            <Text style={styles.tabLabelActive}>Wallet</Text>
+            <Text style={styles.tabLabelActive}>{lang('wallet')}</Text>
           </View>
         </View>
         <View style={styles.content}>
@@ -145,7 +145,7 @@ export default ({componentId}) => {
                   ? user.bitcoinsBought + ' '
                   : 0 + ' '
                 : 0 + ' '}
-              BTC,
+              {lang('btc')},
             </Text>
             <Text style={styles.bitcoinsBoughtRight}>
               ${' '}
@@ -163,7 +163,7 @@ export default ({componentId}) => {
               style={
                 user.lastPrice - priceNow > 0 ? styles.profit : styles.loss
               }>
-              Proit/Loss: ${' '}
+              {lang('profit')}/{lang('loss')}: ${' '}
               {(user.lastPrice - priceNow) * user.bitcoinsBought
                 ? ((user.lastPrice - priceNow) * user.bitcoinsBought)
                     .toString()

@@ -77,7 +77,7 @@ const ListEmptyComponent = () => (
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-    <Text style={{color: 'grey'}}>No trades listed</Text>
+    <Text style={{color: 'grey'}}>{lang('noTradesListed')}</Text>
   </View>
 );
 

@@ -60,7 +60,7 @@ export default function Admin({componentId}) {
     <SafeAreaView style={styles.screen}>
       <View style={styles.content}>
         <View style={styles.headingView}>
-          <Text style={styles.heading}>Transactions</Text>
+          <Text style={styles.heading}>{lang('transactions')}</Text>
         </View>
         <FlatList
           data={transactions}
@@ -71,7 +71,7 @@ export default function Admin({componentId}) {
           refreshControl={refreshControl}
         />
         <View style={[styles.headingView, {marginTop: 50}]}>
-          <Text style={styles.heading}>Trades</Text>
+          <Text style={styles.heading}>{lang('trades')}</Text>
         </View>
         <FlatList
           data={trades}
@@ -96,7 +96,7 @@ const ListEmptyComponent = () => (
       alignItems: 'center',
       justifyContent: 'center',
     }}>
-    <Text style={{color: 'grey'}}>None</Text>
+    <Text style={{color: 'grey'}}>{lang('none')}</Text>
   </View>
 );
 

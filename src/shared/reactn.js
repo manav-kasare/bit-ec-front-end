@@ -14,5 +14,6 @@ export const setGlobalData = () => {
     overlayId: null,
     isAdmin: false,
     priceNow: null,
+    language: null,
   });
 };

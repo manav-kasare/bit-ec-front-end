@@ -106,7 +106,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
     <SafeAreaView style={styles.screen}>
       <View style={styles.container}>
         <View style={styles.headingView}>
-          <Text style={styles.heading}>Enter the code</Text>
+          <Text style={styles.heading}>{lang('enterCode')}</Text>
         </View>
         <View style={styles.inputContainer}>
           <OtpInputs

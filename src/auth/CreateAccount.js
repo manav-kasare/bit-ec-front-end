@@ -72,7 +72,7 @@ export default function CreateAccount({componentId}) {
         />
         <View style={styles.container}>
           <View style={styles.headingView}>
-            <Text style={styles.heading}>Create your account</Text>
+            <Text style={styles.heading}>{lang('createAccount')}</Text>
           </View>
           <View style={styles.textInput}>
             <TextInput

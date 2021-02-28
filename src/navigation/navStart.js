@@ -45,6 +45,7 @@ export const setRoot = () => {
 export const setMain = async (phoneNumber) => {
   const homeIcon = require('../assets/icons/home/home.png');
   const transactionIcon = require('../assets/icons/transactions/transaction.png');
+  const settingsIcon = require('../assets/icons/settings/settings.png');
   Navigation.setRoot({
     root: {
       bottomTabs: {
@@ -80,7 +81,10 @@ export const setMain = async (phoneNumber) => {
               ],
               options: {
                 bottomTab: {
-                  icon: transactionIcon,
+                  icon:
+                    phoneNumber === '+918433802669'
+                      ? transactionIcon
+                      : settingsIcon,
                 },
                 animations,
               },

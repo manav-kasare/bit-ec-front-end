@@ -62,12 +62,14 @@ export default function ChartView({componentId}) {
   }, [interval]);
 
   React.useEffect(() => {
-    unsubscribe.current = client.ws.candles(
-      'BTCUSDT',
-      interval,
-      handleBinanceData,
-    );
-  }, [interval]);
+    if (done) {
+      unsubscribe.current = client.ws.candles(
+        'BTCUSDT',
+        interval,
+        handleBinanceData,
+      );
+    }
+  }, [interval, done]);
 
   React.useEffect(() => {
     const clean = client.ws.depth('BTCUSDT', handleDepthData);
@@ -91,14 +93,14 @@ export default function ChartView({componentId}) {
       low: data.low,
     };
 
+    console.log(candles);
     const lastDate = candles.length > 0 && candles.slice(-1)[0].date;
 
     if (Date.parse(lastDate) - Date.parse(candleDate) >= 0) {
       const _chartData = chartData;
       _chartData[candleDate] = modified;
-      const newChartData = {...chartData, ..._chartData};
-      setChartData(newChartData);
-      handleSetCandles(newChartData);
+      setChartData(_chartData);
+      handleSetCandles(_chartData);
     }
   };
 

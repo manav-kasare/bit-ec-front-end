@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
   },
   tab: {
     borderBottomWidth: 1,
-    borderColor: '#222324',
+    borderColor: constants.primary,
     paddingBottom: 8,
     flex: 1,
   },
   tabLabel: {
     fontSize: 20,
-    color: '#222324',
+    color: constants.primary,
     marginLeft: 16,
   },
   actions: {
@@ -139,12 +139,12 @@ export default ({componentId}) => {
           <View style={styles.bitcoinsBoughtView}>
             <Text style={styles.bitcoinsBought}>
               {user.bitcoinsBought
-                ? user.bitcoinsBought.toString().includes('.')
-                  ? user.bitcoinsBought.toString().slice(0, -15)
-                  : user.bitcoinsBought.toString() + '.00'
-                  ? user.bitcoinsBought
-                  : 0
-                : 0}
+                ? user.bitcoinsBought.toString().includes('.') + ' '
+                  ? user.bitcoinsBought.toString().slice(0, -15) + ' '
+                  : user.bitcoinsBought.toString() + '.00' + ' '
+                  ? user.bitcoinsBought + ' '
+                  : 0 + ' '
+                : 0 + ' '}
               BTC,
             </Text>
             <Text style={styles.bitcoinsBoughtRight}>
@@ -164,10 +164,17 @@ export default ({componentId}) => {
                 user.lastPrice - priceNow > 0 ? styles.profit : styles.loss
               }>
               Proit/Loss: ${' '}
-              {user.lastPrice - priceNow
-                ? (user.lastPrice - priceNow).toString().includes('.')
-                  ? (user.lastPrice - priceNow).toString().slice(0, -11)
-                  : (user.lastPrice - priceNow).toString() + '.00'
+              {(user.lastPrice - priceNow) * user.bitcoinsBought
+                ? ((user.lastPrice - priceNow) * user.bitcoinsBought)
+                    .toString()
+                    .includes('.')
+                  ? ((user.lastPrice - priceNow) * user.bitcoinsBought)
+                      .toString()
+                      .slice(0, -11)
+                  : (
+                      (user.lastPrice - priceNow) *
+                      user.bitcoinsBought
+                    ).toString() + '.00'
                 : 0}
             </Text>
           </View>

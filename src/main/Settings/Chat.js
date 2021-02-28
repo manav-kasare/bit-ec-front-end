@@ -57,11 +57,15 @@ export default function Chat({id, type, prevMessages, componentId}) {
       let _messages = [];
       const promise = ids.map(async (_id) => {
         const response = await webSocket.getMessage(_id);
-        if (!response.err)
+        if (!response.err) {
           _messages.push({
-            user: {_id: user._id, name: user.name},
-            ...response.message,
+            _id: response.message.to,
+            text: response.message.text,
+            createdAt: new Date(),
+            from: response.message.from,
+            image: response.message.image,
           });
+        }
       });
 
       Promise.all(promise).then(() => {
@@ -134,23 +138,17 @@ export default function Chat({id, type, prevMessages, componentId}) {
   const handleSend = (image) => {
     const _message = image
       ? {
-          _id: isAdmin ? userId : adminId,
+          to: isAdmin ? userId : adminId,
           text: message,
           createdAt: new Date(),
-          user: {
-            _id: user._id,
-            name: user.name,
-          },
+          from: user._id,
           image,
         }
       : {
-          _id: isAdmin ? userId : adminId,
+          to: isAdmin ? userId : adminId,
           text: message,
           createdAt: new Date(),
-          user: {
-            _id: user._id,
-            name: user.name,
-          },
+          from: user._id,
         };
     // const newMessages = messages.concat(_message);
     setMessages((previousMessages) => previousMessages.concat(_message));
@@ -163,13 +161,10 @@ export default function Chat({id, type, prevMessages, componentId}) {
 
   const handleSendImage = (image) => {
     const _message = {
-      _id: isAdmin ? userId : adminId,
+      to: isAdmin ? userId : adminId,
       text: message,
       createdAt: new Date(),
-      user: {
-        _id: user._id,
-        name: user.name,
-      },
+      from: user._id,
       image,
     };
     setMessages((previousMessages) => previousMessages.concat(_message));
@@ -345,9 +340,11 @@ const RightBubble = ({message}) => (
       </TouchableWithoutFeedback>
     ) : (
       <>
-        <Text style={{color: 'white'}}>{message.name}</Text>
         <View style={styles.rightBubble}>
           <Text style={{color: 'white', fontSize: 16}}>{message.text}</Text>
+          <Text style={{color: 'grey', fontSize: 16}}>
+            {message.createdAt.toDateString()}
+          </Text>
         </View>
       </>
     )}
@@ -368,9 +365,11 @@ const LeftBubble = ({message}) => (
       </TouchableWithoutFeedback>
     ) : (
       <>
-        <Text style={{color: 'white'}}>{message.name}</Text>
         <View style={styles.leftBubble}>
           <Text style={{color: 'black', fontSize: 16}}>{message.text}</Text>
+          <Text style={{color: 'grey', fontSize: 16}}>
+            {message.createdAt.toDateString()}
+          </Text>
         </View>
       </>
     )}

@@ -30,7 +30,7 @@ export const setRoot = () => {
         children: [
           {
             component: {
-              name: 'Onboard',
+              name: 'Language',
             },
           },
         ],

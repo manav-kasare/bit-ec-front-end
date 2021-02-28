@@ -25,7 +25,7 @@ export default function Onboard({componentId}) {
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
           onPress={handleCreateAccount}>
-          Create Account
+          {lang('createAccount')}
         </Button>
         <Button
           color="white"
@@ -34,7 +34,7 @@ export default function Onboard({componentId}) {
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
           onPress={handleLogin}>
-          Login
+          {lang('login')}
         </Button>
       </View>
     </SafeAreaView>

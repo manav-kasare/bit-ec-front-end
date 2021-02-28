@@ -1,10 +1,11 @@
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {List, Modal, Portal, Searchbar} from 'react-native-paper';
+import {Navigation} from 'react-native-navigation';
+import {List, Searchbar} from 'react-native-paper';
 import countries from '../assets/countries.json';
 const countriesArray = Object.keys(countries);
 
-export default function CountryPicker({visible, setVisible, setCountry}) {
+export default function CountryPicker({setCountry}) {
   const [query, setQuery] = React.useState('');
   const [filteredArray, setFilteredArray] = React.useState([]);
 
@@ -12,10 +13,8 @@ export default function CountryPicker({visible, setVisible, setCountry}) {
     setFilteredArray(countriesArray);
   }, []);
 
-  const onDismiss = () => setVisible(false);
-
   const handleOnPress = (item) => {
-    onDismiss();
+    Navigation.dismissAllOverlays();
     setCountry(item);
   };
 
@@ -70,20 +69,15 @@ export default function CountryPicker({visible, setVisible, setCountry}) {
   );
 
   return (
-    <Portal>
-      <Modal
-        visible={visible}
-        onDismiss={onDismiss}
-        contentContainerStyle={styles.modal}>
-        <FlatList
-          style={styles.flatList}
-          data={filteredArray}
-          keyExtractor={(index) => index.toString()}
-          renderItem={renderItem}
-          ListHeaderComponent={listHeaderComponent}
-        />
-      </Modal>
-    </Portal>
+    <View style={styles.modal}>
+      <FlatList
+        style={styles.flatList}
+        data={filteredArray}
+        keyExtractor={(index) => index.toString()}
+        renderItem={renderItem}
+        ListHeaderComponent={listHeaderComponent}
+      />
+    </View>
   );
 }
 
@@ -95,7 +89,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
     position: 'absolute',
-    bottom: -constants.height * 0.1,
+    bottom: 0,
     left: 0,
     right: 0,
     margin: 0,

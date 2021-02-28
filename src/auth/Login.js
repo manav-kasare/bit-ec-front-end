@@ -1,10 +1,10 @@
 import auth from '@react-native-firebase/auth';
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View, Keyboard} from 'react-native';
+import {Keyboard, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
-import {Button, Provider, TextInput} from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import countries from '../assets/countries.json';
-import {push, showToast} from '../navigation/functions';
+import {push, showOverlay, showToast} from '../navigation/functions';
 import CountryPicker from './CountryPicker';
 import PhoneInput from './PhoneInput';
 
@@ -18,7 +18,13 @@ export default function Login({componentId}) {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const onChangePhonenumber = (text) => setPhoneNumber(text);
-  const handleOnPress = () => setVisible(true);
+  const handleOnPress = () => {
+    showOverlay('CustomModal', {
+      height: constants.height * 0.75,
+      backgroundColor: 'white',
+      children: () => <CountryPicker setCountry={setCountry} />,
+    });
+  };
 
   const handleSubmit = async () => {
     let _phoneNumber = phoneNumber;
@@ -52,40 +58,33 @@ export default function Login({componentId}) {
   };
 
   return (
-    <Provider>
-      <SafeAreaView style={styles.screen}>
-        <CountryPicker
-          visible={visible}
-          setVisible={setVisible}
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.headingView}>
+          <Text style={styles.heading}>{lang('login')}</Text>
+        </View>
+        <PhoneInput
+          handleOnPress={handleOnPress}
+          phoneNumber={phoneNumber}
+          onChangePhonenumber={onChangePhonenumber}
+          countryCode={countryCode}
+          setCountryCode={setCountryCode}
+          country={country}
           setCountry={setCountry}
         />
-        <View style={styles.container}>
-          <View style={styles.headingView}>
-            <Text style={styles.heading}>{lang('login')}</Text>
-          </View>
-          <PhoneInput
-            handleOnPress={handleOnPress}
-            phoneNumber={phoneNumber}
-            onChangePhonenumber={onChangePhonenumber}
-            countryCode={countryCode}
-            setCountryCode={setCountryCode}
-            country={country}
-            setCountry={setCountry}
-          />
-          <Button
-            color={constants.primary}
-            labelStyle={{textTransform: 'none', color: 'white'}}
-            mode="outlined"
-            loading={isLoading}
-            disabled={isLoading}
-            style={styles.button}
-            contentStyle={styles.buttonContentStyle}
-            onPress={handleSubmit}>
-            Submit
-          </Button>
-        </View>
-      </SafeAreaView>
-    </Provider>
+        <Button
+          color={constants.primary}
+          labelStyle={{textTransform: 'none', color: 'white'}}
+          mode="outlined"
+          loading={isLoading}
+          disabled={isLoading}
+          style={styles.button}
+          contentStyle={styles.buttonContentStyle}
+          onPress={handleSubmit}>
+          {lang('submit')}
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 }
 

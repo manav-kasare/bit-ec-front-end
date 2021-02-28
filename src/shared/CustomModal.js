@@ -27,7 +27,7 @@ export default function CustomModal({
   const translateY = mix(yT, height, 0);
 
   const hideModal = () => {
-    console.log('hideModal');
+    open.setValue(0);
     setTimeout(() => {
       Navigation.dismissOverlay(componentId);
     }, 400);

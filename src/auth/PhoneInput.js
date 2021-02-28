@@ -41,7 +41,7 @@ export default function PhoneInput({
         underlineColor="transparent"
         keyboardType="number-pad"
         textContentType="telephoneNumber"
-        placeholder="Phone Number"
+        placeholder={lang('phoneNumber')}
         placeholderTextColor="grey"
         onChangeText={onChangePhonenumber}
       />

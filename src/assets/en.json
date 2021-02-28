@@ -1,4 +1,5 @@
 {
+  "chooseLanguage": "Choose language",
   "createAccount": "Create your account",
   "login": "Log In",
   "enterCode": "Enter the code",
@@ -23,5 +24,8 @@
   "atPrice": "At price",
   "transactions": "Transactions",
   "trades": "Trades",
-  "none": "None"
+  "none": "None",
+  "submit": "Submit",
+  "phoneNumber": "Phone number",
+  "fullName": "Full name"
 }

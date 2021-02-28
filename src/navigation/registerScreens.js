@@ -16,6 +16,12 @@ function registerScreens() {
           () => require('../auth/Onboard').default,
         );
         break;
+      case 'Language':
+        Navigation.registerComponent(
+          'Language',
+          () => require('../auth/Language').default,
+        );
+        break;
       case 'Login':
         Navigation.registerComponent(
           'Login',

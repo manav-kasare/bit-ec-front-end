@@ -36,6 +36,7 @@ export default function App() {
 
   const handleGetToken = async () => {
     const asyncToken = await getToken();
+    console.log('asyncToken', asyncToken);
     const asyncLang = await getLanguage();
     setLanguage(asyncLang);
     setToken(asyncToken);

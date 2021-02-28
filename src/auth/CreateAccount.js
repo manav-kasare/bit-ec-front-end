@@ -1,17 +1,16 @@
-import React from 'react';
 import auth from '@react-native-firebase/auth';
-import {SafeAreaView, StyleSheet, Text, View, Keyboard} from 'react-native';
+import React from 'react';
+import {Keyboard, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import * as RNLocalize from 'react-native-localize';
-import {Button, Provider, TextInput} from 'react-native-paper';
+import {Button, TextInput} from 'react-native-paper';
 import countries from '../assets/countries.json';
-import {push, showToast} from '../navigation/functions';
+import {push, showOverlay, showToast} from '../navigation/functions';
 import CountryPicker from './CountryPicker';
 import PhoneInput from './PhoneInput';
 
 export default function CreateAccount({componentId}) {
   const [name, setName] = React.useState('');
   const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [visible, setVisible] = React.useState(false);
   const [country, setCountry] = React.useState(RNLocalize.getCountry());
   const [countryCode, setCountryCode] = React.useState(
     countries[RNLocalize.getCountry()].callingCode[0],
@@ -20,7 +19,13 @@ export default function CreateAccount({componentId}) {
 
   const onChangeName = (text) => setName(text);
   const onChangePhonenumber = (text) => setPhoneNumber(text);
-  const handleOnPress = () => setVisible(true);
+  const handleOnPress = () => {
+    showOverlay('CustomModal', {
+      height: constants.height * 0.75,
+      backgroundColor: 'white',
+      children: () => <CountryPicker setCountry={setCountry} />,
+    });
+  };
 
   const checkAndHandle = () => {
     if (name === '') {
@@ -63,66 +68,59 @@ export default function CreateAccount({componentId}) {
   };
 
   return (
-    <Provider>
-      <SafeAreaView style={styles.screen}>
-        <CountryPicker
-          visible={visible}
-          setVisible={setVisible}
+    <SafeAreaView style={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.headingView}>
+          <Text style={styles.heading}>{lang('createAccount')}</Text>
+        </View>
+        <View style={styles.textInput}>
+          <TextInput
+            theme={{
+              colors: {
+                primary: 'transparent',
+                text: 'white',
+                background: 'transparent',
+              },
+            }}
+            selectionColor="white"
+            underlineColorAndroid="transparent"
+            underlineColor="transparent"
+            mode="flat"
+            placeholder={lang('fullName')}
+            value={name}
+            style={{
+              width: constants.width * 0.8,
+              height: constants.height * 0.06,
+              margin: 0,
+              borderWidth: 0,
+              borderColor: 'transparent',
+            }}
+            onChangeText={onChangeName}
+            placeholderTextColor="grey"
+          />
+        </View>
+        <PhoneInput
+          handleOnPress={handleOnPress}
+          phoneNumber={phoneNumber}
+          onChangePhonenumber={onChangePhonenumber}
+          countryCode={countryCode}
+          setCountryCode={setCountryCode}
+          country={country}
           setCountry={setCountry}
         />
-        <View style={styles.container}>
-          <View style={styles.headingView}>
-            <Text style={styles.heading}>{lang('createAccount')}</Text>
-          </View>
-          <View style={styles.textInput}>
-            <TextInput
-              theme={{
-                colors: {
-                  primary: 'transparent',
-                  text: 'white',
-                  background: 'transparent',
-                },
-              }}
-              selectionColor="white"
-              underlineColorAndroid="transparent"
-              underlineColor="transparent"
-              mode="flat"
-              placeholder="Full name"
-              value={name}
-              style={{
-                width: constants.width * 0.8,
-                height: constants.height * 0.06,
-                margin: 0,
-                borderWidth: 0,
-                borderColor: 'transparent',
-              }}
-              onChangeText={onChangeName}
-              placeholderTextColor="grey"
-            />
-          </View>
-          <PhoneInput
-            handleOnPress={handleOnPress}
-            phoneNumber={phoneNumber}
-            onChangePhonenumber={onChangePhonenumber}
-            countryCode={countryCode}
-            setCountryCode={setCountryCode}
-            country={country}
-            setCountry={setCountry}
-          />
-          <Button
-            color={constants.accent}
-            loading={isLoading}
-            disabled={isLoading}
-            labelStyle={{textTransform: 'none', color: 'white'}}
-            mode="outlined"
-            style={styles.button}
-            contentStyle={styles.buttonContentStyle}
-            onPress={checkAndHandle}>
-            Submit
-          </Button>
-        </View>
-      </SafeAreaView>
-    </Provider>
+        <Button
+          color={constants.accent}
+          loading={isLoading}
+          disabled={isLoading}
+          labelStyle={{textTransform: 'none', color: 'white'}}
+          mode="outlined"
+          style={styles.button}
+          contentStyle={styles.buttonContentStyle}
+          onPress={checkAndHandle}>
+          {lang('submit')}
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 }
 

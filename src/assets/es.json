@@ -1,4 +1,5 @@
 {
+  "chooseLanguage": "Elige lengua",
   "createAccount": "Crea tu cuenta",
   "login": "El login",
   "enterCode": "Inserte el código",
@@ -23,5 +24,8 @@
   "atPrice": "A precio",
   "transactions": "Actas",
   "trades": "Vientos alisios",
-  "none": "Ninguna"
+  "none": "Ninguna",
+  "submit": "Enviar",
+  "phoneNumber": "Número de teléfono",
+  "fullName": "Nombre completo"
 }

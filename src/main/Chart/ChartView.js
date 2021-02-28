@@ -1,15 +1,10 @@
 import Binance from 'binance-api-react-native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import {ActivityIndicator} from 'react-native-paper';
 import Animated, {add, eq, modulo, sub} from 'react-native-reanimated';
-import {
-  diffClamp,
-  onGestureEvent,
-  useValue,
-  useValues,
-} from 'react-native-redash';
+import {diffClamp, onGestureEvent, useValue} from 'react-native-redash';
 import {useGlobal} from 'reactn';
 import {webSocket} from '../../sockets';
 import Chart from './Chart';
@@ -18,6 +13,7 @@ import Header from './Header';
 import Label from './Label';
 import Line from './Line';
 import Values from './Values';
+import _ from 'lodash';
 
 const client = Binance();
 
@@ -69,7 +65,7 @@ export default function ChartView({componentId}) {
         handleBinanceData,
       );
     }
-  }, [interval, done]);
+  }, [done]);
 
   React.useEffect(() => {
     const clean = client.ws.depth('BTCUSDT', handleDepthData);
@@ -82,6 +78,7 @@ export default function ChartView({componentId}) {
   };
 
   const handleBinanceData = (data) => {
+    console.log(candles.length);
     const candleDate = new Date(data.startTime);
     const modified = {
       date: candleDate,

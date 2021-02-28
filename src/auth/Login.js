@@ -10,7 +10,6 @@ import PhoneInput from './PhoneInput';
 
 export default function Login({componentId}) {
   const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [visible, setVisible] = React.useState(false);
   const [country, setCountry] = React.useState(RNLocalize.getCountry());
   const [countryCode, setCountryCode] = React.useState(
     countries[RNLocalize.getCountry()].callingCode[0],

@@ -136,14 +136,14 @@ export default function ApproveDecline({id, componentId, type}) {
     <View style={styles.modal}>
       <List.Item
         style={styles.tile}
-        title="Approve"
+        title={lang('approve')}
         titleStyle={styles.titleStyle}
         onPress={handleApprove}
       />
       <View style={styles.seperator} />
       <List.Item
         style={styles.tile}
-        title="Decline"
+        title={lang('decline')}
         titleStyle={[styles.titleStyle, {color: 'crimson'}]}
         onPress={handleDecline}
       />

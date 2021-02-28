@@ -6,8 +6,6 @@ import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
 
 export default function Settings({componentId}) {
-  const [user] = useGlobal('user');
-
   const handleTransactions = () => {
     push(componentId, 'Transactions');
   };
@@ -16,21 +14,32 @@ export default function Settings({componentId}) {
     push(componentId, 'Trades');
   };
 
+  const handleChangeLanguage = () => {
+    push(componentId, 'LanguageSetting');
+  };
+
   const right = () => <Feather name="chevron-right" color="white" size={25} />;
 
   return (
     <SafeAreaView style={styles.screen}>
       <List.Item
-        title="Transactions"
+        title={lang('transactions')}
         titleStyle={styles.titleStyle}
         onPress={handleTransactions}
         right={right}
       />
       <View style={styles.seperator} />
       <List.Item
-        title="Trades"
+        title={lang('trades')}
         titleStyle={styles.titleStyle}
         onPress={handleTrades}
+        right={right}
+      />
+      <View style={styles.seperator} />
+      <List.Item
+        title={lang('changeLanguage')}
+        titleStyle={styles.titleStyle}
+        onPress={handleChangeLanguage}
         right={right}
       />
     </SafeAreaView>
@@ -49,6 +58,7 @@ const styles = StyleSheet.create({
   },
   seperator: {
     height: 0.3,
+    marginVertical: 1,
     width: constants.width * 0.95,
     position: 'relative',
     left: constants.width * 0.05,
@@ -59,7 +69,7 @@ const styles = StyleSheet.create({
 Settings.options = {
   topBar: {
     title: {
-      text: 'Settings',
+      text: lang('settings'),
       fontSize: 25,
       fontWeight: '700',
     },

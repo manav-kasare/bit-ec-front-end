@@ -466,7 +466,7 @@ const theme = {
 Chat.options = {
   topBar: {
     title: {
-      text: 'Chat',
+      text: lang('chat'),
       fontSize: 25,
       fontWeight: '700',
     },

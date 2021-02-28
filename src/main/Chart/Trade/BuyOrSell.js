@@ -23,14 +23,14 @@ export default function BuyOrSell({componentId}) {
     <View style={styles.modal}>
       <List.Item
         style={styles.tile}
-        title="Add a Buy listing"
+        title={lang('addBuyListing')}
         titleStyle={styles.titleStyle}
         onPress={handleBuy}
       />
       <View style={styles.seperator} />
       <List.Item
         style={styles.tile}
-        title="Add a Sell listing"
+        title={lang('addSellListing')}
         titleStyle={styles.titleStyle}
         onPress={handleSell}
       />

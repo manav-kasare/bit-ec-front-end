@@ -12,6 +12,7 @@ import {List} from 'react-native-paper';
 import {useGlobal} from 'reactn';
 import {webSocket} from '../../sockets';
 import {push} from '../../navigation/functions';
+import Feather from 'react-native-vector-icons/Feather';
 
 export default function Admin({componentId}) {
   const [user] = useGlobal('user');
@@ -38,6 +39,10 @@ export default function Admin({componentId}) {
     await handleGetTransactions();
     await handleGetTrades();
     setRefreshing(false);
+  };
+
+  const handleChangeLanguage = () => {
+    push(componentId, 'LanguageSetting');
   };
 
   const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
@@ -81,6 +86,12 @@ export default function Admin({componentId}) {
           ListEmptyComponent={ListEmptyComponent}
           refreshControl={refreshControl}
         />
+        <List.Item
+          title={lang('changeLanguage')}
+          titleStyle={styles.titleStyle}
+          onPress={handleChangeLanguage}
+          right={right}
+        />
       </View>
     </SafeAreaView>
   );
@@ -99,6 +110,8 @@ const ListEmptyComponent = () => (
     <Text style={{color: 'grey'}}>{lang('none')}</Text>
   </View>
 );
+
+const right = () => <Feather name="chevron-right" color="white" size={25} />;
 
 const Tile = ({id, componentId}) => {
   const [transaction, setTransaction] = React.useState({
@@ -253,5 +266,10 @@ const styles = StyleSheet.create({
     height: constants.height * 0.1,
     width: constants.width,
     alignItems: 'center',
+  },
+  titleStyle: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 25,
   },
 });

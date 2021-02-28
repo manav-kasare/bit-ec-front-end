@@ -55,7 +55,6 @@ export default function CreateAccount({componentId}) {
           setIsLoading(false);
         });
     } catch (err) {
-      console.log(err);
       setIsLoading(false);
       if (err.code === 'auth/invalid-phone-number') {
         showToast('error', 'Invalid Phone number');

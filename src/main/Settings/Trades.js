@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 Trades.options = {
   topBar: {
     title: {
-      text: 'Trades',
+      text: lang('trades'),
       fontSize: 25,
       fontWeight: '700',
     },

@@ -15,8 +15,8 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
   const [_confirmation, setConfirmation] = React.useState(confirmation);
   const [isLoadingCode, setIsLoadingCode] = React.useState(false);
   const [isLoadingResendCode, setIsLoadingResendCode] = React.useState(false);
-  const [user, setUser] = useGlobal('user');
-  const [token, setToken] = useGlobal('token');
+  const setUser = useGlobal('user')[1];
+  const setToken = useGlobal('token')[1];
 
   const checkAndHandle = () => {
     Keyboard.dismiss();
@@ -64,9 +64,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
     else {
       setUser(response.user);
       setToken(response.token);
+      setMain(phoneNumber);
       storeUser(response.user);
       storeToken(response.token);
-      setMain(phoneNumber);
     }
     setIsLoadingCode(false);
   };
@@ -78,9 +78,9 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
     else {
       setUser(response.user);
       setToken(response.token);
+      setMain(phoneNumber);
       storeUser(response.user);
       storeToken(response.token);
-      setMain(phoneNumber);
     }
     setIsLoadingCode(false);
   };
@@ -130,7 +130,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
           }}
           contentStyle={styles.buttonContentStyle}
           onPress={checkAndHandle}>
-          Submit
+          {lang('submit')}
         </Button>
         <Button
           color="white"
@@ -141,7 +141,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
           style={styles.button}
           contentStyle={styles.buttonContentStyle}
           onPress={resendConfirmationCode}>
-          Resend code
+          {lang('resendCode')}
         </Button>
       </View>
     </SafeAreaView>

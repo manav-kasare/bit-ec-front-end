@@ -27,5 +27,14 @@
   "none": "None",
   "submit": "Submit",
   "phoneNumber": "Phone number",
-  "fullName": "Full name"
+  "fullName": "Full name",
+  "resendCode": "Resend code",
+  "changeLanguage": "Change language",
+  "trade": "Trade",
+  "chat": "Chat",
+  "settings": "Settings",
+  "addBuyListing": "Add a Buy listing",
+  "addSellListing": "Add a Sell listing",
+  "approve": "Approve",
+  "decline": "Decline"
 }

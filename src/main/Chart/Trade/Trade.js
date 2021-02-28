@@ -117,7 +117,7 @@ const moreIcon = () => (
 Trade.options = {
   topBar: {
     title: {
-      text: 'Trade',
+      text: lang('trade'),
       fontSize: 25,
       fontWeight: '700',
     },

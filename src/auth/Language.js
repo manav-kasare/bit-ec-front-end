@@ -25,9 +25,12 @@ export default function Language({componentId}) {
 
   return (
     <SafeAreaView style={styles.screen}>
+      <View style={{marginBottom: constants.height * 0.1}}>
+        <Text style={styles.header}>Bit & Ec</Text>
+      </View>
       <Text style={styles.heading}>{lang('chooseLanguage')}</Text>
 
-      <View style={{marginVertical: constants.height * 0.1}}>
+      <View style={{marginVertical: 25}}>
         <TouchableWithoutFeedback onPress={() => handleLanguage('es')}>
           <View
             style={[
@@ -69,12 +72,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: constants.primary,
     alignItems: 'center',
-    justifyContent: 'center',
+  },
+  header: {
+    fontSize: constants.width * 0.15,
+    fontWeight: '800',
+    color: 'white',
+    marginTop: constants.height * 0.1,
   },
   view: {
-    height: 50,
-    paddingVertical: 5,
-    paddingHorizontal: 25,
+    paddingVertical: 10,
+    width: constants.width * 0.5,
     borderRadius: 15,
     marginVertical: 5,
     alignItems: 'center',

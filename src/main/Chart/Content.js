@@ -182,19 +182,19 @@ export default ({componentId}) => {
       </View>
       <View style={styles.actions}>
         <Button
-          label="Buy"
+          label={lang('buy')}
           backgroundColor="#37b526"
           color="white"
           onPress={handleBuy}
         />
         <Button
-          label="Sell"
+          label={lang('sell')}
           backgroundColor="#E33F64"
           color="white"
           onPress={handleSell}
         />
         <Button
-          label="Trade"
+          label={lang('trade')}
           backgroundColor={constants.accent}
           color="white"
           onPress={handleTrade}

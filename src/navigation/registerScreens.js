@@ -52,6 +52,12 @@ function registerScreens() {
           () => require('../main/Settings/Settings').default,
         );
         break;
+      case 'LanguageSetting':
+        Navigation.registerComponent(
+          'LanguageSetting',
+          () => require('../main/Settings/LanguageSetting').default,
+        );
+        break;
       case 'Transactions':
         Navigation.registerComponent(
           'Transactions',

@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
 Transactions.options = {
   topBar: {
     title: {
-      text: 'Transactions',
+      text: lang('transactions'),
       fontSize: 25,
       fontWeight: '700',
     },

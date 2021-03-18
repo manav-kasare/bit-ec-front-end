@@ -10,11 +10,13 @@ import {
 } from 'react-native';
 import {List} from 'react-native-paper';
 import {push} from '../../navigation/functions';
+import Loading from '../../shared/Loading';
 import {webSocket} from '../../sockets';
 
 export default function AllTrades({componentId}) {
   const [trades, setTrades] = React.useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     handleGetTrades();
@@ -23,6 +25,7 @@ export default function AllTrades({componentId}) {
   const handleGetTrades = async () => {
     const response = await webSocket.getPendingTrades();
     if (!response.err) setTrades(response.trades);
+    setLoading(false);
   };
 
   const renderTrade = ({item}) => (
@@ -47,14 +50,18 @@ export default function AllTrades({componentId}) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <FlatList
-        data={trades}
-        renderItem={renderTrade}
-        key={(item, index) => index.toString()}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={ListEmptyComponent}
-        refreshControl={refreshControl}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={trades}
+          renderItem={renderTrade}
+          key={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          ListEmptyComponent={ListEmptyComponent}
+          refreshControl={refreshControl}
+        />
+      )}
     </SafeAreaView>
   );
 }

@@ -10,11 +10,13 @@ import {
 } from 'react-native';
 import {List} from 'react-native-paper';
 import {push} from '../../navigation/functions';
+import Loading from '../../shared/Loading';
 import {webSocket} from '../../sockets';
 
 export default function AllTransactions({componentId}) {
   const [transactions, setTransactions] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
     handleGetTransactions();
@@ -23,6 +25,7 @@ export default function AllTransactions({componentId}) {
   const handleGetTransactions = async () => {
     const response = await webSocket.getPendingTransactions();
     if (!response.err) setTransactions(response.transactions);
+    setLoading(false);
   };
 
   const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
@@ -45,14 +48,18 @@ export default function AllTransactions({componentId}) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <FlatList
-        data={transactions}
-        renderItem={renderItem}
-        key={(item, index) => index.toString()}
-        ItemSeparatorComponent={ItemSeparatorComponent}
-        ListEmptyComponent={ListEmptyComponent}
-        refreshControl={refreshControl}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={transactions}
+          renderItem={renderItem}
+          key={(item, index) => index.toString()}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          ListEmptyComponent={ListEmptyComponent}
+          refreshControl={refreshControl}
+        />
+      )}
     </SafeAreaView>
   );
 }

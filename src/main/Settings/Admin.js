@@ -1,46 +1,10 @@
 import React from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Platform,
-  RefreshControl,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {List} from 'react-native-paper';
-import {useGlobal} from 'reactn';
-import {webSocket} from '../../sockets';
-import {push} from '../../navigation/functions';
 import Feather from 'react-native-vector-icons/Feather';
+import {push} from '../../navigation/functions';
 
 export default function Admin({componentId}) {
-  const [user] = useGlobal('user');
-  const [transactions, setTransactions] = React.useState([]);
-  const [trades, setTrades] = React.useState([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  React.useEffect(() => {
-    handleGetTransactions();
-    handleGetTrades();
-  }, []);
-
-  const handleGetTransactions = async () => {
-    const response = await webSocket.getPendingTransactions();
-    if (!response.err) setTransactions(response.transactions);
-  };
-
-  const handleGetTrades = async () => {
-    const response = await webSocket.getPendingTrades();
-    if (!response.err) setTrades(response.trades);
-  };
-
-  const onRefresh = async () => {
-    await handleGetTransactions();
-    await handleGetTrades();
-    setRefreshing(false);
-  };
-
   const handleTransactions = () => {
     push(componentId, 'AllTransactions');
   };
@@ -52,22 +16,6 @@ export default function Admin({componentId}) {
   const handleChangeLanguage = () => {
     push(componentId, 'LanguageSetting');
   };
-
-  const renderItem = ({item}) => <Tile id={item} componentId={componentId} />;
-
-  const renderTrade = ({item}) => (
-    <TradeTile id={item} componentId={componentId} />
-  );
-
-  const refreshControl = (
-    <RefreshControl
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-      style={{backgroundColor: constants.primary}}
-      tintColor="white"
-      size={Platform.os === 'ios' ? 'small' : 'default'}
-    />
-  );
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -89,25 +37,6 @@ export default function Admin({componentId}) {
           right={right}
         />
         <View style={styles.seperator} />
-        {/* <FlatList
-          data={transactions}
-          renderItem={renderItem}
-          key={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={refreshControl}
-        />
-        <View style={[styles.headingView, {marginTop: 50}]}>
-          <Text style={styles.heading}>{lang('trades')}</Text>
-        </View>
-        <FlatList
-          data={trades}
-          renderItem={renderTrade}
-          key={(item, index) => index.toString()}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          ListEmptyComponent={ListEmptyComponent}
-          refreshControl={refreshControl}
-        /> */}
         <List.Item
           title={lang('changeLanguage')}
           titleStyle={styles.titleStyle}
@@ -119,146 +48,7 @@ export default function Admin({componentId}) {
   );
 }
 
-const ItemSeparatorComponent = () => <View style={styles.seperator} />;
-
-const ListEmptyComponent = () => (
-  <View
-    style={{
-      width: constants.width,
-      height: constants.height * 0.25,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-    <Text style={{color: 'grey'}}>{lang('none')}</Text>
-  </View>
-);
-
 const right = () => <Feather name="chevron-right" color="white" size={25} />;
-
-const Tile = ({id, componentId}) => {
-  const [transaction, setTransaction] = React.useState({
-    numberOfBitcoins: 0,
-    atPrice: 0,
-    type: '',
-    status: '',
-    messages: [],
-  });
-  React.useEffect(() => {
-    handleGetTransaction();
-  }, []);
-
-  const handleGetTransaction = async () => {
-    const response = await webSocket.getTransaction(id);
-    if (!response.err) setTransaction(response.transaction);
-  };
-
-  const title = `${transaction.numberOfBitcoins} BTC at $ ${transaction.atPrice}`;
-
-  const onPress = () => {
-    push(componentId, 'Chat', {
-      id: id,
-      type: 'transaction',
-      prevMessages: transaction.messages,
-    });
-  };
-
-  const right = () => (
-    <View
-      style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
-      <Text
-        style={{
-          color:
-            transaction.status === 'approved'
-              ? '#37b526'
-              : transaction.status === 'pending'
-              ? 'yellow'
-              : '#E33F64',
-        }}>
-        {transaction.status && transaction.status.toUpperCase()}
-      </Text>
-    </View>
-  );
-
-  return (
-    <>
-      <List.Item
-        title={title}
-        titleStyle={{color: 'white', fontSize: 20, fontWeight: '700'}}
-        description={transaction.type.toUpperCase()}
-        descriptionStyle={{
-          color: transaction.type === 'buy' ? '#37b526' : '#E33F64',
-        }}
-        onPress={onPress}
-        style={styles.tile}
-        right={right}
-      />
-      <ItemSeparatorComponent />
-    </>
-  );
-};
-
-const TradeTile = ({id, componentId}) => {
-  const [trade, setTrade] = React.useState({
-    type: '',
-    atPrice: null,
-    amount: null,
-    status: '',
-  });
-
-  React.useEffect(() => {
-    handleGetTrade();
-  }, []);
-
-  const handleGetTrade = async () => {
-    const response = await webSocket.getTrade(id);
-    if (!response.err) setTrade(response.trade);
-  };
-
-  const title = `${trade.amount / trade.atPrice} BTC`;
-
-  const right = () => (
-    <View
-      style={{alignItems: 'center', justifyContent: 'center', marginRight: 15}}>
-      <Text
-        style={{
-          color:
-            trade.status === 'approved'
-              ? '#37b526'
-              : trade.status === 'pending'
-              ? 'yellow'
-              : '#E33F64',
-        }}>
-        {trade.status && trade.status.toUpperCase()}
-      </Text>
-    </View>
-  );
-
-  const onPress = () => {
-    push(componentId, 'Chat', {
-      id: id,
-      type: 'trade',
-      prevMessages: trade.messages,
-      setTransaction: setTrade,
-    });
-  };
-
-  return (
-    <>
-      <List.Item
-        title={title}
-        titleStyle={{color: 'white', fontSize: 20, fontWeight: '700'}}
-        description={trade.type.toUpperCase()}
-        descriptionStyle={{
-          color: trade.type === 'buy' ? '#37b526' : '#E33F64',
-        }}
-        onPress={onPress}
-        style={styles.tile}
-        right={right}
-      />
-      <ItemSeparatorComponent />
-    </>
-  );
-};
 
 const styles = StyleSheet.create({
   screen: {

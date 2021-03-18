@@ -88,6 +88,18 @@ function registerScreens() {
           () => require('../main/Settings/Admin').default,
         );
         break;
+      case 'AllTransactions':
+        Navigation.registerComponent(
+          'AllTransactions',
+          () => require('../main/Settings/AllTransactions').default,
+        );
+        break;
+      case 'AllTrades':
+        Navigation.registerComponent(
+          'AllTrades',
+          () => require('../main/Settings/AllTrades').default,
+        );
+        break;
       case 'CustomModal':
         Navigation.registerComponent(
           'CustomModal',

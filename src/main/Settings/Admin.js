@@ -41,6 +41,14 @@ export default function Admin({componentId}) {
     setRefreshing(false);
   };
 
+  const handleTransactions = () => {
+    push(componentId, 'AllTransactions');
+  };
+
+  const handleTrades = () => {
+    push(componentId, 'AllTrades');
+  };
+
   const handleChangeLanguage = () => {
     push(componentId, 'LanguageSetting');
   };
@@ -67,7 +75,21 @@ export default function Admin({componentId}) {
         <View style={styles.headingView}>
           <Text style={styles.heading}>{lang('transactions')}</Text>
         </View>
-        <FlatList
+        <List.Item
+          title={lang('transactions')}
+          titleStyle={styles.titleStyle}
+          onPress={handleTransactions}
+          right={right}
+        />
+        <View style={styles.seperator} />
+        <List.Item
+          title={lang('trades')}
+          titleStyle={styles.titleStyle}
+          onPress={handleTrades}
+          right={right}
+        />
+        <View style={styles.seperator} />
+        {/* <FlatList
           data={transactions}
           renderItem={renderItem}
           key={(item, index) => index.toString()}
@@ -85,7 +107,7 @@ export default function Admin({componentId}) {
           ItemSeparatorComponent={ItemSeparatorComponent}
           ListEmptyComponent={ListEmptyComponent}
           refreshControl={refreshControl}
-        />
+        /> */}
         <List.Item
           title={lang('changeLanguage')}
           titleStyle={styles.titleStyle}
@@ -244,7 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: constants.primary,
   },
   seperator: {
-    height: 0.3,
+    height: 0.5,
     width: constants.width * 0.95,
     position: 'relative',
     left: constants.width * 0.05,
@@ -253,6 +275,7 @@ const styles = StyleSheet.create({
   headingView: {
     width: constants.width,
     paddingLeft: 15,
+    marginBottom: constants.height * 0.025,
   },
   heading: {
     fontSize: 30,

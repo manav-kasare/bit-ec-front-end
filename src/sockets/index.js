@@ -8,7 +8,7 @@ class WebSocket {
 
   init = () => {
     console.log('connecting');
-    this.socket = socketIO(`http://192.168.0.102:9090/`, {
+    this.socket = socketIO(`http://192.168.0.101:9090/`, {
       transports: ['websocket'],
       reconnect: true,
       jsonp: true,

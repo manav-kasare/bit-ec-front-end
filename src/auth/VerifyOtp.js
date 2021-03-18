@@ -115,6 +115,7 @@ export default function VerifyOtp({name, phoneNumber, confirmation, type}) {
             inputStyles={styles.singleView}
             placeholder="0"
             placeholderTextColor="grey"
+            autofillFromClipboard={false}
           />
         </View>
         <Button

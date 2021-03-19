@@ -77,7 +77,6 @@ const Tile = ({id, componentId}) => {
 
   const handleGetTransaction = async () => {
     const response = await webSocket.getTransaction(id);
-    console.log(response);
     if (!response.err) setTransaction(response.transaction);
   };
 

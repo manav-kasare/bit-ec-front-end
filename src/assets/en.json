@@ -36,5 +36,6 @@
   "addBuyListing": "Add a Buy listing",
   "addSellListing": "Add a Sell listing",
   "approve": "Approve",
-  "decline": "Decline"
+  "decline": "Decline",
+  "logout": "Log out"
 }

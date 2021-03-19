@@ -36,5 +36,6 @@
   "addBuyListing": "Agregar una lista de compra",
   "addSellListing": "Agregar una lista de venta",
   "approve": "Aprobar",
-  "decline": "Disminución"
+  "decline": "Disminución",
+  "logout": "Cerrar sesión"
 }

@@ -1,10 +1,20 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {List} from 'react-native-paper';
+import {ActivityIndicator, List} from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
+import {useGlobal} from 'reactn';
 import {push} from '../../navigation/functions';
+import {removeToken, removeUser} from '../../shared/asyncStorage';
+import {setRoot} from '../../navigation/navStart';
 
 export default function Settings({componentId}) {
+  const setUser = useGlobal('user')[1];
+  const setToken = useGlobal('token')[1];
+  const setOverlayId = useGlobal('overlayId')[1];
+  const setIsAdmin = useGlobal('isAdmin')[1];
+  const setPriceNow = useGlobal('priceNow')[1];
+  const [loading, setLoading] = React.useState(false);
+
   const handleTransactions = () => {
     push(componentId, 'Transactions');
   };
@@ -15,6 +25,25 @@ export default function Settings({componentId}) {
 
   const handleChangeLanguage = () => {
     push(componentId, 'LanguageSetting');
+  };
+
+  const handleLogOut = async () => {
+    setLoading(true);
+    await removeUser();
+    await removeToken();
+    setUser({
+      _id: '',
+      name: '',
+      bitcoinsBought: 0,
+      lastPrice: 0,
+      transactions: [],
+    });
+    setToken(null);
+    setLoading(false);
+    setRoot();
+    setOverlayId(null);
+    setIsAdmin(null);
+    setPriceNow(null);
   };
 
   const right = () => <Feather name="chevron-right" color="white" size={25} />;
@@ -41,6 +70,24 @@ export default function Settings({componentId}) {
         onPress={handleChangeLanguage}
         right={right}
       />
+      <View style={styles.seperator} />
+      {loading ? (
+        <View
+          style={{
+            width: constants.width,
+            paddingVertical: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator size="small" color="crimson" animating={true} />
+        </View>
+      ) : (
+        <List.Item
+          title={lang('logout')}
+          titleStyle={[styles.titleStyle, {color: 'crimson'}]}
+          onPress={handleLogOut}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -56,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   seperator: {
-    height: 0.3,
+    height: 0.5,
     marginVertical: 1,
     width: constants.width * 0.95,
     position: 'relative',

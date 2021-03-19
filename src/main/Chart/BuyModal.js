@@ -101,10 +101,12 @@ export default function BuyModal({componentId}) {
         <View style={styles.tile}>
           <Text style={styles.tileText}>{lang('amount')}</Text>
           <Text style={styles.tileText}>
-            {parseFloat(value) / priceNow - 0.0001 > 0
-              ? `${(parseFloat(value) / priceNow - 0.0001)
-                  .toString()
-                  .slice(0, -10)} `
+            {parseFloat(value) >= 100
+              ? parseFloat(value) / priceNow - 0.0001 > 0
+                ? `${(parseFloat(value) / priceNow - 0.0001)
+                    .toString()
+                    .slice(0, -10)} `
+                : '0 '
               : '0 '}
             BTC
           </Text>
@@ -116,7 +118,9 @@ export default function BuyModal({componentId}) {
         <View style={styles.tile}>
           <Text style={styles.tileText}>{lang('payable')}</Text>
           <Text style={styles.tileText}>
-            {(parseFloat(value) * 1.05).toString()}
+            {parseFloat(value) >= 100
+              ? (parseFloat(value) * 1.05).toString()
+              : '0'}
           </Text>
         </View>
       </View>

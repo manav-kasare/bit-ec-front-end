@@ -45,13 +45,13 @@ export default function App() {
       setMain(user.phoneNumber);
       SplashScreen.hide();
       setUser(user);
-      if (user.phoneNumber === '+918433802669') setIsAdmin(true);
-      // if (user.phoneNumber === '+593983873813') setIsAdmin(true);
+      // if (user.phoneNumber === '+918433802669') setIsAdmin(true);
+      if (user.phoneNumber === '+593983873813') setIsAdmin(true);
       if (user) {
         const response = await webSocket.getUserByToken(asyncToken);
         if (!response.err) {
-          if (response.user.phoneNumber === '+918433802669') setIsAdmin(true);
-          // if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
+          // if (response.user.phoneNumber === '+918433802669') setIsAdmin(true);
+          if (response.user.phoneNumber === '+593983873813') setIsAdmin(true);
           setUser(response.user);
           storeUser(response.user);
         }

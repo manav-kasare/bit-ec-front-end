@@ -9,8 +9,16 @@ export const getUser = async () => {
   return JSON.parse(user);
 };
 
+export const removeUser = async () => {
+  await AsyncStorage.removeItem('user');
+};
+
 export const storeToken = async (token) => {
   await AsyncStorage.setItem('token', token);
+};
+
+export const removeToken = async () => {
+  await AsyncStorage.removeItem('token');
 };
 
 export const getToken = async () => {

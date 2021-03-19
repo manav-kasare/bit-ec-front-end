@@ -22,7 +22,6 @@ const checkIsHeadless = () => {
     messaging()
       .getIsHeadless()
       .then((isHeadless) => {
-        // do sth with isHeadless
         if (isHeadless) {
           handleNetworkCalls();
         } else {

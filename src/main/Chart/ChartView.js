@@ -165,7 +165,7 @@ export default function ChartView({componentId}) {
           </Animated.View>
         </PanGestureHandler>
       </View>
-      {!isAdmin && <Content componentId={componentId} />}
+      {!isAdmin ? <Content componentId={componentId} /> : <></>}
     </View>
   ) : (
     <View
